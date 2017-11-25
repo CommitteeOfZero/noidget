@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InstallerWindow</class>
+ <widget class="QMainWindow" name="InstallerWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="headerImage">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="main.qrc">:/header.png</pixmap>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>8</number>
+         </property>
+         <property name="leftMargin">
+          <number>8</number>
+         </property>
+         <property name="topMargin">
+          <number>8</number>
+         </property>
+         <property name="rightMargin">
+          <number>8</number>
+         </property>
+         <property name="bottomMargin">
+          <number>8</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="pageHeading">
+           <property name="text">
+            <string>Chaos;Child English PC Patch Installer</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="plainTextEdit">
+           <property name="plainText">
+            <string>STEINS;GATE 0 PC English Patch
+Committee of Zero
+Version 1.00 - February 19, 2017
+-------------------------------------------------------------------------------
+
+See http://sonome.dareno.me/projects/sg0.html for details, contact information and instructions on how to obtain the PC version and English scripts.
+
+Point &quot;Game directory:&quot; to the PC version's installation directory (containing files such as Game.exe and the USRDIR folder), and &quot;English Vita scripts:&quot; to the unencrypted, unmodified &quot;USRDIR\scripts&quot; directory copied from your English Vita version (containing files ending in .scx).
+
+&quot;Create desktop shortcuts&quot; will create one shortcut for the game launcher and one shortcut to the patch configuration tool. &quot;Run configuration tool after installation&quot; will run said configuration tool when installation finishes. Note you can also run it by starting LBConfig.exe inside the game directory after patch installation.
+
+-------------------------------------------------------------------------------
+Credits:
+-------------------------------------------------------------------------------
+* Cypert: Image editing
+* SomeAnon, DrDaxxy: Reverse engineering, hacking, installer
+* zahj, SnowedEarth: Subtitles
+* Kumin, Discontinuous Qualia: Script/subs editing
+* MrComputerRevo: Script dumping tutorial
+
+Special thanks to our vetted laboratory assistants for playtesting and proofreading!
+
+-------------------------------------------------------------------------------
+Third party components:
+-------------------------------------------------------------------------------
+
+STEINS;GATE 0 PC English Patch depends on a number of third-party components:
+
+Installer background music: &quot;Messenger -main theme- from STEINS;GATE0 OPM arrange&quot; by Takeshi Abo &lt;https://soundcloud.com/valsound/messenger-main-theme-from-steinsgate0-opm-arrange&gt;
+Ingame text font: Noto Sans CJK JP by Google &lt;https://www.google.com/get/noto/&gt;
+Subtitle font listing follows.
+
+LanguageBarrier:
+* JSON for Modern C++ &lt;https://github.com/nlohmann/json&gt;
+* Simd Library &lt;http://simd.sourceforge.net/&gt;
+* MinHook &lt;https://github.com/TsudaKageyu/minhook&gt;
+** Hacker Disassembler Engine 32
+* xy-VSFilter &lt;https://github.com/Cyberbeing/xy-VSFilter/tree/3.0.0.306&gt;
+
+LBConfig:
+* Newtonsoft Json.NET &lt;http://www.newtonsoft.com/json&gt;
+
+Installer:
+* Newtonsoft Json.NET &lt;http://www.newtonsoft.com/json&gt;
+* NVcdiff &lt;https://github.com/neris/NVcdiff&gt;
+* Fody &lt;https://github.com/Fody/Fody&gt;
+* Costura &lt;https://github.com/Fody/Costura&gt;
+* Microsoft BCL &lt;https://www.nuget.org/packages?q=Tags%3A%22BCL%22&gt;
+* Microsoft Windows-API-Code-Pack &lt;https://github.com/aybe/Windows-API-Code-Pack-1.1&gt;
+* NAudio &lt;https://github.com/naudio/NAudio&gt;
+* SharpZipLib &lt;https://icsharpcode.github.io/SharpZipLib/&gt;
+* XamlAnimatedGif &lt;https://github.com/XamlAnimatedGif/XamlAnimatedGif&gt;
+
+Subtitle fonts:
+* Ahellya &lt;https://www.behance.net/gallery/18506161/Ahellya-free-fonts&gt;
+* Aozora Mincho &lt;http://blueskis.wktk.so/AozoraMincho/index.html&gt;
+* Candela &lt;https://www.fontsquirrel.com/fonts/candela&gt;
+* Cicle Gordita &lt;https://www.fontsquirrel.com/fonts/cicle&gt;
+* Clemente &lt;http://www.dafont.com/clemente-pd.font&gt;
+* Kochi Substitute &lt;https://osdn.net/projects/efont/&gt;
+* Roboto &lt;https://fonts.google.com/specimen/Roboto&gt;
+* Sorts Mill Goudy &lt;https://fonts.google.com/specimen/Sorts+Mill+Goudy&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>60</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Mute</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/mute.png</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+             <property name="hasIcon" stdset="0">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>60</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Next</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/pointer.png</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="hasIcon" stdset="0">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>60</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Cancel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Minimum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="main.qrc"/>
+ </resources>
+ <connections/>
+</ui>
