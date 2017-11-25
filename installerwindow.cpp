@@ -9,7 +9,7 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     ui->headerImage->installEventFilter(this);
 
     connect(&bgm, &QMediaPlayer::stateChanged, this,
-            &InstallerWindow::on_bgm_stateChanged);
+            &InstallerWindow::bgm_stateChanged);
     bgm.setMedia(QUrl("qrc:/bgm.mp3"));
     bgm.setVolume(50);
     bgm.play();
@@ -36,14 +36,14 @@ bool InstallerWindow::eventFilter(QObject *watched, QEvent *event) {
     return false;
 }
 
-void InstallerWindow::on_bgm_stateChanged(QMediaPlayer::State state) {
+void InstallerWindow::bgm_stateChanged(QMediaPlayer::State state) {
     if (state == QMediaPlayer::StoppedState) {
         bgm.play();
     }
 }
 
-void InstallerWindow::on_pushButton_3_clicked() { close(); }
+void InstallerWindow::on_cancelButton_clicked() { close(); }
 
-void InstallerWindow::on_pushButton_4_clicked() {
+void InstallerWindow::on_muteButton_clicked() {
     bgm.state() == QMediaPlayer::PlayingState ? bgm.pause() : bgm.play();
 }

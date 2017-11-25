@@ -22,11 +22,11 @@ class InstallerWindow : public QMainWindow {
    public slots:
 
    private slots:
-    void on_bgm_stateChanged(QMediaPlayer::State state);
+    void bgm_stateChanged(QMediaPlayer::State state);
 
-    void on_pushButton_3_clicked();
+    void on_cancelButton_clicked();
 
-    void on_pushButton_4_clicked();
+    void on_muteButton_clicked();
 
    private:
     Ui::InstallerWindow *ui;
