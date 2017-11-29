@@ -1,0 +1,12 @@
+{
+  "name": "noidget",
+  "version": "1.0.0",
+  "description": "noidget dev dependencies package",
+  "private": true,
+  "scripts": {
+    "docs": "documentation build *.cpp --polyglot -o apidoc -f html"
+  },
+  "devDependencies": {
+    "documentation": "4.0.0"
+  }
+}
