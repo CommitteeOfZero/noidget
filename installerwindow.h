@@ -1,5 +1,4 @@
-#ifndef INSTALLERWINDOW_H
-#define INSTALLERWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QtMultimedia/QMediaPlayer>
@@ -32,5 +31,3 @@ class InstallerWindow : public QMainWindow {
     Ui::InstallerWindow *ui;
     QMediaPlayer bgm;
 };
-
-#endif  // INSTALLERWINDOW_H
