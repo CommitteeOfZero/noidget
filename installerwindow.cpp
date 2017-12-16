@@ -8,6 +8,9 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     setWindowFlag(Qt::FramelessWindowHint);
     ui->setupUi(this);
 
+    ui->headerImage->setStyleSheet(
+        "background-color: #000");  // TODO parameterize
+
     ui->headerImage->installEventFilter(this);
 
     connect(&bgm, &QMediaPlayer::stateChanged, this,
