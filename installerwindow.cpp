@@ -1,6 +1,8 @@
 #include "installerwindow.h"
 #include "ui_installerwindow.h"
 
+#include <QMouseEvent>
+
 InstallerWindow::InstallerWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::InstallerWindow) {
     setWindowFlag(Qt::FramelessWindowHint);
@@ -47,3 +49,9 @@ void InstallerWindow::on_cancelButton_clicked() { close(); }
 void InstallerWindow::on_muteButton_clicked() {
     bgm.state() == QMediaPlayer::PlayingState ? bgm.pause() : bgm.play();
 }
+
+void InstallerWindow::push(view::Page *page) {}
+
+void InstallerWindow::pop() {}
+
+view::Page *InstallerWindow::currentPage() { return nullptr; }

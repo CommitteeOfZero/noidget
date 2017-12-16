@@ -2,16 +2,23 @@
 
 #include <QMainWindow>
 #include <QtMultimedia/QMediaPlayer>
+#include <QEvent>
+#include "view/ipagestack.h"
+#include "view/page.h"
 
 namespace Ui {
 class InstallerWindow;
 }
 
-class InstallerWindow : public QMainWindow {
+class InstallerWindow : public QMainWindow, public view::IPageStack {
     Q_OBJECT
    public:
     explicit InstallerWindow(QWidget *parent = nullptr);
     ~InstallerWindow();
+
+    void push(view::Page *page) override;
+    void pop() override;
+    view::Page *currentPage() override;
 
    protected:
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
