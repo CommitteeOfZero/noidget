@@ -2,7 +2,7 @@
 
 #include <QScriptable>
 #include <QVBoxLayout>
-#include "api/view/container.h"
+#include "container.h"
 
 namespace api {
 namespace view {

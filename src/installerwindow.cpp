@@ -1,5 +1,6 @@
 #include "installerwindow.h"
 #include "ui_installerwindow.h"
+#include <view/page.h>
 
 #include <QMouseEvent>
 
@@ -53,8 +54,51 @@ void InstallerWindow::on_muteButton_clicked() {
     bgm.state() == QMediaPlayer::PlayingState ? bgm.pause() : bgm.play();
 }
 
-void InstallerWindow::push(view::Page *page) {}
+void InstallerWindow::push(view::Page *page) {
+    connect(page, &view::Page::popRequested, this,
+            &InstallerWindow::page_popRequested);
+    const int i = ui->stackedWidget->addWidget(page);
+    ui->stackedWidget->setCurrentIndex(i);  // TODO necessary?
+}
 
-void InstallerWindow::pop() {}
+void InstallerWindow::pop() {
+    view::Page *top = currentPage();
+    removePage(top);
+}
 
-view::Page *InstallerWindow::currentPage() { return nullptr; }
+view::Page *InstallerWindow::currentPage() {
+    return qobject_cast<view::Page *>(ui->stackedWidget->currentWidget());
+}
+
+void InstallerWindow::on_nextButton_clicked() {
+    view::Page *top = currentPage();
+    if (top != nullptr) {
+        top->next();
+    }
+}
+
+void InstallerWindow::on_backButton_clicked() {
+    view::Page *top = currentPage();
+    if (top != nullptr) {
+        top->back();
+    }
+}
+
+void InstallerWindow::on_stackedWidget_currentChanged(int i) {
+    ui->backButton->setEnabled(ui->stackedWidget->count() > 1);
+}
+
+void InstallerWindow::page_popRequested() {
+    view::Page *page = qobject_cast<view::Page *>(sender());
+    removePage(page);
+}
+
+void InstallerWindow::removePage(view::Page *page) {
+    if (page != nullptr) {
+        disconnect(page, 0, this, 0);
+        disconnect(this, 0, page, 0);
+
+        ui->stackedWidget->removeWidget(page);
+        delete page;
+    }
+}

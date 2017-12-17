@@ -4,5 +4,6 @@
         <file alias="pointer.png">assets/pointer.png</file>
         <file alias="mute.png">assets/mute.png</file>
         <file alias="bgm.mp3">assets/bgm.mp3</file>
+        <file>script.js</file>
     </qresource>
 </RCC>

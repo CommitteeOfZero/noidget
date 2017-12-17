@@ -32,24 +32,11 @@ QMAKE_MOD_RCC = qrc${QMAKE_FUNC_fnPath}
 
 include(kofuna/kofuna.pri)
 
-SOURCES += \
-    main.cpp \
-    installerwindow.cpp \
-    api/view/container.cpp \
-    api/view/page.cpp
+INCLUDEPATH += src
 
-HEADERS += \
-    installerwindow.h \
-    view/ipagestack.h \
-    view/page.h \
-    api/view/icontainer.h \
-    api/view/container.h \
-    api/view/column.h \
-    api/view/row.h \
-    api/view/page.h
-
-FORMS += \
-    installerwindow.ui
+SOURCES += $$files(src/*.cpp, true)
+HEADERS += $$files(src/*.h, true)
+FORMS += $$files(src/*.ui, true)
 
 RESOURCES += \
     main.qrc

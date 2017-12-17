@@ -1,20 +1,33 @@
-#include "api/view/page.h"
+#include "page.h"
+#include "column.h"
 
 namespace api {
 namespace view {
 
-Page::Page(::view::IPageStack* stack, QWidget* parent)
-    : ::view::Page(stack, parent) {
+Page::Page(QWidget* parent) : ::view::Page(parent) {
     _layout = new QVBoxLayout(this);
     _layout->setMargin(0);
-    _layout->setSpacing(0);
+    _layout->setSpacing(8);
     setLayout(_layout);
+    _titleLbl = new QLabel(this);
+    _layout->addWidget(_titleLbl);
     _col = new Column(this);
     _layout->addWidget(_col);
+    _layout->addStretch();  // TODO is this good?
 }
 
-void Page::next() {}
-void Page::back() {}
+void Page::next() {
+    if (_onNext.isFunction()) {
+        _onNext.call();
+    }
+}
+void Page::back() {
+    if (_onBack.isFunction()) {
+        _onBack.call();
+    }
+    // TODO check allowed by script
+    emit popRequested();
+}
 
 void Page::addLabel(const QString& v) { return _col->addLabel(v); }
 void Page::addTextField() { return _col->addTextField(); }

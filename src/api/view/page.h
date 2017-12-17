@@ -3,13 +3,14 @@
 #include <QScriptable>
 #include <QScriptValue>
 #include <QVBoxLayout>
-#include "view/page.h"
-#include "view/ipagestack.h"
-#include "api/view/column.h"
-#include "api/view/icontainer.h"
+#include <QLabel>
+#include <view/page.h>
+#include "icontainer.h"
 
 namespace api {
 namespace view {
+
+class Column;
 
 class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_OBJECT
@@ -18,12 +19,12 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_PROPERTY(QScriptValue onBack READ onBack WRITE setOnBack)
 
    public:
-    explicit Page(::view::IPageStack* stack, QWidget* parent = 0);
+    explicit Page(QWidget* parent = 0);
     void next() override;
     void back() override;
 
-    QString title() const override { return _title; }
-    void setTitle(const QString& v) { _title = v; }
+    QString title() const override { return _titleLbl->text(); }
+    void setTitle(const QString& v) { _titleLbl->setText(v); }
 
     QScriptValue onNext() const { return _onNext; }
     void setOnNext(const QScriptValue& v) { _onNext = v; }
@@ -42,7 +43,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
    private:
     Column* _col;
     QVBoxLayout* _layout;
-    QString _title;
+    QLabel* _titleLbl;
 
     QScriptValue _onNext;
     QScriptValue _onBack;

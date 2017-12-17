@@ -1,8 +1,8 @@
 #pragma once
 
-#include "view/page.h"
-
 namespace view {
+
+class Page;
 
 class IPageStack {
    public:
