@@ -33,7 +33,8 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     void setOnBack(const QScriptValue& v) { _onBack = v; }
 
     Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
-    Q_INVOKABLE void addTextField() override;
+    Q_INVOKABLE api::view::TextField* addTextField(
+        const QScriptValue& obj) override;
     Q_INVOKABLE void addCheckBox() override;
     Q_INVOKABLE void addRadioGroup() override;
     Q_INVOKABLE void addDirectoryPicker() override;

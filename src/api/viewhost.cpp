@@ -5,6 +5,7 @@
 #include <api/view/column.h>
 #include <api/view/container.h>
 #include <api/view/label.h>
+#include <api/view/textfield.h>
 
 QScriptValue pageToScriptValue(QScriptEngine *engine,
                                api::view::Page *const &in) {
@@ -43,6 +44,14 @@ QScriptValue labelToScriptValue(QScriptEngine *engine,
 void labelFromScriptValue(const QScriptValue &object, api::view::Label *&out) {
     out = qobject_cast<api::view::Label *>(object.toQObject());
 }
+QScriptValue textFieldToScriptValue(QScriptEngine *engine,
+                                    api::view::TextField *const &in) {
+    return engine->newQObject(in);
+}
+void textFieldFromScriptValue(const QScriptValue &object,
+                              api::view::TextField *&out) {
+    out = qobject_cast<api::view::TextField *>(object.toQObject());
+}
 
 namespace api {
 ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
@@ -53,6 +62,8 @@ ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
     qScriptRegisterMetaType(engine, containerToScriptValue,
                             containerFromScriptValue);
     qScriptRegisterMetaType(engine, labelToScriptValue, labelFromScriptValue);
+    qScriptRegisterMetaType(engine, textFieldToScriptValue,
+                            textFieldFromScriptValue);
 }
 ViewHost::~ViewHost() {}
 }  // namespace api

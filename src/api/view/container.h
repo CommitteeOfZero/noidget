@@ -9,6 +9,7 @@ namespace api {
 namespace view {
 
 class Label;
+class TextField;
 
 class Container : public QWidget, public IContainer, protected QScriptable {
     Q_OBJECT
@@ -18,7 +19,8 @@ class Container : public QWidget, public IContainer, protected QScriptable {
     virtual ~Container() = 0;
 
     Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
-    Q_INVOKABLE void addTextField() override;
+    Q_INVOKABLE api::view::TextField* addTextField(
+        const QScriptValue& obj) override;
     Q_INVOKABLE void addCheckBox() override;
     Q_INVOKABLE void addRadioGroup() override;
     Q_INVOKABLE void addDirectoryPicker() override;

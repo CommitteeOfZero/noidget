@@ -9,12 +9,12 @@ Page::Page(QWidget* parent) : ::view::Page(parent) {
     _layout = new QVBoxLayout(this);
     _layout->setMargin(0);
     _layout->setSpacing(8);
+    _layout->setAlignment(Qt::AlignTop);
     setLayout(_layout);
     _titleLbl = new QLabel(this);
     _layout->addWidget(_titleLbl);
     _col = new Column(this);
     _layout->addWidget(_col);
-    _layout->addStretch();  // TODO is this good?
 }
 
 void Page::next() {
@@ -31,7 +31,9 @@ void Page::back() {
 }
 
 Label* Page::addLabel(const QScriptValue& obj) { return _col->addLabel(obj); }
-void Page::addTextField() { return _col->addTextField(); }
+TextField* Page::addTextField(const QScriptValue& obj) {
+    return _col->addTextField(obj);
+}
 void Page::addCheckBox() { return _col->addCheckBox(); }
 void Page::addRadioGroup() { return _col->addRadioGroup(); }
 void Page::addDirectoryPicker() { return _col->addDirectoryPicker(); }
