@@ -1,5 +1,7 @@
 var page = ng.window.createPage('Page 1');
-page.addLabel('Hello World');
+page.addLabel('<b>Should be plain</b>');
+var lbl = page.addLabel({text: '<b>Should also be plain</b>'});
+page.addLabel({text: '<b>Should be rich</b>', richText: true});
 page.onNext = function() {
     ng.window.messageBox('onNext()');
 };

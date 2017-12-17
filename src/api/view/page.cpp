@@ -1,5 +1,6 @@
 #include "page.h"
 #include "column.h"
+#include "label.h"
 
 namespace api {
 namespace view {
@@ -29,7 +30,7 @@ void Page::back() {
     emit popRequested();
 }
 
-void Page::addLabel(const QString& v) { return _col->addLabel(v); }
+Label* Page::addLabel(const QScriptValue& obj) { return _col->addLabel(obj); }
 void Page::addTextField() { return _col->addTextField(); }
 void Page::addCheckBox() { return _col->addCheckBox(); }
 void Page::addRadioGroup() { return _col->addRadioGroup(); }

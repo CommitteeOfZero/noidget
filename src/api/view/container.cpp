@@ -1,5 +1,7 @@
 #include "container.h"
-#include <QLabel>
+#include "label.h"
+#include <QScriptValue>
+#include <QScriptContext>
 
 namespace api {
 namespace view {
@@ -7,10 +9,30 @@ namespace view {
 Container::Container(QWidget* parent) : QWidget(parent) {}
 Container::~Container() {}
 
-void Container::addLabel(const QString& v) {
-    QLabel* lbl = new QLabel(this);
-    lbl->setText(v);
+Label* Container::addLabel(const QScriptValue& obj) {
+    QString text;
+    bool richText = false;
+
+    if (obj.isString()) {
+        text = obj.toString();
+    } else if (obj.isObject()) {
+        auto text_ = obj.property("text");
+        if (text_.isString()) text = text_.toString();
+        auto richText_ = obj.property("richText");
+        if (richText_.isBool()) richText = richText_.toBool();
+    } else {
+        if (context() != 0) {
+            // TODO proper error type
+            context()->throwError("Wrong type");
+        }
+        return nullptr;
+    }
+
+    Label* lbl = new Label(this);
+    lbl->setText(text);
+    lbl->setRichText(richText);
     _layout->addWidget(lbl);
+    return lbl;
 }
 void Container::addTextField() {}
 void Container::addCheckBox() {}

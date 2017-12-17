@@ -5,10 +5,12 @@
 namespace api {
 namespace view {
 
+class Label;
+
 class IContainer {
    public:
     virtual ~IContainer() {}
-    virtual void addLabel(const QString& text) = 0;
+    virtual Label* addLabel(const QScriptValue& obj) = 0;
     virtual void addTextField() = 0;
     virtual void addCheckBox() = 0;
     virtual void addRadioGroup() = 0;

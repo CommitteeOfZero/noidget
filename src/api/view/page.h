@@ -11,6 +11,7 @@ namespace api {
 namespace view {
 
 class Column;
+class Label;
 
 class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_OBJECT
@@ -31,7 +32,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     QScriptValue onBack() const { return _onBack; }
     void setOnBack(const QScriptValue& v) { _onBack = v; }
 
-    Q_INVOKABLE void addLabel(const QString& v) override;
+    Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
     Q_INVOKABLE void addTextField() override;
     Q_INVOKABLE void addCheckBox() override;
     Q_INVOKABLE void addRadioGroup() override;

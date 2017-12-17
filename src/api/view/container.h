@@ -8,6 +8,8 @@
 namespace api {
 namespace view {
 
+class Label;
+
 class Container : public QWidget, public IContainer, protected QScriptable {
     Q_OBJECT
 
@@ -15,7 +17,7 @@ class Container : public QWidget, public IContainer, protected QScriptable {
     explicit Container(QWidget* parent = 0);
     virtual ~Container() = 0;
 
-    Q_INVOKABLE void addLabel(const QString& v) override;
+    Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
     Q_INVOKABLE void addTextField() override;
     Q_INVOKABLE void addCheckBox() override;
     Q_INVOKABLE void addRadioGroup() override;
