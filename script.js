@@ -12,7 +12,8 @@ var lipsum = '<ul>' +
 
 var tf = page.addTextField(lipsum);
 
-page.addLabel('Label 3');
+page.addLabel(
+    'Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.');
 
 var cb = page.addCheckBox({
     text: 'Foo bar baz quux',
@@ -28,3 +29,4 @@ page.onNext = function() {
 };
 
 ng.window.pushPage(page);
+// ng.window.playBgm('qrc:/bgm.mp3');

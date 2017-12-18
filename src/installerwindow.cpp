@@ -16,9 +16,6 @@ InstallerWindow::InstallerWindow(QWidget *parent)
 
     connect(&bgm, &QMediaPlayer::stateChanged, this,
             &InstallerWindow::bgm_stateChanged);
-    bgm.setMedia(QUrl("qrc:/bgm.mp3"));
-    bgm.setVolume(50);
-    bgm.play();
 }
 
 InstallerWindow::~InstallerWindow() { delete ui; }
@@ -68,6 +65,12 @@ void InstallerWindow::pop() {
 
 view::Page *InstallerWindow::currentPage() {
     return qobject_cast<view::Page *>(ui->stackedWidget->currentWidget());
+}
+
+void InstallerWindow::setBgm(const QUrl &url) {
+    bgm.setMedia(url);
+    bgm.setVolume(50);
+    bgm.play();
 }
 
 void InstallerWindow::on_nextButton_clicked() {

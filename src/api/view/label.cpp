@@ -10,6 +10,7 @@ Label::Label(QWidget *parent) : QWidget(parent) {
     layout->setSpacing(0);
     setLayout(layout);
     _lbl = new QLabel(this);
+    _lbl->setWordWrap(true);
     _lbl->setTextFormat(Qt::PlainText);
     layout->addWidget(_lbl);
 }

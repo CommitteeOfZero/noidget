@@ -23,6 +23,8 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
     void pop() override;
     view::Page *currentPage() override;
 
+    void setBgm(const QUrl &url);
+
    protected:
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 

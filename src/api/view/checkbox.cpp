@@ -16,6 +16,7 @@ CheckBox::CheckBox(QWidget *parent) : QWidget(parent) {
     connect(_cb, &QCheckBox::stateChanged, this, &CheckBox::qcb_stateChanged);
     layout->addWidget(_cb);
     _lbl = new QLabel(this);
+    _lbl->setWordWrap(true);
     _lbl->setTextFormat(Qt::PlainText);
     layout->addWidget(_lbl);
 }

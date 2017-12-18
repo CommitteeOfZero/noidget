@@ -13,6 +13,8 @@ Page::Page(QWidget* parent) : ::view::Page(parent) {
     _layout->setAlignment(Qt::AlignTop);
     setLayout(_layout);
     _titleLbl = new QLabel(this);
+    _titleLbl->setTextFormat(Qt::PlainText);
+    _titleLbl->setWordWrap(true);
     _titleLbl->setStyleSheet("font-weight: bold");
     _layout->addWidget(_titleLbl);
     _col = new Column(this);

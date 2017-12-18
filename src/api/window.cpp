@@ -23,6 +23,12 @@ void Window::pushPage(api::view::Page *page) {
 
 void Window::popPage() { ngApp->window()->pop(); }
 
+void Window::playBgm(const QString &url) {
+    // TODO disable this when building without multimedia
+    // TODO hide mute button when no BGM set
+    ngApp->window()->setBgm(QUrl(url));
+}
+
 void Window::messageBox(const QScriptValue &v) {
     QString text;
     bool richText = false;
