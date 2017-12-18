@@ -9,16 +9,16 @@ namespace view {
 CheckBox::CheckBox(QWidget *parent) : QWidget(parent) {
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
-    layout->setSpacing(4);
+    layout->setSpacing(0);
     layout->setAlignment(Qt::AlignLeft);
     setLayout(layout);
     _cb = new QCheckBox(this);
     connect(_cb, &QCheckBox::stateChanged, this, &CheckBox::qcb_stateChanged);
-    layout->addWidget(_cb);
+    layout->addWidget(_cb, 0, Qt::AlignTop);
     _lbl = new QLabel(this);
     _lbl->setWordWrap(true);
     _lbl->setTextFormat(Qt::PlainText);
-    layout->addWidget(_lbl);
+    layout->addWidget(_lbl, 1);
 }
 CheckBox::~CheckBox() {}
 
