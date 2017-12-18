@@ -1,6 +1,7 @@
 #include "page.h"
 #include "column.h"
 #include "label.h"
+#include "checkbox.h"
 
 namespace api {
 namespace view {
@@ -35,7 +36,9 @@ Label* Page::addLabel(const QScriptValue& obj) { return _col->addLabel(obj); }
 TextField* Page::addTextField(const QScriptValue& obj) {
     return _col->addTextField(obj);
 }
-void Page::addCheckBox() { return _col->addCheckBox(); }
+CheckBox* Page::addCheckBox(const QScriptValue& obj) {
+    return _col->addCheckBox(obj);
+}
 void Page::addRadioGroup() { return _col->addRadioGroup(); }
 void Page::addDirectoryPicker() { return _col->addDirectoryPicker(); }
 

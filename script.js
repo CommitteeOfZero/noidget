@@ -14,6 +14,14 @@ var tf = page.addTextField(lipsum);
 
 page.addLabel('Label 3');
 
+var cb = page.addCheckBox({
+    text: 'Foo bar baz quux',
+    preset: true,
+    onChange: function(newState) {
+        ng.window.messageBox('New state: ' + newState);
+    }
+});
+
 page.onNext = function() {
     tf.richText = true;
     ng.window.messageBox('onNext()');

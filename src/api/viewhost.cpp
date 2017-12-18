@@ -6,6 +6,7 @@
 #include <api/view/container.h>
 #include <api/view/label.h>
 #include <api/view/textfield.h>
+#include <api/view/checkbox.h>
 
 QScriptValue pageToScriptValue(QScriptEngine *engine,
                                api::view::Page *const &in) {
@@ -52,6 +53,14 @@ void textFieldFromScriptValue(const QScriptValue &object,
                               api::view::TextField *&out) {
     out = qobject_cast<api::view::TextField *>(object.toQObject());
 }
+QScriptValue checkBoxToScriptValue(QScriptEngine *engine,
+                                   api::view::CheckBox *const &in) {
+    return engine->newQObject(in);
+}
+void checkBoxFromScriptValue(const QScriptValue &object,
+                             api::view::CheckBox *&out) {
+    out = qobject_cast<api::view::CheckBox *>(object.toQObject());
+}
 
 namespace api {
 ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
@@ -64,6 +73,8 @@ ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
     qScriptRegisterMetaType(engine, labelToScriptValue, labelFromScriptValue);
     qScriptRegisterMetaType(engine, textFieldToScriptValue,
                             textFieldFromScriptValue);
+    qScriptRegisterMetaType(engine, checkBoxToScriptValue,
+                            checkBoxFromScriptValue);
 }
 ViewHost::~ViewHost() {}
 }  // namespace api
