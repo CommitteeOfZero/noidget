@@ -1,7 +1,5 @@
 #include "installerwindow.h"
 #include "installerapplication.h"
-#include <QFile>
-#include <QTextStream>
 
 int main(int argc, char *argv[]) {
     QApplication::setDesktopSettingsAware(false);
@@ -10,11 +8,6 @@ int main(int argc, char *argv[]) {
     QApplication::setStyle("windows");
 
     InstallerApplication a(argc, argv);
-
-    QFile qssFile(":/kofuna/style.qss");
-    qssFile.open(QFile::ReadOnly | QFile::Text);
-    QTextStream ts(&qssFile);
-    a.setStyleSheet(ts.readAll());
 
     a.showWindow();
 
