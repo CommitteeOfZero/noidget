@@ -2,6 +2,7 @@
 #include "column.h"
 #include "label.h"
 #include "checkbox.h"
+#include "radiogroup.h"
 
 namespace api {
 namespace view {
@@ -41,7 +42,9 @@ TextField* Page::addTextField(const QScriptValue& obj) {
 CheckBox* Page::addCheckBox(const QScriptValue& obj) {
     return _col->addCheckBox(obj);
 }
-void Page::addRadioGroup() { return _col->addRadioGroup(); }
+RadioGroup* Page::addRadioGroup(const QScriptValue& obj) {
+    return _col->addRadioGroup(obj);
+}
 void Page::addDirectoryPicker() { return _col->addDirectoryPicker(); }
 
 }  // namespace view

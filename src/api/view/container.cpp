@@ -2,6 +2,7 @@
 #include "label.h"
 #include "textfield.h"
 #include "checkbox.h"
+#include "radiogroup.h"
 #include <QScriptValue>
 #include <QScriptContext>
 
@@ -95,7 +96,61 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     _layout->addWidget(cb);
     return cb;
 }
-void Container::addRadioGroup() {}
+RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
+    // TODO !! figure out whether contexts get passed on, throwError() unwinding
+    // etc. etc.
+
+    if (!obj.isObject()) {
+        if (context() != 0) {
+            // TODO proper error type
+            context()->throwError("Wrong type");
+        }
+        return nullptr;
+    }
+
+    bool vertical = false;
+    auto vertical_ = obj.property("vertical");
+    if (vertical_.isBool()) vertical = vertical_.toBool();
+
+    RadioGroup* grp = new RadioGroup(this, vertical);
+
+    auto text_ = obj.property("text");
+    if (text_.isString()) rg->setText(text_.toString());
+
+    auto options_ = obj.property("options");
+    if (options_.isArray()) {
+        QScriptValueIterator it(options_);
+        while (it.hasNext()) {
+            it.next();
+            auto option = it.value();
+            if (option.isObject()) {
+                QString oName;
+                QString oText;
+                auto oName_ = option.property("name");
+                if (oName_.isString()) oName = oName_.toString();
+                auto oText_ = option.property("text");
+                if (oText_.isString()) oText = oText_.toString();
+
+                bool success = grp->addOption(oName, oText);
+                if (!success) {
+                    if (context() != nullptr) {
+                        context()->throwError("Invalid option");
+                    }
+                    delete grp;
+                    return nullptr;
+                }
+            }
+        }
+    }
+
+    grp->setOnChange(obj.property("onChange"));
+    // TODO error handling for preset
+    auto preset_ = obj.property("preset");
+    if (preset_.isString()) grp->setSelected(preset_.toString());
+
+    _layout->addWidget(grp);
+    return grp;
+}
 void Container::addDirectoryPicker() {}
 
 }  // namespace view

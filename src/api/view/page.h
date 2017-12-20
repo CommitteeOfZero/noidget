@@ -14,6 +14,7 @@ class Column;
 class Label;
 class TextField;
 class CheckBox;
+class RadioGroup;
 
 class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_OBJECT
@@ -39,7 +40,8 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
         const QScriptValue& obj) override;
     Q_INVOKABLE api::view::CheckBox* addCheckBox(
         const QScriptValue& obj) override;
-    Q_INVOKABLE void addRadioGroup() override;
+    Q_INVOKABLE api::view::RadioGroup* addRadioGroup(
+        const QScriptValue& obj) override;
     Q_INVOKABLE void addDirectoryPicker() override;
 
    signals:

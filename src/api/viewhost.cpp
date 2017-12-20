@@ -7,6 +7,7 @@
 #include <api/view/label.h>
 #include <api/view/textfield.h>
 #include <api/view/checkbox.h>
+#include <api/view/radiogroup.h>
 
 QScriptValue pageToScriptValue(QScriptEngine *engine,
                                api::view::Page *const &in) {
@@ -61,6 +62,14 @@ void checkBoxFromScriptValue(const QScriptValue &object,
                              api::view::CheckBox *&out) {
     out = qobject_cast<api::view::CheckBox *>(object.toQObject());
 }
+QScriptValue radioGroupToScriptValue(QScriptEngine *engine,
+                                     api::view::RadioGroup *const &in) {
+    return engine->newQObject(in);
+}
+void radioGroupFromScriptValue(const QScriptValue &object,
+                               api::view::RadioGroup *&out) {
+    out = qobject_cast<api::view::RadioGroup *>(object.toQObject());
+}
 
 namespace api {
 ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
@@ -75,6 +84,8 @@ ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
                             textFieldFromScriptValue);
     qScriptRegisterMetaType(engine, checkBoxToScriptValue,
                             checkBoxFromScriptValue);
+    qScriptRegisterMetaType(engine, radioGroupToScriptValue,
+                            radioGroupFromScriptValue);
 }
 ViewHost::~ViewHost() {}
 }  // namespace api
