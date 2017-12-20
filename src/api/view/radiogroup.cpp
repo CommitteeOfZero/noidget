@@ -77,6 +77,7 @@ void RadioGroup::addOption(const QString &name, const QString &text) {
     }
     button = new QRadioButton(_groupWidget);
     button->setObjectName(name);
+    // TODO use labels? (wordwrap)
     button->setText(text);
     _buttonGroup->addButton(button);
     _groupWidget->layout()->addWidget(button);
