@@ -3,6 +3,7 @@
 #include "label.h"
 #include "checkbox.h"
 #include "radiogroup.h"
+#include "row.h"
 #include <api/exception.h>
 
 namespace api {
@@ -59,6 +60,17 @@ RadioGroup* Page::addRadioGroup(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_END(nullptr)
 }
 void Page::addDirectoryPicker() { return _col->addDirectoryPicker(); }
+
+Column* Page::addColumn() {
+    SCRIPT_EX_GUARD_START
+    return _col->addColumn();
+    SCRIPT_EX_GUARD_END(nullptr)
+}
+Row* Page::addRow() {
+    SCRIPT_EX_GUARD_START
+    return _col->addRow();
+    SCRIPT_EX_GUARD_END(nullptr)
+}
 
 }  // namespace view
 }  // namespace api

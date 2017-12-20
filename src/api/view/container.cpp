@@ -3,6 +3,8 @@
 #include "textfield.h"
 #include "checkbox.h"
 #include "radiogroup.h"
+#include "column.h"
+#include "row.h"
 #include <QScriptValue>
 #include <QScriptValueIterator>
 #include <api/exception.h>
@@ -13,6 +15,7 @@ namespace view {
 Container::Container(QWidget* parent) : QWidget(parent) {}
 Container::~Container() {}
 
+// TODO do this without QBoxLayout::addSpacing, to support FlowLayouts
 void Container::addSpace(int space) { _layout->addSpacing(space); }
 
 Label* Container::addLabel(const QScriptValue& obj) {
@@ -147,6 +150,21 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     return grp;
 }
 void Container::addDirectoryPicker() {}
+
+Column* Container::addColumn() {
+    SCRIPT_EX_GUARD_START
+    Column* col = new Column(this);
+    _layout->addWidget(col);
+    return col;
+    SCRIPT_EX_GUARD_END(nullptr)
+}
+Row* Container::addRow() {
+    SCRIPT_EX_GUARD_START
+    Row* row = new Row(this);
+    _layout->addWidget(row);
+    return row;
+    SCRIPT_EX_GUARD_END(nullptr)
+}
 
 }  // namespace view
 }  // namespace api

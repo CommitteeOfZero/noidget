@@ -10,6 +10,9 @@ class TextField;
 class CheckBox;
 class RadioGroup;
 
+class Column;
+class Row;
+
 class IContainer {
    public:
     virtual ~IContainer() {}
@@ -19,6 +22,8 @@ class IContainer {
     virtual CheckBox* addCheckBox(const QScriptValue& obj) = 0;
     virtual RadioGroup* addRadioGroup(const QScriptValue& obj) = 0;
     virtual void addDirectoryPicker() = 0;
+    virtual Column* addColumn() = 0;
+    virtual Row* addRow() = 0;
 };
 
 }  // namespace view

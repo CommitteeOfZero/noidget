@@ -10,11 +10,13 @@
 namespace api {
 namespace view {
 
-class Column;
 class Label;
 class TextField;
 class CheckBox;
 class RadioGroup;
+
+class Column;
+class Row;
 
 class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_OBJECT
@@ -45,6 +47,9 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_INVOKABLE api::view::RadioGroup* addRadioGroup(
         const QScriptValue& obj) override;
     Q_INVOKABLE void addDirectoryPicker() override;
+
+    Q_INVOKABLE api::view::Column* addColumn() override;
+    Q_INVOKABLE api::view::Row* addRow() override;
 
    signals:
     void titleChanged(const QString& v);

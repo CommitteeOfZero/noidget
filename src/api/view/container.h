@@ -13,6 +13,9 @@ class TextField;
 class CheckBox;
 class RadioGroup;
 
+class Column;
+class Row;
+
 class Container : public QWidget, public IContainer, protected QScriptable {
     Q_OBJECT
 
@@ -30,6 +33,9 @@ class Container : public QWidget, public IContainer, protected QScriptable {
     Q_INVOKABLE api::view::RadioGroup* addRadioGroup(
         const QScriptValue& obj) override;
     Q_INVOKABLE void addDirectoryPicker() override;
+
+    Q_INVOKABLE api::view::Column* addColumn() override;
+    Q_INVOKABLE api::view::Row* addRow() override;
 
    protected:
     QBoxLayout* _layout;

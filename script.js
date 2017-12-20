@@ -40,7 +40,9 @@ page.onNext = function() {
         ],
         preset: '1080p'
     });
-    page2.addRadioGroup({
+    var indentRow = page2.addRow();
+    indentRow.addSpace(24);
+    indentRow.addRadioGroup({
         text: 'Vertical',
         vertical: true,
         options: [
