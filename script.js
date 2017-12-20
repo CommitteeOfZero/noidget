@@ -31,7 +31,11 @@ page.onNext = function() {
         options: [
             {name: '480p', text: '854x480'}, {name: '576p', text: '1024x576'},
             {name: '720p', text: '1280x720'},
-            {name: '1080p', text: '1920x1080'}
+            {name: '1080p', text: '1920x1080'}, {
+                name: '4k',
+                text:
+                    '3840x2160dapibus, neque id cursus faucibus, tortor neque '
+            }
         ],
         preset: '1080p'
     });

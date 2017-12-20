@@ -17,7 +17,7 @@ RadioGroup::RadioGroup(QWidget *parent, bool vertical) : QWidget(parent) {
     if (vertical) {
         QVBoxLayout *layout = new QVBoxLayout(this);
         layout->setMargin(0);
-        layout->setSpacing(0);
+        layout->setSpacing(4);
         layout->setAlignment(Qt::AlignTop);
         setLayout(layout);
         layout->addWidget(_lbl);
@@ -25,12 +25,12 @@ RadioGroup::RadioGroup(QWidget *parent, bool vertical) : QWidget(parent) {
     } else {
         QHBoxLayout *layout = new QHBoxLayout(this);
         layout->setMargin(0);
-        layout->setSpacing(0);
+        layout->setSpacing(8);
         layout->setAlignment(Qt::AlignLeft);
         setLayout(layout);
         layout->addWidget(_lbl, 0, Qt::AlignTop);
         _groupWidget = new QWidget(this);
-        FlowLayout *groupLayout = new FlowLayout(_groupWidget, 0, 0, 0);
+        FlowLayout *groupLayout = new FlowLayout(_groupWidget, 0, 8, 4);
         _groupWidget->setLayout(groupLayout);
         layout->addWidget(_groupWidget, 1, Qt::AlignTop);
     }
