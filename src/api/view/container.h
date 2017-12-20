@@ -12,6 +12,7 @@ class Label;
 class TextField;
 class CheckBox;
 class RadioGroup;
+class DirectoryPicker;
 
 class Column;
 class Row;
@@ -32,7 +33,8 @@ class Container : public QWidget, public IContainer, protected QScriptable {
         const QScriptValue& obj) override;
     Q_INVOKABLE api::view::RadioGroup* addRadioGroup(
         const QScriptValue& obj) override;
-    Q_INVOKABLE void addDirectoryPicker() override;
+    Q_INVOKABLE api::view::DirectoryPicker* addDirectoryPicker(
+        const QScriptValue& obj) override;
 
     Q_INVOKABLE api::view::Column* addColumn() override;
     Q_INVOKABLE api::view::Row* addRow() override;

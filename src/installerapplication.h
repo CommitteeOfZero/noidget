@@ -22,10 +22,8 @@ class InstallerApplication : public QApplication {
 
     InstallerWindow* window() { return w; }
     api::ApiHost* apiHost() { return h; }
-    QStyle* defaultStyle() { return _defaultStyle; }
 
    private:
     InstallerWindow* w;
     api::ApiHost* h;
-    QStyle* _defaultStyle;
 };

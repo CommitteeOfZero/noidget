@@ -8,6 +8,7 @@
 #include <api/view/textfield.h>
 #include <api/view/checkbox.h>
 #include <api/view/radiogroup.h>
+#include <api/view/directorypicker.h>
 
 QScriptValue pageToScriptValue(QScriptEngine *engine,
                                api::view::Page *const &in) {
@@ -70,6 +71,14 @@ void radioGroupFromScriptValue(const QScriptValue &object,
                                api::view::RadioGroup *&out) {
     out = qobject_cast<api::view::RadioGroup *>(object.toQObject());
 }
+QScriptValue directoryPickerToScriptValue(
+    QScriptEngine *engine, api::view::DirectoryPicker *const &in) {
+    return engine->newQObject(in);
+}
+void directoryPickerFromScriptValue(const QScriptValue &object,
+                                    api::view::DirectoryPicker *&out) {
+    out = qobject_cast<api::view::DirectoryPicker *>(object.toQObject());
+}
 
 namespace api {
 ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
@@ -86,6 +95,8 @@ ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
                             checkBoxFromScriptValue);
     qScriptRegisterMetaType(engine, radioGroupToScriptValue,
                             radioGroupFromScriptValue);
+    qScriptRegisterMetaType(engine, directoryPickerToScriptValue,
+                            directoryPickerFromScriptValue);
 }
 ViewHost::~ViewHost() {}
 }  // namespace api

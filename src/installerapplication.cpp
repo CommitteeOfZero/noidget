@@ -7,16 +7,14 @@
 
 InstallerApplication::InstallerApplication(int& argc, char** argv)
     : QApplication(argc, argv) {
-    auto defaultStyleName = style()->objectName();
-    _defaultStyle = QStyleFactory::create(defaultStyleName);
+    w = new InstallerWindow(0);
 
-    setStyle("windows");
+    // we do not set these globally so that we can have unthemed dialogs
+    w->setStyle(QStyleFactory::create("windows"));
     QFile qssFile(":/kofuna/style.qss");
     qssFile.open(QFile::ReadOnly | QFile::Text);
     QTextStream ts(&qssFile);
-    setStyleSheet(ts.readAll());
-
-    w = new InstallerWindow(0);
+    w->setStyleSheet(ts.readAll());
 
     h = new api::ApiHost(0);
 

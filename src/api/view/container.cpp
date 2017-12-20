@@ -5,6 +5,7 @@
 #include "radiogroup.h"
 #include "column.h"
 #include "row.h"
+#include "directorypicker.h"
 #include <QScriptValue>
 #include <QScriptValueIterator>
 #include <api/exception.h>
@@ -94,6 +95,7 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     return cb;
 }
 RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
+    // TODO what about no parameters?
     if (!obj.isObject()) {
         SCRIPT_THROW("Wrong type")
         return nullptr;
@@ -149,7 +151,31 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     _layout->addWidget(grp);
     return grp;
 }
-void Container::addDirectoryPicker() {}
+DirectoryPicker* Container::addDirectoryPicker(const QScriptValue& obj) {
+    SCRIPT_EX_GUARD_START
+    if (!obj.isObject()) {
+        // TODO what about no parameters?
+        SCRIPT_THROW("Wrong type")
+        return nullptr;
+    }
+
+    DirectoryPicker* pick = new DirectoryPicker(this);
+
+    auto text_ = obj.property("text");
+    if (text_.isString()) pick->setText(text_.toString());
+    auto richText_ = obj.property("richText");
+    if (richText_.isBool()) pick->setRichText(richText_.toBool());
+    auto title_ = obj.property("title");
+    if (title_.isString()) pick->setTitle(title_.toString());
+    auto preset_ = obj.property("preset");
+    if (preset_.isString()) pick->setValue(preset_.toString());
+    pick->setOnPick(obj.property("onPick"));
+    pick->setAdjustDirectory(obj.property("adjustDirectory"));
+
+    _layout->addWidget(pick);
+    return pick;
+    SCRIPT_EX_GUARD_END(nullptr)
+}
 
 Column* Container::addColumn() {
     SCRIPT_EX_GUARD_START

@@ -4,6 +4,7 @@
 #include "checkbox.h"
 #include "radiogroup.h"
 #include "row.h"
+#include "directorypicker.h"
 #include <api/exception.h>
 
 namespace api {
@@ -59,7 +60,11 @@ RadioGroup* Page::addRadioGroup(const QScriptValue& obj) {
     return _col->addRadioGroup(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-void Page::addDirectoryPicker() { return _col->addDirectoryPicker(); }
+DirectoryPicker* Page::addDirectoryPicker(const QScriptValue& obj) {
+    SCRIPT_EX_GUARD_START
+    return _col->addDirectoryPicker(obj);
+    SCRIPT_EX_GUARD_END(nullptr)
+}
 
 Column* Page::addColumn() {
     SCRIPT_EX_GUARD_START

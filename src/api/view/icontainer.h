@@ -9,6 +9,7 @@ class Label;
 class TextField;
 class CheckBox;
 class RadioGroup;
+class DirectoryPicker;
 
 class Column;
 class Row;
@@ -21,7 +22,7 @@ class IContainer {
     virtual TextField* addTextField(const QScriptValue& obj) = 0;
     virtual CheckBox* addCheckBox(const QScriptValue& obj) = 0;
     virtual RadioGroup* addRadioGroup(const QScriptValue& obj) = 0;
-    virtual void addDirectoryPicker() = 0;
+    virtual DirectoryPicker* addDirectoryPicker(const QScriptValue& obj) = 0;
     virtual Column* addColumn() = 0;
     virtual Row* addRow() = 0;
 };

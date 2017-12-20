@@ -52,6 +52,24 @@ page.onNext = function() {
             ng.window.messageBox('Now selected: ' + sel);
         }
     });
+    var pick = page2.addDirectoryPicker({
+        text: 'Game installation directory',
+        title: 'Parent of game installation directory',
+        preset: 'G:/noidget',
+        adjustDirectory: function(orig) {
+            var parts = orig.split('/');
+            parts.pop();
+            return parts.join('/');
+        },
+        onPick: function(val) {
+            if (!val) {
+                pick.value = 'G:/noidget';
+            } else {
+                if (val[val.length - 1] != '/') val += '/';
+                pick.value = val + 'noidget';
+            }
+        }
+    });
     try {
         page2.addRadioGroup('foo');
     } catch (err) {
