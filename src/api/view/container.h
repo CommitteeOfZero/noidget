@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include <QScriptable>
-#include <QLayout>
+#include <QBoxLayout>
 #include "icontainer.h"
 
 namespace api {
@@ -20,6 +20,8 @@ class Container : public QWidget, public IContainer, protected QScriptable {
     explicit Container(QWidget* parent = 0);
     virtual ~Container() = 0;
 
+    Q_INVOKABLE void addSpace(int space) override;
+
     Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
     Q_INVOKABLE api::view::TextField* addTextField(
         const QScriptValue& obj) override;
@@ -30,7 +32,7 @@ class Container : public QWidget, public IContainer, protected QScriptable {
     Q_INVOKABLE void addDirectoryPicker() override;
 
    protected:
-    QLayout* _layout;
+    QBoxLayout* _layout;
 };
 
 }  // namespace view

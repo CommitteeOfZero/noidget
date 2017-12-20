@@ -36,6 +36,8 @@ void Page::back() {
     emit popRequested();
 }
 
+void Page::addSpace(int space) { _col->addSpace(space); }
+
 Label* Page::addLabel(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addLabel(obj);

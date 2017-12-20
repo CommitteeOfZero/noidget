@@ -13,6 +13,8 @@ namespace view {
 Container::Container(QWidget* parent) : QWidget(parent) {}
 Container::~Container() {}
 
+void Container::addSpace(int space) { _layout->addSpacing(space); }
+
 Label* Container::addLabel(const QScriptValue& obj) {
     QString text;
     bool richText = false;

@@ -13,6 +13,7 @@ class RadioGroup;
 class IContainer {
    public:
     virtual ~IContainer() {}
+    virtual void addSpace(int space) = 0;
     virtual Label* addLabel(const QScriptValue& obj) = 0;
     virtual TextField* addTextField(const QScriptValue& obj) = 0;
     virtual CheckBox* addCheckBox(const QScriptValue& obj) = 0;

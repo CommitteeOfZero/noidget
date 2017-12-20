@@ -35,6 +35,8 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     QScriptValue onBack() const { return _onBack; }
     void setOnBack(const QScriptValue& v) { _onBack = v; }
 
+    Q_INVOKABLE void addSpace(int space) override;
+
     Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
     Q_INVOKABLE api::view::TextField* addTextField(
         const QScriptValue& obj) override;
