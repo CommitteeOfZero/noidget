@@ -4,8 +4,7 @@
 #include <view/flowlayout.h>
 #include <QScriptValueList>
 #include <QRadioButton>
-#include <QScriptContext>
-#include <util/exception.h>
+#include <api/exception.h>
 
 namespace api {
 namespace view {
@@ -50,7 +49,7 @@ QString RadioGroup::selected() const {
     return _buttonGroup->checkedButton()->objectName();
 }
 
-void RadioGroup::nativeSetSelected(const QString &v) {
+void RadioGroup::setSelected(const QString &v) {
     if (v == "") {
         if (_buttonGroup->checkedButton() != nullptr) {
             _buttonGroup->checkedButton()->setChecked(false);
@@ -61,44 +60,26 @@ void RadioGroup::nativeSetSelected(const QString &v) {
     if (button != nullptr) {
         button->setChecked(true);
     } else {
-        throw NgException("No such button exists");
+        SCRIPT_THROW("No such button exists")
+        return;
     }
 }
 
-void RadioGroup::setSelected(const QString &v) {
-    // TODO try to prevent these from being called natively
-    try {
-        nativeSetSelected(v);
-    } catch (const NgException &ex) {
-        if (context() != nullptr) {
-            context()->throwError(ex.what());
-        }
-    }
-}
-
-void RadioGroup::nativeAddOption(const QString &name, const QString &text) {
+void RadioGroup::addOption(const QString &name, const QString &text) {
     if (name == "") {
-        throw NgException("Empty name not allowed");
+        SCRIPT_THROW("Empty name not allowed")
+        return;
     }
     QRadioButton *button = _groupWidget->findChild<QRadioButton *>(name);
     if (button != nullptr) {
-        throw NgException("Button with this name already exists");
+        SCRIPT_THROW("Button with this name already exists")
+        return;
     }
     button = new QRadioButton(_groupWidget);
     button->setObjectName(name);
     button->setText(text);
     _buttonGroup->addButton(button);
     _groupWidget->layout()->addWidget(button);
-}
-
-void RadioGroup::addOption(const QString &name, const QString &text) {
-    try {
-        nativeAddOption(name, text);
-    } catch (const NgException &ex) {
-        if (context() != nullptr) {
-            context()->throwError(ex.what());
-        }
-    }
 }
 
 void RadioGroup::buttonGroup_buttonToggled(int id, bool checked) {

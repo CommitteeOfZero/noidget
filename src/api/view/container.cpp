@@ -5,8 +5,7 @@
 #include "radiogroup.h"
 #include <QScriptValue>
 #include <QScriptValueIterator>
-#include <QScriptContext>
-#include <util/exception.h>
+#include <api/exception.h>
 
 namespace api {
 namespace view {
@@ -26,10 +25,7 @@ Label* Container::addLabel(const QScriptValue& obj) {
         auto richText_ = obj.property("richText");
         if (richText_.isBool()) richText = richText_.toBool();
     } else {
-        if (context() != 0) {
-            // TODO proper error type
-            context()->throwError("Wrong type");
-        }
+        SCRIPT_THROW("Wrong type")
         return nullptr;
     }
 
@@ -51,10 +47,7 @@ TextField* Container::addTextField(const QScriptValue& obj) {
         auto richText_ = obj.property("richText");
         if (richText_.isBool()) richText = richText_.toBool();
     } else {
-        if (context() != 0) {
-            // TODO proper error type
-            context()->throwError("Wrong type");
-        }
+        SCRIPT_THROW("Wrong type")
         return nullptr;
     }
 
@@ -83,10 +76,7 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
         if (preset_.isBool()) preset = preset_.toBool();
         onChange = obj.property("onChange");
     } else {
-        if (context() != 0) {
-            // TODO proper error type
-            context()->throwError("Wrong type");
-        }
+        SCRIPT_THROW("Wrong type")
         return nullptr;
     }
 
@@ -100,12 +90,7 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
 }
 RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     if (!obj.isObject()) {
-        if (context() == nullptr) {
-            throw NgException("Wrong type");
-        } else {
-            // TODO proper error type
-            context()->throwError("Wrong type");
-        }
+        SCRIPT_THROW("Wrong type")
         return nullptr;
     }
 
@@ -133,14 +118,10 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
                 if (oText_.isString()) oText = oText_.toString();
 
                 try {
-                    grp->nativeAddOption(oName, oText);
+                    grp->addOption(oName, oText);
                 } catch (const NgException& ex) {
                     delete grp;
-                    if (context() == nullptr) {
-                        throw NgException("Invalid option for RadioGroup");
-                    } else {
-                        context()->throwError("Invalid option for RadioGroup");
-                    }
+                    SCRIPT_THROW("Invalid option for RadioGroup")
                     return nullptr;
                 }
             }
@@ -152,14 +133,10 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     auto preset_ = obj.property("preset");
     if (preset_.isString()) {
         try {
-            grp->nativeSetSelected(preset_.toString());
+            grp->setSelected(preset_.toString());
         } catch (const NgException& ex) {
             delete grp;
-            if (context() == nullptr) {
-                throw NgException("Invalid preset for RadioGroup");
-            } else {
-                context()->throwError("Invalid preset for RadioGroup");
-            }
+            SCRIPT_THROW("Invalid option for RadioGroup")
             return nullptr;
         }
     }

@@ -22,13 +22,11 @@ class RadioGroup : public QWidget, protected QScriptable {
     void setText(const QString &v) { _lbl->setText(v); }
 
     QString selected() const;
-    void nativeSetSelected(const QString &v);
     void setSelected(const QString &v);
 
     QScriptValue onChange() const { return _onChange; }
     void setOnChange(const QScriptValue &v) { _onChange = v; }
 
-    void nativeAddOption(const QString &name, const QString &text);
     Q_INVOKABLE void addOption(const QString &name, const QString &text);
 
    private slots:

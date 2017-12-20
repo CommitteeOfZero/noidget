@@ -25,8 +25,32 @@ var cb = page.addCheckBox({
 });
 
 page.onNext = function() {
-    tf.richText = true;
-    ng.window.messageBox('onNext()');
+    var page2 = ng.window.createPage('Page 2');
+    page2.addRadioGroup({
+        text: 'Horizontal',
+        options: [
+            {name: '480p', text: '854x480'}, {name: '576p', text: '1024x576'},
+            {name: '720p', text: '1280x720'},
+            {name: '1080p', text: '1920x1080'}
+        ],
+        preset: '1080p'
+    });
+    page2.addRadioGroup({
+        text: 'Vertical',
+        vertical: true,
+        options: [
+            {name: 'opt1', text: 'Option 1'}, {name: 'opt2', text: 'Option 2'}
+        ],
+        onChange: function(sel) {
+            ng.window.messageBox('Now selected: ' + sel);
+        }
+    });
+    try {
+        page2.addRadioGroup('foo');
+    } catch (err) {
+        print(err);
+    }
+    ng.window.pushPage(page2);
 };
 
 ng.window.pushPage(page);
