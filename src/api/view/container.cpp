@@ -5,6 +5,7 @@
 #include "radiogroup.h"
 #include <QScriptValue>
 #include <QScriptContext>
+#include <util/exception.h>
 
 namespace api {
 namespace view {
@@ -97,11 +98,10 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     return cb;
 }
 RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
-    // TODO !! figure out whether contexts get passed on, throwError() unwinding
-    // etc. etc.
-
     if (!obj.isObject()) {
-        if (context() != 0) {
+        if (context() == nullptr) {
+            throw NgException("Wrong type");
+        } else {
             // TODO proper error type
             context()->throwError("Wrong type");
         }
@@ -131,12 +131,15 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
                 auto oText_ = option.property("text");
                 if (oText_.isString()) oText = oText_.toString();
 
-                bool success = grp->addOption(oName, oText);
-                if (!success) {
-                    if (context() != nullptr) {
-                        context()->throwError("Invalid option");
-                    }
+                try {
+                    grp->nativeAddOption(oName, oText);
+                } catch (const NgException& ex) {
                     delete grp;
+                    if (context() == nullptr) {
+                        throw NgException("Invalid option for RadioGroup");
+                    } else {
+                        context()->throwError("Invalid option for RadioGroup");
+                    }
                     return nullptr;
                 }
             }
@@ -144,9 +147,21 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     }
 
     grp->setOnChange(obj.property("onChange"));
-    // TODO error handling for preset
+
     auto preset_ = obj.property("preset");
-    if (preset_.isString()) grp->setSelected(preset_.toString());
+    if (preset_.isString()) {
+        try {
+            grp->nativeSetSelected(preset_.toString());
+        } catch (const NgException& ex) {
+            delete grp;
+            if (context() == nullptr) {
+                throw NgException("Invalid preset for RadioGroup");
+            } else {
+                context()->throwError("Invalid preset for RadioGroup");
+            }
+            return nullptr;
+        }
+    }
 
     _layout->addWidget(grp);
     return grp;
