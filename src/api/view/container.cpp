@@ -4,6 +4,7 @@
 #include "checkbox.h"
 #include "radiogroup.h"
 #include <QScriptValue>
+#include <QScriptValueIterator>
 #include <QScriptContext>
 #include <util/exception.h>
 
@@ -115,7 +116,7 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     RadioGroup* grp = new RadioGroup(this, vertical);
 
     auto text_ = obj.property("text");
-    if (text_.isString()) rg->setText(text_.toString());
+    if (text_.isString()) grp->setText(text_.toString());
 
     auto options_ = obj.property("options");
     if (options_.isArray()) {
