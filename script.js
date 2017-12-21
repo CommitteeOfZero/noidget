@@ -14,9 +14,9 @@ var tf = page.addTextField(lipsum);
 page.addSpace(50);
 page.addLabel(
     'Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.');
-page.addCheckBox(
+var cbd = page.addCheckBox(
     'Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.');
-
+cbd.enabled = false;
 var cb = page.addCheckBox({
     text: 'Foo bar baz quux',
     preset: true,

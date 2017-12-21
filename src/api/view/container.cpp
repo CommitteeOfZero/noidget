@@ -67,6 +67,7 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     QString text;
     bool richText = false;
     bool preset = false;
+    bool enabled = true;
     QScriptValue onChange(QScriptValue::UndefinedValue);
 
     if (obj.isString()) {
@@ -81,6 +82,8 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
         auto preset_ = obj.property("preset");
         if (preset_.isBool()) preset = preset_.toBool();
         onChange = obj.property("onChange");
+        auto enabled_ = obj.property("enabled");
+        if (enabled_.isBool()) enabled = enabled_.toBool();
     } else {
         SCRIPT_THROW("Wrong type")
         return nullptr;
@@ -91,6 +94,7 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     cb->setRichText(richText);
     cb->setChecked(preset);
     cb->setOnChange(onChange);
+    cb->setEnabled(enabled);
     _layout->addWidget(cb);
     return cb;
 }

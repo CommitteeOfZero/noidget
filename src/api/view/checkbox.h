@@ -16,6 +16,7 @@ class CheckBox : public QWidget, protected QScriptable {
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
     Q_PROPERTY(bool checked READ checked WRITE setChecked)
     Q_PROPERTY(QScriptValue onChange READ onChange WRITE setOnChange)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
 
    public:
     explicit CheckBox(QWidget *parent = 0);
@@ -38,6 +39,9 @@ class CheckBox : public QWidget, protected QScriptable {
 
     QScriptValue onChange() const { return _onChange; }
     void setOnChange(const QScriptValue &v) { _onChange = v; }
+
+    bool enabled() const { return _cb->isEnabled(); }
+    void setEnabled(bool v) { _cb->setEnabled(v); }
 
    protected:
     void mousePressEvent(QMouseEvent *event) override;
