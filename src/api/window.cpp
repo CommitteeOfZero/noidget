@@ -6,6 +6,9 @@
 #include <view/page.h>
 #include <QMessageBox>
 #include <api/exception.h>
+#include <api/view/dialog.h>
+#include <QScriptValue>
+#include <QScriptValueList>
 
 namespace api {
 
@@ -53,6 +56,36 @@ void Window::messageBox(const QScriptValue &v) {
     mb.setText(text);
     mb.setTextFormat(richText ? Qt::RichText : Qt::PlainText);
     mb.exec();
+}
+
+bool Window::modal(const QString &type, const QScriptValue &setup) {
+    if (!setup.isFunction()) {
+        SCRIPT_THROW("Setup function is required")
+        return false;
+    }
+
+    api::view::Dialog::DlgType type_;
+
+    if (type == "ok") {
+        type_ = api::view::Dialog::DlgType::OK;
+    } else {
+        SCRIPT_THROW("Unknown dialog type")
+        return false;
+    }
+
+    api::view::Dialog dlg(type_, ngApp->window());
+
+    // TODO ensure dialog gets deleted in case of exception?
+    // (we have nothing that throws here yet)
+    SCRIPT_EX_GUARD_START
+    QScriptValueList args;
+    // script-invokable functions can only take constrefs to QScriptValues
+    // so we need to create a new mutable QScriptValue here
+    QScriptValue setup_(setup);
+    args << setup_.engine()->toScriptValue(&dlg);
+    setup_.call(QScriptValue(), args);
+    return dlg.present();
+    SCRIPT_EX_GUARD_END(false)
 }
 
 }  // namespace api

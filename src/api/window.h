@@ -11,7 +11,7 @@ class ApiHost;
 
 namespace view {
 class Page;
-}
+}  // namespace view
 
 class Window : public QObject, protected QScriptable {
     Q_OBJECT
@@ -27,5 +27,6 @@ class Window : public QObject, protected QScriptable {
     Q_INVOKABLE void playBgm(const QString& url);
 
     Q_INVOKABLE void messageBox(const QScriptValue& v);
+    Q_INVOKABLE bool modal(const QString& type, const QScriptValue& setup);
 };
 }  // namespace api

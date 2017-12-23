@@ -26,6 +26,20 @@ var cb = page.addCheckBox({
 });
 
 page.onNext = function() {
+    if (cb.checked) {
+        ng.window.modal('ok', function(dlg) {
+            dlg.width = 300;
+            dlg.height = 300;
+            dlg.title = 'My Dialog';
+            dlg.addLabel('Errors:');
+            var err =
+                '<ul><li>File A not found</li><li>File B: hash mismatch</li></ul>';
+            var tf = dlg.addTextField({text: err, richText: true});
+            dlg.addSpace(32);
+        });
+        return;
+    }
+
     var page2 = ng.window.createPage('Page 2');
     page2.addRadioGroup({
         text: 'Horizontal',
