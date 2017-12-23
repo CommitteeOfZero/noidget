@@ -9,6 +9,7 @@ namespace api {
 namespace view {
 
 class Label;
+class Button;
 class TextField;
 class CheckBox;
 class RadioGroup;
@@ -27,6 +28,7 @@ class Container : public QWidget, public IContainer, protected QScriptable {
     Q_INVOKABLE void addSpace(int space) override;
 
     Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
+    Q_INVOKABLE api::view::Button* addButton(const QScriptValue& obj) override;
     Q_INVOKABLE api::view::TextField* addTextField(
         const QScriptValue& obj) override;
     Q_INVOKABLE api::view::CheckBox* addCheckBox(

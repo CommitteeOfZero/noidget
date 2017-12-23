@@ -6,6 +6,7 @@ namespace api {
 namespace view {
 
 class Label;
+class Button;
 class TextField;
 class CheckBox;
 class RadioGroup;
@@ -19,6 +20,7 @@ class IContainer {
     virtual ~IContainer() {}
     virtual void addSpace(int space) = 0;
     virtual Label* addLabel(const QScriptValue& obj) = 0;
+    virtual Button* addButton(const QScriptValue& obj) = 0;
     virtual TextField* addTextField(const QScriptValue& obj) = 0;
     virtual CheckBox* addCheckBox(const QScriptValue& obj) = 0;
     virtual RadioGroup* addRadioGroup(const QScriptValue& obj) = 0;

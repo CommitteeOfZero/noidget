@@ -1,6 +1,7 @@
 #include "page.h"
 #include "column.h"
 #include "label.h"
+#include "button.h"
 #include "checkbox.h"
 #include "radiogroup.h"
 #include "row.h"
@@ -43,6 +44,11 @@ void Page::addSpace(int space) { _col->addSpace(space); }
 Label* Page::addLabel(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addLabel(obj);
+    SCRIPT_EX_GUARD_END(nullptr)
+}
+Button* Page::addButton(const QScriptValue& obj) {
+    SCRIPT_EX_GUARD_START
+    return _col->addButton(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
 TextField* Page::addTextField(const QScriptValue& obj) {

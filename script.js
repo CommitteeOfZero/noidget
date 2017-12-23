@@ -12,6 +12,13 @@ var lipsum = '<ul>' +
 
 var tf = page.addTextField(lipsum);
 page.addSpace(50);
+page.addButton({
+    text: 'blah',
+    width: 50,
+    onClick: function() {
+        ng.window.messageBox('onClick');
+    }
+});
 page.addLabel(
     'Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.');
 var cbd = page.addCheckBox(

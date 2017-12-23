@@ -49,6 +49,11 @@ Label* Dialog::addLabel(const QScriptValue& obj) {
     return _dlg->_col->addLabel(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
+Button* Dialog::addButton(const QScriptValue& obj) {
+    SCRIPT_EX_GUARD_START
+    return _dlg->_col->addButton(obj);
+    SCRIPT_EX_GUARD_END(nullptr)
+}
 TextField* Dialog::addTextField(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_START
     return _dlg->_col->addTextField(obj);

@@ -1,5 +1,6 @@
 #include "container.h"
 #include "label.h"
+#include "button.h"
 #include "textfield.h"
 #include "checkbox.h"
 #include "radiogroup.h"
@@ -40,6 +41,28 @@ Label* Container::addLabel(const QScriptValue& obj) {
     lbl->setRichText(richText);
     _layout->addWidget(lbl);
     return lbl;
+}
+Button* Container::addButton(const QScriptValue& obj) {
+    SCRIPT_EX_GUARD_START
+    if (!obj.isObject()) {
+        // TODO what about no parameters?
+        SCRIPT_THROW("Wrong type")
+        return nullptr;
+    }
+
+    Button* btn = new Button(this);
+    auto text = obj.property("text");
+    if (text.isString()) btn->setText(text.toString());
+    auto enabled = obj.property("enabled");
+    if (enabled.isBool()) btn->setEnabled(enabled.toBool());
+    btn->setOnClick(obj.property("onClick"));
+    auto width = obj.property("width");
+    if (width.isNumber()) btn->setWidth(width.toInt32());
+    auto height = obj.property("height");
+    if (height.isNumber()) btn->setHeight(height.toInt32());
+    _layout->addWidget(btn);
+    return btn;
+    SCRIPT_EX_GUARD_END(nullptr)
 }
 TextField* Container::addTextField(const QScriptValue& obj) {
     QString text;

@@ -10,6 +10,7 @@
 #include <api/view/radiogroup.h>
 #include <api/view/directorypicker.h>
 #include <api/view/dialog.h>
+#include <api/view/button.h>
 
 QScriptValue pageToScriptValue(QScriptEngine *engine,
                                api::view::Page *const &in) {
@@ -88,6 +89,14 @@ void dialogFromScriptValue(const QScriptValue &object,
                            api::view::Dialog *&out) {
     out = qobject_cast<api::view::Dialog *>(object.toQObject());
 }
+QScriptValue buttonToScriptValue(QScriptEngine *engine,
+                                 api::view::Button *const &in) {
+    return engine->newQObject(in);
+}
+void buttonFromScriptValue(const QScriptValue &object,
+                           api::view::Button *&out) {
+    out = qobject_cast<api::view::Button *>(object.toQObject());
+}
 
 namespace api {
 ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
@@ -107,6 +116,7 @@ ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
     qScriptRegisterMetaType(engine, directoryPickerToScriptValue,
                             directoryPickerFromScriptValue);
     qScriptRegisterMetaType(engine, dialogToScriptValue, dialogFromScriptValue);
+    qScriptRegisterMetaType(engine, buttonToScriptValue, buttonFromScriptValue);
 }
 ViewHost::~ViewHost() {}
 }  // namespace api
