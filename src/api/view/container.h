@@ -18,6 +18,10 @@ class DirectoryPicker;
 class Column;
 class Row;
 
+/*^jsdoc
+ * Abstract base class for widgets containing child widgets
+ * @class Container
+ ^jsdoc*/
 class Container : public QWidget, public IContainer, protected QScriptable {
     Q_OBJECT
 

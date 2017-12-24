@@ -4,7 +4,7 @@
   "description": "noidget dev dependencies package",
   "private": true,
   "scripts": {
-    "docs": "node extractjsdoc.js && documentation build tmp.js -o apidoc -f html"
+    "docs": "node extractjsdoc.js && documentation build tmp.js --config documentation.yml --sort-order alpha -o apidoc -f html"
   },
   "devDependencies": {
     "documentation": "^5.3.5",

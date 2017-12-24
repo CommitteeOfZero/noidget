@@ -10,12 +10,57 @@
 
 namespace api {
 namespace view {
+/*^jsdoc
+* Check box with associated multiline label
+* @class CheckBox
+^jsdoc*/
 class CheckBox : public QWidget, protected QScriptable {
     Q_OBJECT
+    /*^jsdoc
+     * Label text, supports wordwrapping
+     * @member {string} text
+     * @instance
+     * @memberof CheckBox
+     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
+    /*^jsdoc
+     * Render basic HTML in label?
+     *
+     * **Default:** `false`
+     * @member {boolean} richText
+     * @instance
+     * @memberof CheckBox
+     ^jsdoc*/
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
+    /*^jsdoc
+     * Currently checked?
+     *
+     * Setting this from script **will trigger** {@link CheckBox#onChange}.
+     Setting a default (`preset`) when creating the CheckBox with {@link
+     Container#addCheckBox} will not.
+     * @member {boolean} checked
+     * @instance
+     * @memberof CheckBox
+     ^jsdoc*/
     Q_PROPERTY(bool checked READ checked WRITE setChecked)
+    /*^jsdoc
+     * Event handler that triggers when `checked` changes.
+     *
+     * `function(checked: boolean)`
+     * @member {Function} onChange
+     * @instance
+     * @memberof CheckBox
+     ^jsdoc*/
     Q_PROPERTY(QScriptValue onChange READ onChange WRITE setOnChange)
+    /*^jsdoc
+     * Input allowed? (When this is `false`, `checked` can still be changed
+     programmatically)
+     *
+     * **Default:** `true`
+     * @member {boolean} enabled
+     * @instance
+     * @memberof CheckBox
+     ^jsdoc*/
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
 
    public:

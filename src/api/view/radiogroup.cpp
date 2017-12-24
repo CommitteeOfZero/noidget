@@ -65,6 +65,15 @@ void RadioGroup::setSelected(const QString &v) {
     }
 }
 
+/*^jsdoc
+ * Adds a new radio button to the end of the group
+ * @method addOption
+ * @memberof RadioGroup
+ * @instance
+ * @param {string} name - internal name, used for `selected`, must be unique
+ among the group!
+ * @param {string} text - displayed label (no wordwrapping, no rich text)
+ ^jsdoc*/
 void RadioGroup::addOption(const QString &name, const QString &text) {
     if (name == "") {
         SCRIPT_THROW("Empty name not allowed")

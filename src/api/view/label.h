@@ -6,9 +6,27 @@
 
 namespace api {
 namespace view {
+/*^jsdoc
+ * Multiline, rich-text capable label
+ * @class Label
+ ^jsdoc*/
 class Label : public QWidget, protected QScriptable {
     Q_OBJECT
+    /*^jsdoc
+     * Label text, supports wordwrapping
+     * @member {string} text
+     * @instance
+     * @memberof Label
+     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
+    /*^jsdoc
+     * Render basic HTML in label?
+     *
+     * **Default:** `false`
+     * @member {boolean} richText
+     * @instance
+     * @memberof Label
+     ^jsdoc*/
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
    public:
     explicit Label(QWidget *parent = 0);

@@ -9,10 +9,38 @@
 
 namespace api {
 namespace view {
+/*^jsdoc
+ * Group of mutually exclusive radio buttons.
+ * @param {bool} [vertical=false] - Lay out buttons vertically, under the label,
+ or in a flow layout, right next to the label?
+ * @class RadioGroup
+ ^jsdoc*/
 class RadioGroup : public QWidget, protected QScriptable {
     Q_OBJECT
+    /*^jsdoc
+     * Label text, supports wordwrapping. **Rich text not supported here.**
+     * @member {string} text
+     * @instance
+     * @memberof RadioGroup
+     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
+    /*^jsdoc
+     * Name of currently selected button, or empty string for no selection.
+     **TODO** does setting this programmatically trigger onChange?
+     * @member {string} selected
+     * @instance
+     * @memberof RadioGroup
+     ^jsdoc*/
     Q_PROPERTY(QString selected READ selected WRITE setSelected)
+    /*^jsdoc
+     * Event handler that gets called with the newly selected button name when
+     selection changes.
+     *
+     * `function(selected: string) {}`
+     * @member {Function} onChange
+     * @instance
+     * @memberof RadioGroup
+     ^jsdoc*/
     Q_PROPERTY(QScriptValue onChange READ onChange WRITE setOnChange)
    public:
     explicit RadioGroup(QWidget *parent = 0, bool vertical = false);

@@ -7,6 +7,11 @@
 namespace api {
 namespace view {
 
+/*^jsdoc
+ * {@link Container} that vertically arranges child widgets
+ * @class Column
+ * @extends Container
+ ^jsdoc*/
 class Column : public Container {
     Q_OBJECT
 

@@ -2,3 +2,4 @@ build/
 *.user
 apidoc
 node_modules
+tmp.js

@@ -18,8 +18,33 @@ Container::Container(QWidget* parent) : QWidget(parent) {}
 Container::~Container() {}
 
 // TODO do this without QBoxLayout::addSpacing, to support FlowLayouts
+/*^jsdoc
+ * Appends `space` px of empty space after the last widget
+ * @method addSpace
+ * @memberof Container
+ * @instance
+ * @param {number} space
+ ^jsdoc*/
 void Container::addSpace(int space) { _layout->addSpacing(space); }
 
+/*^jsdoc
+ * Creates a new {@link Label} and appends it to the container
+ * @method addLabel
+ * @memberof Container
+ * @instance
+ * @param {string} text
+ * @returns {Label}
+ ^jsdoc*/
+/*^jsdoc
+ * Creates a new {@link Label} and appends it to the container
+ * @method addLabel
+ * @memberof Container
+ * @instance
+ * @param {Object} params
+ * @param {string} params.text
+ * @param {boolean} [params.richText=false]
+ * @returns {Label}
+ ^jsdoc*/
 Label* Container::addLabel(const QScriptValue& obj) {
     QString text;
     bool richText = false;
@@ -42,6 +67,19 @@ Label* Container::addLabel(const QScriptValue& obj) {
     _layout->addWidget(lbl);
     return lbl;
 }
+/*^jsdoc
+ * Creates a new {@link Button} and appends it to the container
+ * @method addButton
+ * @memberof Container
+ * @instance
+ * @param {Object} params
+ * @param {string} params.text
+ * @param {boolean} [params.enabled=true]
+ * @param {Function} [params.onClick]
+ * @param {number} [params.width]
+ * @param {number} [params.height]
+ * @returns {Button}
+ ^jsdoc*/
 Button* Container::addButton(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_START
     if (!obj.isObject()) {
@@ -64,6 +102,24 @@ Button* Container::addButton(const QScriptValue& obj) {
     return btn;
     SCRIPT_EX_GUARD_END(nullptr)
 }
+/*^jsdoc
+ * Creates a new {@link TextField} and appends it to the container
+ * @method addTextField
+ * @memberof Container
+ * @instance
+ * @param {string} text
+ * @returns {TextField}
+ ^jsdoc*/
+/*^jsdoc
+ * Creates a new {@link TextField} and appends it to the container
+ * @method addTextField
+ * @memberof Container
+ * @instance
+ * @param {Object} params
+ * @param {string} params.text
+ * @param {boolean} [params.richText=false]
+ * @returns {TextField}
+ ^jsdoc*/
 TextField* Container::addTextField(const QScriptValue& obj) {
     QString text;
     bool richText = false;
@@ -86,6 +142,28 @@ TextField* Container::addTextField(const QScriptValue& obj) {
     _layout->addWidget(tf);
     return tf;
 }
+/*^jsdoc
+ * Creates a new {@link CheckBox} and appends it to the container
+ * @method addCheckBox
+ * @memberof Container
+ * @instance
+ * @param {string} text
+ * @returns {CheckBox}
+ ^jsdoc*/
+/*^jsdoc
+ * Creates a new {@link CheckBox} and appends it to the container
+ * @method addCheckBox
+ * @memberof Container
+ * @instance
+ * @param {Object} params
+ * @param {string} params.text
+ * @param {boolean} [params.richText=false]
+ * @param {boolean} [params.enabled=true]
+ * @param {boolean} [params.preset=false] - default value (`onChange` will not
+ be called when this is initially set)
+ * @param {Function} [params.onChange]
+ * @returns {CheckBox}
+ ^jsdoc*/
 CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     QString text;
     bool richText = false;
@@ -121,6 +199,22 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     _layout->addWidget(cb);
     return cb;
 }
+/*^jsdoc
+ * Creates a new {@link RadioGroup} and appends it to the container
+ * @method addRadioGroup
+ * @memberof Container
+ * @instance
+ * @param {Object} params
+ * @param {string} params.text
+ * @param {Array<Object>} [params.options] - see {@link RadioGroup#addOption}
+ * @param {string} params.options.name
+ * @param {string} params.options.text
+ * @param {string} [params.preset] - default value (`onChange` will not be
+ called when this is initially set)
+ * @param {Function} [params.onChange]
+ * @param {boolean} [params.vertical=false]
+ * @returns {RadioGroup}
+ ^jsdoc*/
 RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     // TODO what about no parameters?
     if (!obj.isObject()) {
@@ -178,6 +272,20 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     _layout->addWidget(grp);
     return grp;
 }
+/*^jsdoc
+ * Creates a new {@link DirectoryPicker} and appends it to the container
+ * @method addDirectoryPicker
+ * @memberof Container
+ * @instance
+ * @param {Object} params
+ * @param {string} params.text
+ * @param {boolean} [params.richText=false]
+ * @param {string} [params.title]
+ * @param {string} [params.preset] - default value
+ * @param {Function} [params.onPick]
+ * @param {Function} [params.adjustDirectory]
+ * @returns {DirectoryPicker}
+ ^jsdoc*/
 DirectoryPicker* Container::addDirectoryPicker(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_START
     if (!obj.isObject()) {
@@ -203,7 +311,13 @@ DirectoryPicker* Container::addDirectoryPicker(const QScriptValue& obj) {
     return pick;
     SCRIPT_EX_GUARD_END(nullptr)
 }
-
+/*^jsdoc
+ * Creates a new {@link Column} and appends it to the container
+ * @method addColumn
+ * @memberof Container
+ * @instance
+ * @returns {Column}
+ ^jsdoc*/
 Column* Container::addColumn() {
     SCRIPT_EX_GUARD_START
     Column* col = new Column(this);
@@ -211,6 +325,13 @@ Column* Container::addColumn() {
     return col;
     SCRIPT_EX_GUARD_END(nullptr)
 }
+/*^jsdoc
+ * Creates a new {@link Row} and appends it to the container
+ * @method addRow
+ * @memberof Container
+ * @instance
+ * @returns {Row}
+ ^jsdoc*/
 Row* Container::addRow() {
     SCRIPT_EX_GUARD_START
     Row* row = new Row(this);

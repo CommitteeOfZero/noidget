@@ -17,10 +17,34 @@ class DirectoryPicker;
 class Column;
 class Row;
 
+/*^jsdoc
+ * Modal dialog. Uses {@link Column} to contain child widgets. **TODO** document
+ type
+ * @class Dialog
+ * @extends Container
+ ^jsdoc*/
 class Dialog : public QObject, public IContainer, protected QScriptable {
     Q_OBJECT
+    /*^jsdoc
+    * Window title
+    * @member {string} title
+    * @instance
+    * @memberof Dialog
+    ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle)
+    /*^jsdoc
+    * Window width
+    * @member {number} width
+    * @instance
+    * @memberof Dialog
+    ^jsdoc*/
     Q_PROPERTY(int width READ width WRITE setWidth)
+    /*^jsdoc
+    * Window height
+    * @member {number} height
+    * @instance
+    * @memberof Dialog
+    ^jsdoc*/
     Q_PROPERTY(int height READ height WRITE setHeight)
 
    public:

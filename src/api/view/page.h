@@ -20,10 +20,42 @@ class DirectoryPicker;
 class Column;
 class Row;
 
+/*^jsdoc
+ * Wizard page. Uses {@link Column} to contain child widgets.
+ * @class Page
+ * @extends Container
+ ^jsdoc*/
 class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_OBJECT
+    /*^jsdoc
+     * Page title, displayed on the page, **not** the window title. Rich text is
+     not allowed.
+     * @member {string} title
+     * @instance
+     * @memberof Page
+     ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    /*^jsdoc
+     * Event handler called when the page's "next" button is clicked. Natively,
+     * this click does nothing - page controllers must implement any applicable
+     * page changing logic.
+     *
+     * `function()`
+     * @member {Function} onNext
+     * @instance
+     * @memberof Page
+     ^jsdoc*/
     Q_PROPERTY(QScriptValue onNext READ onNext WRITE setOnNext)
+    /*^jsdoc
+     * Event handler called when the page's "back" button is clicked. Unlike
+     * {@link Page#onNext}, the current page will be destroyed after this is
+     * called, or if there's no handler set.
+     *
+     * `function()`
+     * @member {Function} onBack
+     * @instance
+     * @memberof Page
+    ^jsdoc*/
     Q_PROPERTY(QScriptValue onBack READ onBack WRITE setOnBack)
 
    public:
