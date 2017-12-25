@@ -4,10 +4,10 @@
   "description": "noidget dev dependencies package",
   "private": true,
   "scripts": {
-    "docs": "node extractjsdoc.js && documentation build tmp.js --config documentation.yml --sort-order alpha -o apidoc -f html"
+    "docs": "node extractjsdoc.js && documentation build tmp.js --sort-order alpha -o apidoc -f html -t doctheme"
   },
   "devDependencies": {
-    "documentation": "^5.3.5",
+    "documentation": "5.3.5",
     "glob": "^7.1.2"
   }
 }

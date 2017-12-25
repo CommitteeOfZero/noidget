@@ -14,6 +14,10 @@ namespace view {
  * @param {bool} [vertical=false] - Lay out buttons vertically, under the label,
  or in a flow layout, right next to the label?
  * @class RadioGroup
+ * @static
+ * @memberof ng.view
+ * @toplevel
+ * @hideconstructor
  ^jsdoc*/
 class RadioGroup : public QWidget, protected QScriptable {
     Q_OBJECT
@@ -21,7 +25,7 @@ class RadioGroup : public QWidget, protected QScriptable {
      * Label text, supports wordwrapping. **Rich text not supported here.**
      * @member {string} text
      * @instance
-     * @memberof RadioGroup
+     * @memberof ng.view.RadioGroup
      ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -29,7 +33,7 @@ class RadioGroup : public QWidget, protected QScriptable {
      **TODO** does setting this programmatically trigger onChange?
      * @member {string} selected
      * @instance
-     * @memberof RadioGroup
+     * @memberof ng.view.RadioGroup
      ^jsdoc*/
     Q_PROPERTY(QString selected READ selected WRITE setSelected)
     /*^jsdoc
@@ -39,7 +43,7 @@ class RadioGroup : public QWidget, protected QScriptable {
      * `function(selected: string) {}`
      * @member {Function} onChange
      * @instance
-     * @memberof RadioGroup
+     * @memberof ng.view.RadioGroup
      ^jsdoc*/
     Q_PROPERTY(QScriptValue onChange READ onChange WRITE setOnChange)
    public:

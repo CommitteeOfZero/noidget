@@ -21,29 +21,29 @@ Container::~Container() {}
 /*^jsdoc
  * Appends `space` px of empty space after the last widget
  * @method addSpace
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {number} space
  ^jsdoc*/
 void Container::addSpace(int space) { _layout->addSpacing(space); }
 
 /*^jsdoc
- * Creates a new {@link Label} and appends it to the container
+ * Creates a new {@link ng.view.Label} and appends it to the container
  * @method addLabel
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {string} text
- * @returns {Label}
+ * @returns {ng.view.Label}
  ^jsdoc*/
 /*^jsdoc
- * Creates a new {@link Label} and appends it to the container
+ * Creates a new {@link ng.view.Label} and appends it to the container
  * @method addLabel
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {Object} params
  * @param {string} params.text
  * @param {boolean} [params.richText=false]
- * @returns {Label}
+ * @returns {ng.view.Label}
  ^jsdoc*/
 Label* Container::addLabel(const QScriptValue& obj) {
     QString text;
@@ -68,9 +68,9 @@ Label* Container::addLabel(const QScriptValue& obj) {
     return lbl;
 }
 /*^jsdoc
- * Creates a new {@link Button} and appends it to the container
+ * Creates a new {@link ng.view.Button} and appends it to the container
  * @method addButton
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {Object} params
  * @param {string} params.text
@@ -78,7 +78,7 @@ Label* Container::addLabel(const QScriptValue& obj) {
  * @param {Function} [params.onClick]
  * @param {number} [params.width]
  * @param {number} [params.height]
- * @returns {Button}
+ * @returns {ng.view.Button}
  ^jsdoc*/
 Button* Container::addButton(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_START
@@ -103,22 +103,22 @@ Button* Container::addButton(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_END(nullptr)
 }
 /*^jsdoc
- * Creates a new {@link TextField} and appends it to the container
+ * Creates a new {@link ng.view.TextField} and appends it to the container
  * @method addTextField
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {string} text
- * @returns {TextField}
+ * @returns {ng.view.TextField}
  ^jsdoc*/
 /*^jsdoc
- * Creates a new {@link TextField} and appends it to the container
+ * Creates a new {@link ng.view.TextField} and appends it to the container
  * @method addTextField
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {Object} params
  * @param {string} params.text
  * @param {boolean} [params.richText=false]
- * @returns {TextField}
+ * @returns {ng.view.TextField}
  ^jsdoc*/
 TextField* Container::addTextField(const QScriptValue& obj) {
     QString text;
@@ -143,17 +143,17 @@ TextField* Container::addTextField(const QScriptValue& obj) {
     return tf;
 }
 /*^jsdoc
- * Creates a new {@link CheckBox} and appends it to the container
+ * Creates a new {@link ng.view.CheckBox} and appends it to the container
  * @method addCheckBox
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {string} text
- * @returns {CheckBox}
+ * @returns {ng.view.CheckBox}
  ^jsdoc*/
 /*^jsdoc
- * Creates a new {@link CheckBox} and appends it to the container
+ * Creates a new {@link ng.view.CheckBox} and appends it to the container
  * @method addCheckBox
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {Object} params
  * @param {string} params.text
@@ -162,7 +162,7 @@ TextField* Container::addTextField(const QScriptValue& obj) {
  * @param {boolean} [params.preset=false] - default value (`onChange` will not
  be called when this is initially set)
  * @param {Function} [params.onChange]
- * @returns {CheckBox}
+ * @returns {ng.view.CheckBox}
  ^jsdoc*/
 CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     QString text;
@@ -200,20 +200,21 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
     return cb;
 }
 /*^jsdoc
- * Creates a new {@link RadioGroup} and appends it to the container
+ * Creates a new {@link ng.view.RadioGroup} and appends it to the container
  * @method addRadioGroup
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {Object} params
  * @param {string} params.text
- * @param {Array<Object>} [params.options] - see {@link RadioGroup#addOption}
+ * @param {Array<Object>} [params.options] - see {@link
+ ng.view.RadioGroup#addOption}
  * @param {string} params.options.name
  * @param {string} params.options.text
  * @param {string} [params.preset] - default value (`onChange` will not be
  called when this is initially set)
  * @param {Function} [params.onChange]
  * @param {boolean} [params.vertical=false]
- * @returns {RadioGroup}
+ * @returns {ng.view.RadioGroup}
  ^jsdoc*/
 RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     // TODO what about no parameters?
@@ -273,9 +274,9 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
     return grp;
 }
 /*^jsdoc
- * Creates a new {@link DirectoryPicker} and appends it to the container
+ * Creates a new {@link ng.view.DirectoryPicker} and appends it to the container
  * @method addDirectoryPicker
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
  * @param {Object} params
  * @param {string} params.text
@@ -284,7 +285,7 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
  * @param {string} [params.preset] - default value
  * @param {Function} [params.onPick]
  * @param {Function} [params.adjustDirectory]
- * @returns {DirectoryPicker}
+ * @returns {ng.view.DirectoryPicker}
  ^jsdoc*/
 DirectoryPicker* Container::addDirectoryPicker(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_START
@@ -312,11 +313,11 @@ DirectoryPicker* Container::addDirectoryPicker(const QScriptValue& obj) {
     SCRIPT_EX_GUARD_END(nullptr)
 }
 /*^jsdoc
- * Creates a new {@link Column} and appends it to the container
+ * Creates a new {@link ng.view.Column} and appends it to the container
  * @method addColumn
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
- * @returns {Column}
+ * @returns {ng.view.Column}
  ^jsdoc*/
 Column* Container::addColumn() {
     SCRIPT_EX_GUARD_START
@@ -326,11 +327,11 @@ Column* Container::addColumn() {
     SCRIPT_EX_GUARD_END(nullptr)
 }
 /*^jsdoc
- * Creates a new {@link Row} and appends it to the container
+ * Creates a new {@link ng.view.Row} and appends it to the container
  * @method addRow
- * @memberof Container
+ * @memberof ng.view.Container
  * @instance
- * @returns {Row}
+ * @returns {ng.view.Row}
  ^jsdoc*/
 Row* Container::addRow() {
     SCRIPT_EX_GUARD_START

@@ -5,6 +5,9 @@
 
 namespace api {
 
+/*^jsdoc
+ * @namespace ng
+ ^jsdoc*/
 class ApiHost : public QObject {
     Q_OBJECT
 

@@ -9,6 +9,10 @@ namespace view {
 /*^jsdoc
  * Multiline, rich-text capable label
  * @class Label
+ * @memberof ng.view
+ * @static
+ * @toplevel
+ * @hideconstructor
  ^jsdoc*/
 class Label : public QWidget, protected QScriptable {
     Q_OBJECT
@@ -16,7 +20,7 @@ class Label : public QWidget, protected QScriptable {
      * Label text, supports wordwrapping
      * @member {string} text
      * @instance
-     * @memberof Label
+     * @memberof ng.view.Label
      ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -25,7 +29,7 @@ class Label : public QWidget, protected QScriptable {
      * **Default:** `false`
      * @member {boolean} richText
      * @instance
-     * @memberof Label
+     * @memberof ng.view.Label
      ^jsdoc*/
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
    public:

@@ -11,16 +11,20 @@
 namespace api {
 namespace view {
 /*^jsdoc
-* Check box with associated multiline label
-* @class CheckBox
-^jsdoc*/
+ * Check box with associated multiline label
+ * @class CheckBox
+ * @memberof ng.view
+ * @static
+ * @toplevel
+ * @hideconstructor
+ ^jsdoc*/
 class CheckBox : public QWidget, protected QScriptable {
     Q_OBJECT
     /*^jsdoc
      * Label text, supports wordwrapping
      * @member {string} text
      * @instance
-     * @memberof CheckBox
+     * @memberof ng.view.CheckBox
      ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -29,18 +33,18 @@ class CheckBox : public QWidget, protected QScriptable {
      * **Default:** `false`
      * @member {boolean} richText
      * @instance
-     * @memberof CheckBox
+     * @memberof ng.view.CheckBox
      ^jsdoc*/
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
     /*^jsdoc
      * Currently checked?
      *
-     * Setting this from script **will trigger** {@link CheckBox#onChange}.
-     Setting a default (`preset`) when creating the CheckBox with {@link
-     Container#addCheckBox} will not.
+     * Setting this from script **will trigger** {@link
+     ng.view.CheckBox#onChange}. Setting a default (`preset`) when creating the
+     CheckBox with {@link ng.view.Container#addCheckBox} will not.
      * @member {boolean} checked
      * @instance
-     * @memberof CheckBox
+     * @memberof ng.view.CheckBox
      ^jsdoc*/
     Q_PROPERTY(bool checked READ checked WRITE setChecked)
     /*^jsdoc
@@ -49,7 +53,7 @@ class CheckBox : public QWidget, protected QScriptable {
      * `function(checked: boolean)`
      * @member {Function} onChange
      * @instance
-     * @memberof CheckBox
+     * @memberof ng.view.CheckBox
      ^jsdoc*/
     Q_PROPERTY(QScriptValue onChange READ onChange WRITE setOnChange)
     /*^jsdoc
@@ -59,7 +63,7 @@ class CheckBox : public QWidget, protected QScriptable {
      * **Default:** `true`
      * @member {boolean} enabled
      * @instance
-     * @memberof CheckBox
+     * @memberof ng.view.CheckBox
      ^jsdoc*/
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
 

@@ -21,9 +21,13 @@ class Column;
 class Row;
 
 /*^jsdoc
- * Wizard page. Uses {@link Column} to contain child widgets.
+ * Wizard page. Uses {@link ng.view.Column} to contain child widgets.
  * @class Page
- * @extends Container
+ * @extends ng.view.Container
+ * @static
+ * @memberof ng.view
+ * @toplevel
+ * @hideconstructor
  ^jsdoc*/
 class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_OBJECT
@@ -32,7 +36,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
      not allowed.
      * @member {string} title
      * @instance
-     * @memberof Page
+     * @memberof ng.view.Page
      ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     /*^jsdoc
@@ -43,7 +47,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
      * `function()`
      * @member {Function} onNext
      * @instance
-     * @memberof Page
+     * @memberof ng.view.Page
      ^jsdoc*/
     Q_PROPERTY(QScriptValue onNext READ onNext WRITE setOnNext)
     /*^jsdoc
@@ -54,7 +58,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
      * `function()`
      * @member {Function} onBack
      * @instance
-     * @memberof Page
+     * @memberof ng.view.Page
     ^jsdoc*/
     Q_PROPERTY(QScriptValue onBack READ onBack WRITE setOnBack)
 

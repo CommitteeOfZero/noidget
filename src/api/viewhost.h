@@ -7,6 +7,11 @@ namespace api {
 
 class ApiHost;
 
+/*^jsdoc
+ * @namespace view
+ * @memberof ng
+ * @static
+ ^jsdoc*/
 class ViewHost : public QObject, protected QScriptable {
     Q_OBJECT
 

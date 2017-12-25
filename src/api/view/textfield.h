@@ -7,17 +7,21 @@
 namespace api {
 namespace view {
 /*^jsdoc
-* (Read-only) multiline text box with selection, rich text and scrolling
+ * (Read-only) multiline text box with selection, rich text and scrolling
 capabilities. Vertical scroll bar is always shown.
-* @class TextField
-^jsdoc*/
+ * @class TextField
+ * @static
+ * @memberof ng.view
+ * @toplevel
+ * @hideconstructor
+ ^jsdoc*/
 class TextField : public QWidget, protected QScriptable {
     Q_OBJECT
     /*^jsdoc
      * Text, supports wordwrapping
      * @member {string} text
      * @instance
-     * @memberof TextField
+     * @memberof ng.view.TextField
      ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -26,7 +30,7 @@ class TextField : public QWidget, protected QScriptable {
      * **Default:** `false`
      * @member {boolean} richText
      * @instance
-     * @memberof TextField
+     * @memberof ng.view.TextField
      ^jsdoc*/
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
    public:

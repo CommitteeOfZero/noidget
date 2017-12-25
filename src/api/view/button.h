@@ -13,6 +13,10 @@ namespace view {
 /*^jsdoc
  * Regular old push button.
  * @class Button
+ * @memberof ng.view
+ * @static
+ * @toplevel
+ * @hideconstructor
  ^jsdoc*/
 class Button : public QWidget, protected QScriptable {
     Q_OBJECT
@@ -20,7 +24,7 @@ class Button : public QWidget, protected QScriptable {
      * Label. No rich text supported, does not word-wrap.
      * @member {string} text
      * @instance
-     * @memberof Button
+     * @memberof ng.view.Button
      ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -29,7 +33,7 @@ class Button : public QWidget, protected QScriptable {
      * `function()`
      * @member {Function} onClick
      * @instance
-     * @memberof Button
+     * @memberof ng.view.Button
     ^jsdoc*/
     Q_PROPERTY(QScriptValue onClick READ onClick WRITE setOnClick)
     /*^jsdoc
@@ -38,21 +42,21 @@ class Button : public QWidget, protected QScriptable {
      * **Default:** `true`
      * @member {boolean} enabled
      * @instance
-     * @memberof Button
+     * @memberof ng.view.Button
      ^jsdoc*/
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
     /*^jsdoc
      * Fixed button width. **TODO** stretching behaviour when unset
      * @member {number} width
      * @instance
-     * @memberof Button
+     * @memberof ng.view.Button
      ^jsdoc*/
     Q_PROPERTY(int width READ width WRITE setWidth)
     /*^jsdoc
      * Fixed button height. **TODO** stretching behaviour when unset
      * @member {number} height
      * @instance
-     * @memberof Button
+     * @memberof ng.view.Button
      ^jsdoc*/
     Q_PROPERTY(int height READ height WRITE setHeight)
    public:

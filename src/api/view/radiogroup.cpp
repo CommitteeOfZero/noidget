@@ -68,7 +68,7 @@ void RadioGroup::setSelected(const QString &v) {
 /*^jsdoc
  * Adds a new radio button to the end of the group
  * @method addOption
- * @memberof RadioGroup
+ * @memberof ng.view.RadioGroup
  * @instance
  * @param {string} name - internal name, used for `selected`, must be unique
  among the group!

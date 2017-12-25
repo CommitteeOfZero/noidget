@@ -14,6 +14,10 @@ namespace view {
 /*^jsdoc
  * Text input field with 'browse' button that opens a directory selection dialog
  * @class DirectoryPicker
+ * @static
+ * @memberof ng.view
+ * @hideconstructor
+ * @toplevel
  ^jsdoc*/
 class DirectoryPicker : public QWidget, protected QScriptable {
     Q_OBJECT
@@ -21,7 +25,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      * Label text, supports wordwrapping
      * @member {string} text
      * @instance
-     * @memberof DirectoryPicker
+     * @memberof ng.view.DirectoryPicker
      ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -30,7 +34,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      * **Default:** `false`
      * @member {boolean} richText
      * @instance
-     * @memberof DirectoryPicker
+     * @memberof ng.view.DirectoryPicker
      ^jsdoc*/
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
     /*^jsdoc
@@ -44,7 +48,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      * `function(newDirectory: string)`
      * @member {Function} onPick
      * @instance
-     * @memberof DirectoryPicker
+     * @memberof ng.view.DirectoryPicker
      ^jsdoc*/
     Q_PROPERTY(QScriptValue onPick READ onPick WRITE setOnPick)
     /*^jsdoc
@@ -58,7 +62,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      * `function(textFieldValue: string): string`
      * @member {Function} adjustDirectory
      * @instance
-     * @memberof DirectoryPicker
+     * @memberof ng.view.DirectoryPicker
      ^jsdoc*/
     Q_PROPERTY(QScriptValue adjustDirectory READ adjustDirectory WRITE
                    setAdjustDirectory)
@@ -66,14 +70,14 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      * Current text in input field
      * @member {string} value
      * @instance
-     * @memberof DirectoryPicker
+     * @memberof ng.view.DirectoryPicker
      ^jsdoc*/
     Q_PROPERTY(QString value READ value WRITE setValue)
     /*^jsdoc
     * Window title for directory selection dialog
     * @member {string} title
     * @instance
-    * @memberof DirectoryPicker
+    * @memberof ng.view.DirectoryPicker
     ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle)
 

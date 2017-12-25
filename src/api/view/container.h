@@ -21,6 +21,10 @@ class Row;
 /*^jsdoc
  * Abstract base class for widgets containing child widgets
  * @class Container
+ * @memberof ng.view
+ * @static
+ * @toplevel
+ * @hideconstructor
  ^jsdoc*/
 class Container : public QWidget, public IContainer, protected QScriptable {
     Q_OBJECT

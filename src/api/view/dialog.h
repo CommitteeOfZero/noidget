@@ -18,10 +18,14 @@ class Column;
 class Row;
 
 /*^jsdoc
- * Modal dialog. Uses {@link Column} to contain child widgets. **TODO** document
- type
+ * Modal dialog. Uses {@link ng.view.Column} to contain child widgets. **TODO**
+ document type
  * @class Dialog
- * @extends Container
+ * @memberof ng.view
+ * @static
+ * @toplevel
+ * @hideconstructor
+ * @extends ng.view.Container
  ^jsdoc*/
 class Dialog : public QObject, public IContainer, protected QScriptable {
     Q_OBJECT
@@ -29,21 +33,21 @@ class Dialog : public QObject, public IContainer, protected QScriptable {
     * Window title
     * @member {string} title
     * @instance
-    * @memberof Dialog
+    * @memberof ng.view.Dialog
     ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle)
     /*^jsdoc
     * Window width
     * @member {number} width
     * @instance
-    * @memberof Dialog
+    * @memberof ng.view.Dialog
     ^jsdoc*/
     Q_PROPERTY(int width READ width WRITE setWidth)
     /*^jsdoc
     * Window height
     * @member {number} height
     * @instance
-    * @memberof Dialog
+    * @memberof ng.view.Dialog
     ^jsdoc*/
     Q_PROPERTY(int height READ height WRITE setHeight)
 

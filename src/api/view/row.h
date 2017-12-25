@@ -8,9 +8,13 @@ namespace api {
 namespace view {
 
 /*^jsdoc
- * {@link Container} that horizontally arranges child widgets
+ * {@link ng.view.Container} that horizontally arranges child widgets
  * @class Row
- * @extends Container
+ * @extends ng.view.Container
+ * @static
+ * @memberof ng.view
+ * @toplevel
+ * @hideconstructor
  ^jsdoc*/
 class Row : public Container {
     Q_OBJECT
