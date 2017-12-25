@@ -8,6 +8,7 @@
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
   <link href='assets/github.css' type='text/css' rel='stylesheet' />
   <link href='assets/split.css' type='text/css' rel='stylesheet' />
+  <link href='assets/mapnik.css' type='text/css' rel='stylesheet' />
 </head>
 <body class='documentation m0'>
     <div class='flex'>
