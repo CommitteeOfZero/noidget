@@ -4,7 +4,7 @@
   <meta charset='utf-8' />
   <title><%- config['project-name'] %> <%- config['project-version'] %> | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <link href='assets/mapnik.css' type='text/css' rel='stylesheet' />
+  <link href='assets/theme.css' type='text/css' rel='stylesheet' />
 </head>
 <body class='documentation cf'>
   <div class='toc-container'>
@@ -83,7 +83,6 @@
     </div>
   </div>
   <script src='assets/anchor.js'></script>
-  <script src='assets/split.js'></script>
   <script src='assets/site.js'></script>
 </body>
 </html>
