@@ -294,7 +294,9 @@ pre { background: #282828; border: 1px solid #404040; }
 .content-container {
     display: table-cell;
     vertical-align: top;
+    width: 100%;
 }
+.content { margin: 0 auto 0 0; }
 table code, p code { padding: 1px 6px; }
 .table-wrapper {
   overflow-x: auto;
