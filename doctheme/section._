@@ -1,7 +1,7 @@
 <section class='py2 clearfix'>
   <% if (typeof nested === 'undefined' || (section.context && section.context.github)) { %>
   <% if (typeof nested === 'undefined') { %>
-  <h2 class='function' id='<%- slug(section.namespace) %>'>
+  <h1 class='function' id='<%- slug(section.namespace) %>'>
     <%- fullPath(section) %><span class='gray section-params'><%- formatParams(section) %></span>
   </h2>
   <% } %>

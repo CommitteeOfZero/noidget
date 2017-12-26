@@ -9,7 +9,7 @@
 <body class='documentation cf'>
   <div class='toc-container'>
     <h1 class='no-anchor title'><%- config['project-name'] %></h1>
-    <div class='mb1'><code><%- config['project-version'] %></code></div>
+    <h4><%- config['project-version'] %></h4>
     <input
       placeholder='Filter'
       id='filter-input'
@@ -27,7 +27,8 @@
           <% if (doc.members.static && doc.members.static.length) { %>
             <% doc.members.static.forEach(function(member) { %>
               <a
-                href='#<%=slug(member.namespace)%>'>
+                href='#<%=slug(member.namespace)%>'
+                class='member'>
                 .<%- shortSignature(member) %>
               </a>
             <% }) %>
@@ -35,7 +36,8 @@
           <% if (doc.members.instance && doc.members.instance.length) { %>
             <% doc.members.instance.forEach(function(member) { %>
               <a
-                href='#<%=slug(member.namespace)%>'>
+                href='#<%=slug(member.namespace)%>'
+                class='member'>
                 #<%- shortSignature(member) %>
               </a>
             <% }) %>
@@ -43,7 +45,8 @@
           <% if (doc.members.inner && doc.members.inner.length) { %>
             <% doc.members.inner.forEach(function(member) { %>
               <a
-                href='#<%=slug(member.namespace)%>'>
+                href='#<%=slug(member.namespace)%>'
+                class='member'>
                 #<%- shortSignature(member) %>
               </a>
             <% }) %>
@@ -51,7 +54,8 @@
           <% if (doc.members.events && doc.members.events.length) { %>
             <% doc.members.events.forEach(function(member) { %>
               <a
-                href='#<%=slug(member.namespace)%>'>
+                href='#<%=slug(member.namespace)%>'
+                class='member'>
                 ⓔ <%- shortSignature(member) %>
               </a>
             <% }) %>

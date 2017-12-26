@@ -270,11 +270,20 @@ table td p {
   border-bottom: 1px solid #f2f2f2;
 }
 
-
-
+body { font-size: 17px; }
+.gray { color: #b0b0b0; }
+.title { margin: 0 0 0.5em; }
+h1.function { font-size: 1.25em; }
 .display-none{ display:none !important }
 h2.function.subsection { color: #7f7fff; display: inline; border: 0; }
 h2.function.subsection a { font-style: italic; }
 h2.function.subsection > .anchorjs-link { margin-left: -2em !important; }
 section > :first-child { margin-top: 0; }
 code, p.mono { font-family: 'Source Code Pro', monospace; }
+.member { margin-left: 1em; }
+@media (min-width: 52em) {
+  .content {
+    max-width: 60em;
+    margin: auto;
+  }
+}
