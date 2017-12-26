@@ -38,9 +38,8 @@ class Button : public QWidget, protected QScriptable {
     Q_PROPERTY(QScriptValue onClick READ onClick WRITE setOnClick)
     /*^jsdoc
      * Is button clickable?
-     *
-     * **Default:** `true`
      * @member {boolean} enabled
+     * @default true
      * @instance
      * @memberof ng.view.Button
      ^jsdoc*/

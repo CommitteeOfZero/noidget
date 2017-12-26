@@ -26,9 +26,8 @@ class TextField : public QWidget, protected QScriptable {
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Render basic HTML?
-     *
-     * **Default:** `false`
      * @member {boolean} richText
+     * @default false
      * @instance
      * @memberof ng.view.TextField
      ^jsdoc*/

@@ -29,9 +29,8 @@ class CheckBox : public QWidget, protected QScriptable {
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Render basic HTML in label?
-     *
-     * **Default:** `false`
      * @member {boolean} richText
+     * @default false
      * @instance
      * @memberof ng.view.CheckBox
      ^jsdoc*/
@@ -59,9 +58,8 @@ class CheckBox : public QWidget, protected QScriptable {
     /*^jsdoc
      * Input allowed? (When this is `false`, `checked` can still be changed
      programmatically)
-     *
-     * **Default:** `true`
      * @member {boolean} enabled
+     * @default true
      * @instance
      * @memberof ng.view.CheckBox
      ^jsdoc*/

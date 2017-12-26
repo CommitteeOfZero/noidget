@@ -30,9 +30,8 @@ class DirectoryPicker : public QWidget, protected QScriptable {
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Render basic HTML in label?
-     *
-     * **Default:** `false`
      * @member {boolean} richText
+     * @default false
      * @instance
      * @memberof ng.view.DirectoryPicker
      ^jsdoc*/

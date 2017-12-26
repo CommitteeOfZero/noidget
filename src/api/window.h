@@ -16,6 +16,7 @@ class Page;
 /*^jsdoc
  * @name window
  * @memberof ng
+ * @namespace
  * @static
  * @toplevel
  ^jsdoc*/
