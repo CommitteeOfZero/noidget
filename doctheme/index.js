@@ -31,6 +31,10 @@ module.exports = function(comments, config) {
                 var slugger = new GithubSlugger();
                 return slugger.slug(str);
             },
+            formatParams(section) {
+                if (section.kind !== 'class' && !isFunction(section)) return '';
+                return formatters.parameters(section, true);
+            },
             shortSignature(section) {
                 var prefix = '';
                 if (section.kind === 'class') {

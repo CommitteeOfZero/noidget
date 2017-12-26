@@ -269,3 +269,12 @@ table td p {
   font-size: 1em;
   border-bottom: 1px solid #f2f2f2;
 }
+
+
+
+.display-none{ display:none !important }
+h2.function.subsection { color: #7f7fff; display: inline; border: 0; }
+h2.function.subsection a { font-style: italic; }
+h2.function.subsection > .anchorjs-link { margin-left: -2em !important; }
+section > :first-child { margin-top: 0; }
+code, p.mono { font-family: 'Source Code Pro', monospace; }
