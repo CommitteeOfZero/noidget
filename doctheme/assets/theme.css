@@ -249,6 +249,7 @@ table td p {
 .title { margin: 0 0 0.5em; }
 h1.function { font-size: 1.25em; }
 .display-none{ display:none !important }
+.overflow-auto{ overflow:auto; }
 h2.function.subsection { color: #7f7fff; display: inline; border: 0; }
 h2.function.subsection a { font-style: italic; }
 h2.function.subsection > .anchorjs-link { margin-left: -2em !important; }
@@ -282,7 +283,7 @@ table th {
     border: 1px solid #404040;
 }
 .collapsible { border-top: 1px solid #404040; }
-pre { background: #202020; }
+pre { background: #282828; border: 1px solid #404040; }
 .toc-container {
     display: table-cell;
     width: 300px;
