@@ -14,16 +14,10 @@ class Page;
 }  // namespace view
 
 /*^jsdoc
- * @name window
+ * @namespace window
  * @memberof ng
- * @namespace
  * @static
  * @toplevel
- ^jsdoc*/
-/*^jsdoc
- * @method popPage
- * memberof ng.window
- * @static
  ^jsdoc*/
 class Window : public QObject, protected QScriptable {
     Q_OBJECT
