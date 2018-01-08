@@ -91,7 +91,7 @@
     <% section.returns.forEach(function(ret) { %>
       <h4>Returns</h4>
       <code><%= formatType(ret.type) %></code><% if (ret.description) { %>:
-        <div class='force-inline'><%= md(ret.description, true) %></div>
+        <p class='force-inline'><%= md(ret.description, true) %></p>
       <% }%>
     <% }) %>
   <% } %>
