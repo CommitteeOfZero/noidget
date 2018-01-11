@@ -109,6 +109,9 @@ module.exports = function(comments, config) {
         var tagIsToplevel = function(e) {
             return e.title == 'toplevel';
         };
+        var tagIsHidesecondlevel = function(e) {
+            return e.title == 'hidesecondlevel';
+        };
 
         if (current.kind == 'note') {
             acc.push(current);
@@ -118,12 +121,13 @@ module.exports = function(comments, config) {
             // apparently this is how everyone does deep copies so it'll do
             // ¯\_(ツ)_/¯
             var currentWithoutToplevel = JSON.parse(JSON.stringify(current));
-            for (var memberType in currentWithoutToplevel.members) {
-                for (var member in currentWithoutToplevel.members[memberType]) {
-                    if (currentWithoutToplevel.members[memberType][member]
-                            .tags.some(tagIsToplevel)) {
-                        delete currentWithoutToplevel
-                            .members[memberType][member];
+            for (var _memberType in currentWithoutToplevel.members) {
+                var memberType = currentWithoutToplevel.members[_memberType];
+                for (var _member in memberType) {
+                    var member = memberType[_member];
+                    if (member.tags.some(tagIsToplevel) ||
+                        member.tags.some(tagIsHidesecondlevel)) {
+                        delete memberType[_member];
                     }
                 }
             }
