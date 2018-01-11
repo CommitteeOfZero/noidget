@@ -13,12 +13,16 @@ ApiHost::ApiHost(QObject *parent) : QObject(parent) {
     QScriptValue root_ = _engine->newObject();
 
     root_.setProperty("window", _engine->newQObject(new Window(this)));
+
     auto viewHost = new ViewHost(this);
     auto ng_view = _engine->newQObject(viewHost);
     viewHost->setupScriptObject(ng_view);
     root_.setProperty("view", ng_view);
 
-    root_.setProperty("systemInfo", _engine->newQObject(new SystemInfo(this)));
+    auto systemInfo = new SystemInfo(this);
+    auto ng_systemInfo = _engine->newQObject(systemInfo);
+    systemInfo->setupScriptObject(ng_systemInfo);
+    root_.setProperty("systemInfo", ng_systemInfo);
 
     _engine->globalObject().setProperty("ng", root_);
 

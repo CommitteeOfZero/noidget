@@ -6,18 +6,29 @@
 
 namespace api {
 
-SystemInfo::SystemInfo(ApiHost *parent) : QObject(parent) {}
+SystemInfo::SystemInfo(ApiHost* parent) : QObject(parent) {}
 SystemInfo::~SystemInfo() {}
 
-QString SystemInfo::platform() const {
+void SystemInfo::setupScriptObject(QScriptValue& o) {
+    ApiHost::registerEnum<api::SystemInfo::OsFamily>(o);
+}
+
+/*^jsdoc
+ * Platform the program is currently running on.
+ * @method platform
+ * @memberof ng.systemInfo
+ * @static
+ * @returns {ng.systemInfo.OsFamily}
+ ^jsdoc*/
+SystemInfo::OsFamily SystemInfo::platform() const {
 #if defined(Q_OS_WIN32)
-    return "win32";
+    return OsFamily::Windows;
 #elif defined(Q_OS_MACOS)
-    return "mac";
+    return OsFamily::Mac;
 #elif defined(Q_OS_LINUX)
-    return "linux";
+    return OsFamily::Linux;
 #else
-    return "wtf";
+    return OsFamily::Unknown;
 #endif
 }
 
