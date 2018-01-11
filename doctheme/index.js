@@ -97,6 +97,9 @@ module.exports = function(comments, config) {
     sharedImports.imports.renderParamProperty = _.template(
         fs.readFileSync(path.join(__dirname, 'paramProperty._'), 'utf8'),
         sharedImports);
+    sharedImports.imports.renderParamPropertyTable = _.template(
+        fs.readFileSync(path.join(__dirname, 'paramPropertyTable._'), 'utf8'),
+        sharedImports);
 
     var pageTemplate = _.template(
         fs.readFileSync(path.join(__dirname, 'index._'), 'utf8'),

@@ -43,48 +43,12 @@
 
   <% if (section.params.length) { %>
     <h4>Parameters</h4>
-    <div class='table-wrapper'>
-      <table class='params'>
-        <tr>
-          <th>param</th>
-          <th>type = default</th>
-          <th>description</th>
-        </tr>
-        <% section.params.forEach(function(property) { %>
-          <%= renderParamProperty({
-            property: property,
-            renderParamProperty: renderParamProperty
-          }) %>
-        <% }) %>
-      </table>
-    </div>
+    <%= renderParamPropertyTable({type: 'param', renderParamProperty: renderParamProperty, ele: section.params}) %>
   <% } %>
 
   <% if (section.properties.length) { %>
-    <div class='py1 quiet mt1 prose-big'>Properties</div>
-    <div>
-      <% section.properties.forEach(function(property) { %>
-        <div class='space-bottom0'>
-          <span class='code bold'><%- property.name%></span> <code class='quiet'>(<%= formatType(property.type) %>)</code>
-          <% if (property.default) { %>
-            (default <code><%- property.default %></code>)
-          <% } %><% if (property.description) {
-	    %>: <%= md(property.description, true) %><%
-	  } %>
-          <% if (property.properties && property.properties.length) { %>
-            <ul>
-              <% property.properties.forEach(function(property) { %>
-                <li><code><%- property.name %></code> <%= formatType(property.type) %>
-                  <% if (property.default) { %>
-                    (default <code><%- property.default %></code>)
-                  <% } %>
-                  <%= md(property.description) %></li>
-              <% }) %>
-            </ul>
-          <% } %>
-        </div>
-      <% }) %>
-    </div>
+    <h4>Properties</h4>
+    <%= renderParamPropertyTable({type: 'prop', renderParamProperty: renderParamProperty, ele: section.properties}) %>
   <% } %>
 
   <% if (section.returns.length) { %>
@@ -115,16 +79,16 @@
 
   <% if (section.members.static && section.members.static.length) { %>
     <h4>Static members</h4>
-    <%= renderSectionList({ members: section.members.static, renderSection: renderSection, renderParamProperty: renderParamProperty, noun: 'Static Member' }) %>
+    <%= renderSectionList({ members: section.members.static, renderSection: renderSection, renderParamProperty: renderParamProperty, renderParamPropertyTable: renderParamPropertyTable, noun: 'Static Member' }) %>
   <% } %>
 
   <% if (section.members.instance && section.members.instance.length) { %>
     <h4>Instance members</h4>
-    <%= renderSectionList({ members: section.members.instance, renderSection: renderSection, renderParamProperty: renderParamProperty, noun: 'Instance Member' }) %>
+    <%= renderSectionList({ members: section.members.instance, renderSection: renderSection, renderParamProperty: renderParamProperty, renderParamPropertyTable: renderParamPropertyTable, noun: 'Instance Member' }) %>
   <% } %>
 
   <% if (section.members.events && section.members.events.length) { %>
     <h4>Events</h4>
-    <%= renderSectionList({ members: section.members.events, renderSection: renderSection, renderParamProperty: renderParamProperty, noun: 'Event' }) %>
+    <%= renderSectionList({ members: section.members.events, renderSection: renderSection, renderParamProperty: renderParamProperty, renderParamPropertyTable: renderParamPropertyTable, noun: 'Event' }) %>
   <% } %>
 </section>

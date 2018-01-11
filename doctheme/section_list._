@@ -11,6 +11,7 @@
         section: member,
         renderSection: renderSection,
         renderParamProperty: renderParamProperty,
+        renderParamPropertyTable: renderParamPropertyTable,
       nested: true
       }) %>
     </div>

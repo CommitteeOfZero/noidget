@@ -74,7 +74,8 @@
               section: s,
               renderSection: renderSection,
               renderSectionList: renderSectionList,
-              renderParamProperty: renderParamProperty
+              renderParamProperty: renderParamProperty,
+              renderParamPropertyTable: renderParamPropertyTable
             }) %>
           </div>
         <% } else { %>
