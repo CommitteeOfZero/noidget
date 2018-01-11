@@ -115,8 +115,8 @@ void Window::messageBox(const QScriptValue &v) {
  * Called with newly created to set up child widgets etc. before display.
  *
  * `function(dialog: ng.view.Dialog) {}`
- * @returns {boolean} - was the dialog accepted or rejected? ({@link
- ng.view.DlgType.OK} type dialogs always return true)
+ * @returns {boolean} - was the dialog accepted or rejected? (`OK` type dialogs
+ always return true)
  ^jsdoc*/
 bool Window::modal(api::view::Dialog::DlgType type, const QScriptValue &setup) {
     if (!setup.isFunction()) {
