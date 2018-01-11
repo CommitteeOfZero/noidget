@@ -1,4 +1,6 @@
 #include <QScriptValue>
+#include <QFile>
+#include <QTextStream>
 #include "apihost.h"
 #include "window.h"
 #include "viewhost.h"
@@ -19,6 +21,11 @@ ApiHost::ApiHost(QObject *parent) : QObject(parent) {
     root_.setProperty("systemInfo", _engine->newQObject(new SystemInfo(this)));
 
     _engine->globalObject().setProperty("ng", root_);
+
+    QFile jslibFile(":/jslib.js");
+    jslibFile.open(QFile::ReadOnly | QFile::Text);
+    QTextStream ts(&jslibFile);
+    _engine->evaluate(ts.readAll());
 }
 
 QScriptValue ApiHost::root() { return _engine->globalObject().property("ng"); }
