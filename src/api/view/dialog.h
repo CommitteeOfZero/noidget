@@ -18,8 +18,7 @@ class Column;
 class Row;
 
 /*^jsdoc
- * Modal dialog. Uses {@link ng.view.Column} to contain child widgets. **TODO**
- document type
+ * Modal dialog. Uses {@link ng.view.Column} to contain child widgets.
  * @class Dialog
  * @memberof ng.view
  * @static
@@ -52,7 +51,17 @@ class Dialog : public QObject, public IContainer, protected QScriptable {
     Q_PROPERTY(int height READ height WRITE setHeight)
 
    public:
-    enum DlgType { OK };
+    /*^jsdoc
+     * Available kinds of {@link ng.view.Dialog}
+     * @namespace DlgType
+     * @memberof ng.view
+     * @static
+     * @toplevel
+     * @property {number} OK - *message box* style dialog with just an "OK"
+     button - cannot be rejected
+     ^jsdoc*/
+    enum class DlgType { OK };
+    Q_ENUM(DlgType)
 
     explicit Dialog(DlgType type, QWidget* parent = 0);
     ~Dialog();

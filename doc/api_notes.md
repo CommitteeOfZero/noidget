@@ -11,3 +11,4 @@
 
    engine->evaluate("foo()"); # => true
    ```
+- We generally don't want to register classes with `QScriptEngine::newQMetaObject` because they'll be polluted with values of their own and superclasses' enums straight inside the JS object. Enums should be individually registered with `ApiHost::registerEnum` where appropriate.

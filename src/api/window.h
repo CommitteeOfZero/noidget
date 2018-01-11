@@ -4,6 +4,7 @@
 #include <QString>
 #include <QScriptable>
 #include <QUrl>
+#include <api/view/dialog.h>
 
 namespace api {
 
@@ -33,6 +34,7 @@ class Window : public QObject, protected QScriptable {
     Q_INVOKABLE void playBgm(const QString& url);
 
     Q_INVOKABLE void messageBox(const QScriptValue& v);
-    Q_INVOKABLE bool modal(const QString& type, const QScriptValue& setup);
+    Q_INVOKABLE bool modal(api::view::Dialog::DlgType type,
+                           const QScriptValue& setup);
 };
 }  // namespace api

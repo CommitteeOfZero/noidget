@@ -34,7 +34,7 @@ var cb = page.addCheckBox({
 
 page.onNext = function() {
     if (cb.checked) {
-        ng.window.modal('ok', function(dlg) {
+        ng.window.modal(ng.view.DlgType.OK, function(dlg) {
             dlg.width = 300;
             dlg.height = 300;
             dlg.title = 'My Dialog';

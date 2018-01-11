@@ -11,6 +11,8 @@
 #include <api/view/directorypicker.h>
 #include <api/view/dialog.h>
 #include <api/view/button.h>
+#include <QMetaEnum>
+#include <QDebug>
 
 QScriptValue pageToScriptValue(QScriptEngine *engine,
                                api::view::Page *const &in) {
@@ -117,6 +119,9 @@ ViewHost::ViewHost(ApiHost *parent) : QObject(parent) {
                             directoryPickerFromScriptValue);
     qScriptRegisterMetaType(engine, dialogToScriptValue, dialogFromScriptValue);
     qScriptRegisterMetaType(engine, buttonToScriptValue, buttonFromScriptValue);
+}
+void ViewHost::setupScriptObject(QScriptValue &o) {
+    ApiHost::registerEnum<api::view::Dialog::DlgType>(o);
 }
 ViewHost::~ViewHost() {}
 }  // namespace api

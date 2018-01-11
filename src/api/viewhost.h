@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QScriptable>
+#include <QScriptValue>
 
 namespace api {
 
@@ -17,6 +18,7 @@ class ViewHost : public QObject, protected QScriptable {
 
    public:
     explicit ViewHost(ApiHost* parent);
+    void setupScriptObject(QScriptValue& o);
     ~ViewHost();
 };
 }  // namespace api

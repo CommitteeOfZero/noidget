@@ -110,30 +110,21 @@ void Window::messageBox(const QScriptValue &v) {
  * @method modal
  * @memberof ng.window
  * @static
- * @param {string} type - **TODO** document properly
+ * @param {ng.view.DlgType} type
  * @param {Function} setup
  * Called with newly created to set up child widgets etc. before display.
  *
  * `function(dialog: ng.view.Dialog) {}`
- * @returns {boolean} - was the dialog accepted or rejected? (`ok` type dialogs
- always return true)
+ * @returns {boolean} - was the dialog accepted or rejected? ({@link
+ ng.view.DlgType.OK} type dialogs always return true)
  ^jsdoc*/
-bool Window::modal(const QString &type, const QScriptValue &setup) {
+bool Window::modal(api::view::Dialog::DlgType type, const QScriptValue &setup) {
     if (!setup.isFunction()) {
         SCRIPT_THROW("Setup function is required")
         return false;
     }
 
-    api::view::Dialog::DlgType type_;
-
-    if (type == "ok") {
-        type_ = api::view::Dialog::DlgType::OK;
-    } else {
-        SCRIPT_THROW("Unknown dialog type")
-        return false;
-    }
-
-    api::view::Dialog dlg(type_, ngApp->window());
+    api::view::Dialog dlg(type, ngApp->window());
 
     // TODO ensure dialog gets deleted in case of exception?
     // (we have nothing that throws here yet)
