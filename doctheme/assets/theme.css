@@ -149,7 +149,7 @@ section:target h3 {
   font-weight:700;
 }
 
-.documentation p {
+.documentation p, .documentation ul {
     font-family: 'Source Sans Pro', Helvetica, sans-serif;
 }
 
