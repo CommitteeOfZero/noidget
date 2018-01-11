@@ -127,7 +127,7 @@ module.exports = function(comments, config) {
                     var member = memberType[_member];
                     if (member.tags.some(tagIsToplevel) ||
                         member.tags.some(tagIsHidesecondlevel)) {
-                        delete memberType[_member];
+                        memberType.splice(_member);
                     }
                 }
             }
