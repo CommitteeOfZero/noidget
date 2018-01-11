@@ -123,13 +123,15 @@ module.exports = function(comments, config) {
             var currentWithoutToplevel = JSON.parse(JSON.stringify(current));
             for (var _memberType in currentWithoutToplevel.members) {
                 var memberType = currentWithoutToplevel.members[_memberType];
+                var cleanMemberType = [];
                 for (var _member in memberType) {
                     var member = memberType[_member];
-                    if (member.tags.some(tagIsToplevel) ||
-                        member.tags.some(tagIsHidesecondlevel)) {
-                        memberType.splice(_member);
+                    if (!member.tags.some(tagIsToplevel) &&
+                        !member.tags.some(tagIsHidesecondlevel)) {
+                        cleanMemberType.push(member);
                     }
                 }
+                currentWithoutToplevel.members[_memberType] = cleanMemberType;
             }
             acc.push(currentWithoutToplevel);
         }
