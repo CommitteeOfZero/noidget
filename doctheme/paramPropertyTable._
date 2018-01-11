@@ -2,7 +2,7 @@
     <table class='params'>
     <tr>
         <th><%- type %></th>
-        <th>type = default</th>
+        <th>type<% if(hasDefault) { %> = default<% } %></th>
         <th>description</th>
     </tr>
     <% ele.forEach(function(property) { %>

@@ -43,12 +43,12 @@
 
   <% if (section.params.length) { %>
     <h4>Parameters</h4>
-    <%= renderParamPropertyTable({type: 'param', renderParamProperty: renderParamProperty, ele: section.params}) %>
+    <%= renderParamPropertyTable({type: 'param', renderParamProperty: renderParamProperty, ele: section.params, hasDefault: true}) %>
   <% } %>
 
   <% if (section.properties.length) { %>
     <h4>Properties</h4>
-    <%= renderParamPropertyTable({type: 'prop', renderParamProperty: renderParamProperty, ele: section.properties}) %>
+    <%= renderParamPropertyTable({type: 'prop', renderParamProperty: renderParamProperty, ele: section.properties, hasDefault: false}) %>
   <% } %>
 
   <% if (section.returns.length) { %>
