@@ -14,15 +14,10 @@ capabilities. Vertical scroll bar is always shown.
  * @memberof ng.view
  * @toplevel
  * @hideconstructor
+ * @property {string} text - Text, supports wordwrapping
  ^jsdoc*/
 class TextField : public QWidget, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-     * Text, supports wordwrapping
-     * @member {string} text
-     * @instance
-     * @memberof ng.view.TextField
-     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Render basic HTML?

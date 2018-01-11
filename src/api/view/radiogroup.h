@@ -18,23 +18,15 @@ namespace view {
  * @memberof ng.view
  * @toplevel
  * @hideconstructor
+ * @property {string} text - Label text, supports wordwrapping. **Rich text not
+ supported here.**
+ * @property {string} selected - Name of currently selected button, or empty
+ string for no selection. **TODO** does setting this programmatically trigger
+ onChange?
  ^jsdoc*/
 class RadioGroup : public QWidget, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-     * Label text, supports wordwrapping. **Rich text not supported here.**
-     * @member {string} text
-     * @instance
-     * @memberof ng.view.RadioGroup
-     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
-    /*^jsdoc
-     * Name of currently selected button, or empty string for no selection.
-     **TODO** does setting this programmatically trigger onChange?
-     * @member {string} selected
-     * @instance
-     * @memberof ng.view.RadioGroup
-     ^jsdoc*/
     Q_PROPERTY(QString selected READ selected WRITE setSelected)
     /*^jsdoc
      * Event handler that gets called with the newly selected button name when

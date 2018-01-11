@@ -17,15 +17,14 @@ namespace view {
  * @static
  * @toplevel
  * @hideconstructor
+ * @property {string} text - Label. No rich text supported, does not word-wrap.
+ * @property {number} width - Fixed button width. **TODO** stretching behaviour
+ when unset
+ * @property {number} height - Fixed button height. **TODO** stretching
+ behaviour when unset
  ^jsdoc*/
 class Button : public QWidget, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-     * Label. No rich text supported, does not word-wrap.
-     * @member {string} text
-     * @instance
-     * @memberof ng.view.Button
-     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Click event handler.
@@ -34,7 +33,7 @@ class Button : public QWidget, protected QScriptable {
      * @member {Function} onClick
      * @instance
      * @memberof ng.view.Button
-    ^jsdoc*/
+     ^jsdoc*/
     Q_PROPERTY(QScriptValue onClick READ onClick WRITE setOnClick)
     /*^jsdoc
      * Is button clickable?
@@ -44,19 +43,7 @@ class Button : public QWidget, protected QScriptable {
      * @memberof ng.view.Button
      ^jsdoc*/
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
-    /*^jsdoc
-     * Fixed button width. **TODO** stretching behaviour when unset
-     * @member {number} width
-     * @instance
-     * @memberof ng.view.Button
-     ^jsdoc*/
     Q_PROPERTY(int width READ width WRITE setWidth)
-    /*^jsdoc
-     * Fixed button height. **TODO** stretching behaviour when unset
-     * @member {number} height
-     * @instance
-     * @memberof ng.view.Button
-     ^jsdoc*/
     Q_PROPERTY(int height READ height WRITE setHeight)
    public:
     explicit Button(QWidget *parent = 0);

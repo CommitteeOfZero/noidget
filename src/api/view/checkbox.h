@@ -17,15 +17,15 @@ namespace view {
  * @static
  * @toplevel
  * @hideconstructor
+ * @property {string} text - Label text, supports wordwrapping
+ * @property {boolean} checked - Currently checked?
+ *
+ * Setting this from script **will trigger** {@link ng.view.CheckBox#onChange}.
+ Setting a default (`preset`) when creating the CheckBox with {@link
+ ng.view.Container#addCheckBox} will not.
  ^jsdoc*/
 class CheckBox : public QWidget, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-     * Label text, supports wordwrapping
-     * @member {string} text
-     * @instance
-     * @memberof ng.view.CheckBox
-     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Render basic HTML in label?
@@ -35,16 +35,6 @@ class CheckBox : public QWidget, protected QScriptable {
      * @memberof ng.view.CheckBox
      ^jsdoc*/
     Q_PROPERTY(bool richText READ richText WRITE setRichText)
-    /*^jsdoc
-     * Currently checked?
-     *
-     * Setting this from script **will trigger** {@link
-     ng.view.CheckBox#onChange}. Setting a default (`preset`) when creating the
-     CheckBox with {@link ng.view.Container#addCheckBox} will not.
-     * @member {boolean} checked
-     * @instance
-     * @memberof ng.view.CheckBox
-     ^jsdoc*/
     Q_PROPERTY(bool checked READ checked WRITE setChecked)
     /*^jsdoc
      * Event handler that triggers when `checked` changes.

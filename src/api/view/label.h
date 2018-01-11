@@ -13,15 +13,10 @@ namespace view {
  * @static
  * @toplevel
  * @hideconstructor
+ * @property {string} text - Label text, supports wordwrapping
  ^jsdoc*/
 class Label : public QWidget, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-     * Label text, supports wordwrapping
-     * @member {string} text
-     * @instance
-     * @memberof ng.view.Label
-     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Render basic HTML in label?

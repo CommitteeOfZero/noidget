@@ -25,29 +25,14 @@ class Row;
  * @toplevel
  * @hideconstructor
  * @extends ng.view.Container
+ * @property {string} title - Window title
+ * @property {number} width - Window width
+ * @property {number} height - Window height
  ^jsdoc*/
 class Dialog : public QObject, public IContainer, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-    * Window title
-    * @member {string} title
-    * @instance
-    * @memberof ng.view.Dialog
-    ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle)
-    /*^jsdoc
-    * Window width
-    * @member {number} width
-    * @instance
-    * @memberof ng.view.Dialog
-    ^jsdoc*/
     Q_PROPERTY(int width READ width WRITE setWidth)
-    /*^jsdoc
-    * Window height
-    * @member {number} height
-    * @instance
-    * @memberof ng.view.Dialog
-    ^jsdoc*/
     Q_PROPERTY(int height READ height WRITE setHeight)
 
    public:

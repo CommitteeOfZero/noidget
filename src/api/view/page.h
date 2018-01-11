@@ -28,16 +28,11 @@ class Row;
  * @memberof ng.view
  * @toplevel
  * @hideconstructor
+ * @property {string} title - Page title, displayed on the page, **not** the
+ window title. Rich text is not allowed.
  ^jsdoc*/
 class Page : public ::view::Page, public IContainer, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-     * Page title, displayed on the page, **not** the window title. Rich text is
-     not allowed.
-     * @member {string} title
-     * @instance
-     * @memberof ng.view.Page
-     ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     /*^jsdoc
      * Event handler called when the page's "next" button is clicked. Natively,

@@ -18,15 +18,12 @@ namespace view {
  * @memberof ng.view
  * @hideconstructor
  * @toplevel
+ * @property {string} text - Label text, supports wordwrapping
+ * @property {string} value - Current text in input field
+ * @property {string} title - Window title for directory selection dialog
  ^jsdoc*/
 class DirectoryPicker : public QWidget, protected QScriptable {
     Q_OBJECT
-    /*^jsdoc
-     * Label text, supports wordwrapping
-     * @member {string} text
-     * @instance
-     * @memberof ng.view.DirectoryPicker
-     ^jsdoc*/
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
      * Render basic HTML in label?
@@ -65,19 +62,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      ^jsdoc*/
     Q_PROPERTY(QScriptValue adjustDirectory READ adjustDirectory WRITE
                    setAdjustDirectory)
-    /*^jsdoc
-     * Current text in input field
-     * @member {string} value
-     * @instance
-     * @memberof ng.view.DirectoryPicker
-     ^jsdoc*/
     Q_PROPERTY(QString value READ value WRITE setValue)
-    /*^jsdoc
-    * Window title for directory selection dialog
-    * @member {string} title
-    * @instance
-    * @memberof ng.view.DirectoryPicker
-    ^jsdoc*/
     Q_PROPERTY(QString title READ title WRITE setTitle)
 
    public:

@@ -12,6 +12,7 @@ class ApiHost;
  * @namespace view
  * @memberof ng
  * @static
+ * @hidesecondlevel
  ^jsdoc*/
 class ViewHost : public QObject, protected QScriptable {
     Q_OBJECT
