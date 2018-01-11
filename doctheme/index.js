@@ -103,21 +103,32 @@ module.exports = function(comments, config) {
         sharedImports);
 
     var topLevelReducer = function(acc, current) {
+        var tagIsToplevel = function(e) {
+            return e.title == 'toplevel';
+        };
+
         if (current.kind == 'note') {
             acc.push(current);
             return acc;
         }
-        if (current.tags.some(function(e) {
-                return e.title == 'toplevel';
-            })) {
-            // TODO remove top-level members of a top-level member so they're
-            // only displayed once
-            acc.push(current);
-        } else {
-            for (var memberType in current.members) {
-                acc = acc.concat(
-                    current.members[memberType].reduce(topLevelReducer, []));
+        if (current.tags.some(tagIsToplevel)) {
+            // apparently this is how everyone does deep copies so it'll do
+            // ¯\_(ツ)_/¯
+            var currentWithoutToplevel = JSON.parse(JSON.stringify(current));
+            for (var memberType in currentWithoutToplevel.members) {
+                for (var member in currentWithoutToplevel.members[memberType]) {
+                    if (currentWithoutToplevel.members[memberType][member]
+                            .tags.some(tagIsToplevel)) {
+                        delete currentWithoutToplevel
+                            .members[memberType][member];
+                    }
+                }
             }
+            acc.push(currentWithoutToplevel);
+        }
+        for (var memberType in current.members) {
+            acc = acc.concat(
+                current.members[memberType].reduce(topLevelReducer, []));
         }
         return acc;
     };
