@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QString>
 #include <QScriptable>
+#include <util/systeminfo.h>
 
 namespace api {
 
@@ -29,13 +30,11 @@ class SystemInfo : public QObject, protected QScriptable {
      * @property {number} Mac
      * @property {number} Linux
      ^jsdoc*/
-    enum class OsFamily { Unknown, Windows, Mac, Linux };
-    Q_ENUM(OsFamily)
 
     explicit SystemInfo(ApiHost* parent);
     void setupScriptObject(QScriptValue& o);
     ~SystemInfo();
 
-    Q_INVOKABLE api::SystemInfo::OsFamily platform() const;
+    Q_INVOKABLE util::SystemInfo::OsFamily platform() const;
 };
 }  // namespace api
