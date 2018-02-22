@@ -1,7 +1,7 @@
 var glob = require('glob');
 var fs = require('fs');
 var out = '';
-var files = glob.sync('src/api/**/*.@(cpp|h)');
+var files = glob.sync('src/**/*.@(cpp|h)');
 var re = /\/\*\^jsdoc\s*\n((.|\n|\r)*?)\^jsdoc\*\//g;
 files.forEach(function(path) {
     var text = fs.readFileSync(path, 'utf8');
