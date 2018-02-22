@@ -25,3 +25,9 @@
     } else {                         \
         context()->throwError(what); \
     }
+
+#define ENFORCE_SCRIPT                                               \
+    if (context() == nullptr) {                                      \
+        throw NgException(                                           \
+            "Tried to call script-only functions from native code"); \
+    }
