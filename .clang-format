@@ -3,3 +3,4 @@ BasedOnStyle: Google
 SortIncludes: false
 IndentWidth: 4
 UseTab: Never
+CommentPragmas: '^\^jsdoc'
