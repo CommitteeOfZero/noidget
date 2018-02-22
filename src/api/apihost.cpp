@@ -5,6 +5,7 @@
 #include "window.h"
 #include "viewhost.h"
 #include "systeminfo.h"
+#include "fshost.h"
 
 namespace api {
 
@@ -23,6 +24,11 @@ ApiHost::ApiHost(QObject *parent) : QObject(parent) {
     auto ng_systemInfo = _engine->newQObject(systemInfo);
     systemInfo->setupScriptObject(ng_systemInfo);
     root_.setProperty("systemInfo", ng_systemInfo);
+
+    auto fsHost = new FsHost(this);
+    auto ng_fs = _engine->newQObject(fsHost);
+    fsHost->setupScriptObject(ng_fs);
+    root_.setProperty("fs", ng_fs);
 
     _engine->globalObject().setProperty("ng", root_);
 
