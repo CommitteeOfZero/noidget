@@ -64,7 +64,7 @@ QString Fs::expandedPath(const QString& inPath) const {
     bool found;
     do {
         found = false;
-        auto match = matchMacro.match(inPath);
+        auto match = matchMacro.match(result);
         if (match.hasMatch()) {
             auto key = match.captured(1);
             QString replacement;
@@ -78,8 +78,8 @@ QString Fs::expandedPath(const QString& inPath) const {
             }
 
             if (found) {
-                result.replace(match.capturedStart(1), match.capturedLength(1),
-                               replacement);
+                result.replace(match.capturedStart(1) - 1,
+                               match.capturedLength(1) + 2, replacement);
             }
         }
     } while (found);
