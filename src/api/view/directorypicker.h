@@ -4,6 +4,7 @@
 #include <QScriptable>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QSpacerItem>
 #include <QScriptValue>
 #include <QLineEdit>
 #include <QPushButton>
@@ -70,7 +71,18 @@ class DirectoryPicker : public QWidget, protected QScriptable {
     ~DirectoryPicker();
 
     QString text() const { return _lbl->text(); }
-    void setText(const QString &v) { _lbl->setText(v); }
+    void setText(const QString &v) {
+        _lbl->setText(v);
+        if (v.trimmed().isEmpty()) {
+            _lbl->setVisible(false);
+            _lblSpacer->changeSize(0, 0, QSizePolicy::Fixed,
+                                   QSizePolicy::Fixed);
+        } else {
+            _lbl->setVisible(true);
+            _lblSpacer->changeSize(4, 0, QSizePolicy::Fixed,
+                                   QSizePolicy::Fixed);
+        }
+    }
 
     bool richText() const { return _lbl->textFormat() == Qt::RichText; }
     void setRichText(bool v) {
@@ -100,6 +112,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
 
    private:
     QLabel *_lbl;
+    QSpacerItem *_lblSpacer;
     QLineEdit *_edit;
     QPushButton *_btn;
     QFileDialog *_dlg;

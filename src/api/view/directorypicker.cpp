@@ -17,13 +17,21 @@ DirectoryPicker::DirectoryPicker(QWidget *parent) : QWidget(parent) {
     _lbl = new QLabel(this);
     _lbl->setWordWrap(true);
     _lbl->setTextFormat(Qt::PlainText);
-    layout->addSpacing(4);
+    // When label is blank (default), we want the textbox to reach the left
+    // edge, so we only make it visible (and add non-zero spacing) when it's not
+    // blank
+    _lbl->setVisible(false);
+    _lblSpacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
     layout->addWidget(_lbl);
+    layout->addSpacerItem(_lblSpacer);
     _edit = new QLineEdit(this);
     layout->addWidget(_edit);
     _btn = new QPushButton(this);
     _btn->setText("Browse...");
     layout->addWidget(_btn);
+
+    // TODO do this cleanly
+    _edit->setFixedHeight(_btn->height() - 5);
 
     // no parent - avoid styling
     _dlg = new QFileDialog(nullptr);
