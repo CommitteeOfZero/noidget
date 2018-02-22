@@ -19,11 +19,32 @@
         return defaultReturn;                 \
     }
 
+// Functions created with QScriptEngine::newFunction are not inside a
+// QScriptable, but instead receive a "QScriptContext *context" parameter
+#define SCRIPT_EX_GUARD_START_FUN try {
+#define SCRIPT_EX_GUARD_END_FUN(defaultReturn) \
+    }                                          \
+    catch (const NgException& ex) {            \
+        if (context == nullptr) {              \
+            throw;                             \
+        } else {                               \
+            context->throwError(ex.what());    \
+        }                                      \
+        return defaultReturn;                  \
+    }
+
 #define SCRIPT_THROW(what)           \
     if (context() == nullptr) {      \
         throw NgException(what);     \
     } else {                         \
         context()->throwError(what); \
+    }
+
+#define SCRIPT_THROW_FUN(what)     \
+    if (context == nullptr) {      \
+        throw NgException(what);   \
+    } else {                       \
+        context->throwError(what); \
     }
 
 #define ENFORCE_SCRIPT                                               \

@@ -4,6 +4,8 @@
 #include <QScriptable>
 #include <QScriptValue>
 
+class Fs;
+
 namespace api {
 
 class ApiHost;
@@ -23,5 +25,9 @@ class FsHost : public QObject, protected QScriptable {
     ~FsHost();
 
     Q_INVOKABLE QScriptValue createFs();
+    Q_INVOKABLE Fs* global();
+
+   private:
+    Fs* _global;
 };
 }  // namespace api
