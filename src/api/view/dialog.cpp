@@ -29,6 +29,15 @@ Dialog::Dialog(Dialog::DlgType type, QWidget* parent)
             connect(_dlg->_btnBox, &QDialogButtonBox::accepted, _dlg,
                     &QDialog::accept);
             break;
+        case DlgType::YesNo:
+            _dlg->_btnBox->setCenterButtons(true);
+            _dlg->_btnBox->addButton(QDialogButtonBox::Yes);
+            _dlg->_btnBox->addButton(QDialogButtonBox::No);
+            connect(_dlg->_btnBox, &QDialogButtonBox::accepted, _dlg,
+                    &QDialog::accept);
+            connect(_dlg->_btnBox, &QDialogButtonBox::rejected, _dlg,
+                    &QDialog::reject);
+            break;
     }
 }
 
@@ -92,6 +101,8 @@ bool Dialog::present() {
         case DlgType::OK:
             // can't reject a message box
             return true;
+        case DlgType::YesNo:
+            return ret == QDialog::Accepted;
     }
     return false;
 }

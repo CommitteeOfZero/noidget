@@ -44,8 +44,9 @@ class Dialog : public QObject, public IContainer, protected QScriptable {
      * @toplevel
      * @property {number} OK - *message box* style dialog with just an "OK"
      button - cannot be rejected
+     * @property {number} YesNo - like OK, but has "Yes" and "No" buttons
      ^jsdoc*/
-    enum class DlgType { OK };
+    enum class DlgType { OK, YesNo };
     Q_ENUM(DlgType)
 
     explicit Dialog(DlgType type, QWidget* parent = 0);
