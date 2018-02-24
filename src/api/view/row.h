@@ -23,7 +23,7 @@ class Row : public Container {
     explicit Row(QWidget *parent = 0) : Container(parent) {
         _layout = new QHBoxLayout(this);
         _layout->setMargin(0);
-        _layout->setSpacing(4);  // TODO parameterize
+        _layout->setSpacing(8);  // TODO parameterize
         _layout->setAlignment(Qt::AlignLeft);
         setLayout(_layout);
     }

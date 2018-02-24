@@ -17,7 +17,7 @@ Dialog::Dialog(Dialog::DlgType type, QWidget* parent)
     _dlg->_col = new Column(_dlg);
     QVBoxLayout* layout = new QVBoxLayout(_dlg);
     _dlg->setLayout(layout);
-    layout->setMargin(8);
+    layout->setMargin(16);
     layout->setSpacing(8);
     layout->setAlignment(Qt::AlignTop);
     layout->addWidget(_dlg->_col, 1);

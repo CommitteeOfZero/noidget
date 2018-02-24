@@ -12,6 +12,10 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     ui->headerImage->setStyleSheet(
         "background-color: #000");  // TODO parameterize
 
+    // TODO upper right corner close/mute and reenable this
+    // TODO parameterize whole window layout
+    ui->muteButton->setVisible(false);
+
     ui->headerImage->installEventFilter(this);
 
     connect(&bgm, &QMediaPlayer::stateChanged, this,

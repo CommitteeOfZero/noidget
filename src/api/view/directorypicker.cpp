@@ -11,7 +11,7 @@ DirectoryPicker::DirectoryPicker(QWidget *parent) : QWidget(parent) {
     // label to expand, ensure there's enough vertical room for multiline labels
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
-    layout->setSpacing(4);
+    layout->setSpacing(8);
     layout->setAlignment(Qt::AlignLeft);
     setLayout(layout);
     _lbl = new QLabel(this);
@@ -31,7 +31,7 @@ DirectoryPicker::DirectoryPicker(QWidget *parent) : QWidget(parent) {
     layout->addWidget(_btn);
 
     // TODO do this cleanly
-    _edit->setFixedHeight(_btn->height() - 5);
+    _edit->setFixedHeight(_btn->height() - 4);
 
     // no parent - avoid styling
     _dlg = new QFileDialog(nullptr);

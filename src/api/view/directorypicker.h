@@ -79,7 +79,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
                                    QSizePolicy::Fixed);
         } else {
             _lbl->setVisible(true);
-            _lblSpacer->changeSize(4, 0, QSizePolicy::Fixed,
+            _lblSpacer->changeSize(8, 0, QSizePolicy::Fixed,
                                    QSizePolicy::Fixed);
         }
     }

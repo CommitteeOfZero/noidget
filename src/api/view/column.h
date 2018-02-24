@@ -23,7 +23,7 @@ class Column : public Container {
     explicit Column(QWidget *parent = 0) : Container(parent) {
         _layout = new QVBoxLayout(this);
         _layout->setMargin(0);
-        _layout->setSpacing(4);  // TODO parameterize
+        _layout->setSpacing(8);  // TODO parameterize
         _layout->setAlignment(Qt::AlignTop);
         setLayout(_layout);
     }

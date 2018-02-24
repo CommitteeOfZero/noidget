@@ -20,7 +20,7 @@ Page::Page(QWidget* parent) : ::view::Page(parent) {
     _titleLbl = new QLabel(this);
     _titleLbl->setTextFormat(Qt::PlainText);
     _titleLbl->setWordWrap(true);
-    _titleLbl->setStyleSheet("font-weight: bold");
+    _titleLbl->setObjectName("pageHeading");
     _layout->addWidget(_titleLbl);
     _col = new Column(this);
     _layout->addWidget(_col);
