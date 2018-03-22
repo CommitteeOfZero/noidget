@@ -4,6 +4,7 @@
 #include <QString>
 #include <QScriptable>
 #include <QUrl>
+#include <QPixmap>
 #include <api/view/dialog.h>
 
 namespace api {

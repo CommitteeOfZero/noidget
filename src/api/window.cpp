@@ -9,7 +9,6 @@
 #include <api/view/dialog.h>
 #include <QScriptValue>
 #include <QScriptValueList>
-#include <QPixmap>
 
 namespace api {
 
