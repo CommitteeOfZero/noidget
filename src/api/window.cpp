@@ -9,10 +9,11 @@
 #include <api/view/dialog.h>
 #include <QScriptValue>
 #include <QScriptValueList>
+#include <QPixmap>
 
 namespace api {
 
-Window::Window(ApiHost *parent) : QObject(parent) {}
+Window::Window(ApiHost *parent) : QObject(parent), _mbIcon() {}
 Window::~Window() {}
 
 /*^jsdoc
@@ -101,8 +102,20 @@ void Window::messageBox(const QScriptValue &v) {
     QMessageBox mb(ngApp->window());
     mb.setText(text);
     mb.setTextFormat(richText ? Qt::RichText : Qt::PlainText);
+    if (!_mbIcon.isNull()) {
+        mb.setIconPixmap(_mbIcon);
+    }
     mb.exec();
 }
+
+/*^jsdoc
+ * Load an icon to be used for all message boxes.
+ * @method setMessageBoxIcon
+ * @memberof ng.window
+ * @static
+ * @param {string} url
+ ^jsdoc*/
+void Window::setMessageBoxIcon(const QString &url) { _mbIcon = QPixmap(url); }
 
 /*^jsdoc
  * Displays a customized modal {@link ng.view.Dialog}. Returns only after user

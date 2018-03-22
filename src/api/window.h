@@ -32,9 +32,13 @@ class Window : public QObject, protected QScriptable {
     Q_INVOKABLE void popPage();
 
     Q_INVOKABLE void playBgm(const QString& url);
+    Q_INVOKABLE void setMessageBoxIcon(const QString& url);
 
     Q_INVOKABLE void messageBox(const QScriptValue& v);
     Q_INVOKABLE bool modal(api::view::Dialog::DlgType type,
                            const QScriptValue& setup);
+
+   private:
+    QPixmap _mbIcon;
 };
 }  // namespace api
