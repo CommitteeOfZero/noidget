@@ -3,3 +3,4 @@ build/
 apidoc
 node_modules
 tmp.js
+conf.pri

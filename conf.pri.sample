@@ -1,0 +1,15 @@
+# Libarchive (tested with 3.3.2)
+INCLUDEPATH += $$quote(/path/to/libarchive/include)
+CONFIG(debug, debug|release) {
+    LIBS += $$quote(-L/path/to/libarchive-debug/lib)
+}
+else {
+    LIBS += $$quote(-L/path/to/libarchive-release/lib)
+}
+
+win32-msvc* {
+    LIBS += archive_static.lib
+} else {
+    # TODO check
+    LIBS += libarchive
+}

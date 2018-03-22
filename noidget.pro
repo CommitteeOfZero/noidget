@@ -30,6 +30,7 @@ QMAKE_MOD_RCC = qrc${QMAKE_FUNC_fnPath}
 
 # But I'm going with it anyway.
 
+include(conf.pri)
 include(kofuna/kofuna.pri)
 
 INCLUDEPATH += src
