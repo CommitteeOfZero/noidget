@@ -1,16 +1,32 @@
 var product = {
     gameTitle: 'Chaos;Child',
     inputScriptVersionTitle: 'English Vita 1.01',
+    paths: {
+        PATCH_CONTENT: 'content',
+        SCRIPT_BACKUP: '%CONFIG_LOCATION%/script_backup',
+        SCRIPT_DIFFS: 'scriptDiffs',
+        ENSCRIPT_MPK: '%GAME_PATH%/languagebarrier/enscript.mpk',
+        ORIG_GAMEEXE_PATH: '%GAME_PATH%/Game.exe',
+        PATCHED_GAMEEXE_PATH: '%GAME_PATH%/GameEng.exe',
+        LAUNCHERENG_PATH: '%GAME_PATH%/LauncherEng.exe'
+    },
     platforms: {
         windows: {
             paths: {
                 DEFAULT_INSTALL_LOCATION:
-                    '%PROGRAMFILES(X86)%\\CHAOS\uFF1BCHILD'
+                    '%PROGRAMFILES(X86)%\\CHAOS\uFF1BCHILD',
+                CONFIG_LOCATION: '%LOCALAPPDATA%/Committee of Zero/CC'
             }
         }
     },
     gameProbeFilePath: '%GAME_PATH%/USRDIR/sysse.mpk',
     gameProbeHash: 'c652ad182ae5c9c0f12d8cdac17d8ca3',
+    untouchedGameExeHash: '9265520ff9e09da0781e6a9b03c1098e',
+    gameExeSdWrapSize: 0x600000,
+    gameExeStrippedSize: 9969152,
+    // Large-address-aware flag
+    gameExeLaaNeedle: '00 00 00 00 00 00 00 00 E0 00 02 01',
+    gameExeLaaReplace: '00 00 00 00 00 00 00 00 E0 00 22 01',
     origScriptHashes: {
         '_map.scx': '6cd9aea8725821c17e3d2e96a9a5d2d3',
         '_startup_ps4.scx': '3cd207cb0d3ffcdb6024418eb9760269',
@@ -255,6 +271,84 @@ function validateOrigScripts(loc) {
     return result;
 }
 
+function DoTx() {
+    // TODO uninstaller / registry info
+    /*
+    if (ng.systemInfo.platform() == ng.systemInfo.OsFamily.Windows) {
+        var regSection = ng.tx.addSection('Registration');
+    }
+    */
+
+    var patchContentSection = ng.tx.addSection('Copying patch content');
+    patchContentSection.copyFiles('%PATCH_CONTENT%/*', '%GAME_PATH%');
+
+    var applyPatchesSection = ng.tx.addSection('Applying patches');
+    applyPatchesSection.log(
+        'Backing up original ' + product.gameTitle + ' (' +
+        product.inputScriptVersionTitle + ') scripts for future updates...');
+    applyPatchesSection.createDirectory('%SCRIPT_BACKUP%');
+    var backupOp = applyPatchesSection.copyFiles(
+        '%ORIG_SCRIPT_PATH%/*', '%SCRIPT_BACKUP%');
+
+    applyPatchesSection.log('Building patched script archive...');
+    var enscriptMpk = applyPatchesSection.buildMpk('%ENSCRIPT_MPK%');
+    product.enscript.forEach(function(entry) {
+        var inputPath = '%ORIG_SCRIPT_PATH%/' + entry.filename;
+        var diffPath = '%SCRIPT_DIFFS%/' + entry.filename + '.vcdiff';
+        if (ng.fs.global().pathIsFile(diffPath)) {
+            var stream = ng.tx.diffStreamBuilder(inputPath, diffPath);
+            enscriptMpk.addStreamOpen(stream);
+            enscriptMpk.addFile({
+                id: entry.id,
+                filename: entry.filename,
+                source: stream,
+                size: entry.size
+            });
+            enscriptMpk.addStreamClose(stream);
+        } else {
+            enscriptMpk.addFile({
+                id: entry.id,
+                filename: entry.filename,
+                source: inputPath,
+                size: entry.size
+            });
+        }
+    });
+
+    applyPatchesSection.log('Patching Game.exe...');
+
+    if (ng.fs.global().md5sum('%ORIG_GAMEEXE_PATH%') ===
+        product.untouchedGameExeHash) {
+        var stream = ng.tx.fileStreamBuilder('%ORIG_GAMEEXE_PATH%');
+        applyPatchesSection.addStreamOpen(stream);
+        applyPatchesSection.addStreamSeek(stream, product.gameExeSdWrapSize);
+        var writer = applyPatchesSection.addStreamWriter(
+            stream, '%PATCHED_GAMEEXE_PATH%');
+        writer.setSize(product.gameExeStrippedSize);
+        applyPatchesSection.addStreamClose(stream);
+    } else {
+        applyPatchesSection.copyFiles(
+            '%ORIG_GAMEEXE_PATH%', '%PATCHED_GAMEEXE_PATH%');
+    }
+
+    applyPatchesSection.addBinarySearchReplace(
+        '%PATCHED_GAMEEXE_PATH%', product.gameExeLaaNeedle,
+        product.gameExeLaaReplace);
+
+    if (state.shouldCreateDesktopShortcut ||
+        state.shouldCreateStartMenuShortcut) {
+        var shortcutsSection = ng.tx.addSection('Creating shortcuts');
+        // TODO shortcuts
+    }
+
+    if (state.shouldRunLauncher) {
+        ng.tx.addExecuteAfterFinish('%LAUNCHERENG_PATH%');
+    }
+
+    // And hundreds of lines of code later...
+    ng.tx.run();
+}
+
 var StartPage = function() {
     nglib.PageController.call(this, 'Readme');
     this.view.addTextField('<Readme placeholder>');
@@ -455,10 +549,13 @@ var DummyPage = function() {
 };
 DummyPage.prototype = Object.create(nglib.PageController.prototype);
 
+ng.fs.global().addMacros(product.paths);
 switch (ng.systemInfo.platform()) {
     case ng.systemInfo.OsFamily.Windows:
         ng.fs.global().addMacros(product.platforms.windows.paths);
         break;
 }
+
+ng.window.setMessageBoxIcon(':/assets/kozue48.png');
 
 (new StartPage()).push();
