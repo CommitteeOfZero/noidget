@@ -5,6 +5,7 @@
         <file alias="mute.png">assets/mute.png</file>
         <file alias="bgm.mp3">assets/bgm.mp3</file>
         <file>assets/disword.png</file>
+        <file>assets/kozue48.png</file>
         <file>script.js</file>
         <file>jslib.js</file>
     </qresource>
