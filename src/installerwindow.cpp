@@ -3,6 +3,7 @@
 #include <view/page.h>
 
 #include <QMouseEvent>
+#include <QToolButton>
 
 InstallerWindow::InstallerWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::InstallerWindow) {
@@ -12,14 +13,34 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     ui->headerImage->setStyleSheet(
         "background-color: #000");  // TODO parameterize
 
-    // TODO upper right corner close/mute and reenable this
     // TODO parameterize whole window layout
-    ui->muteButton->setVisible(false);
 
     ui->headerImage->installEventFilter(this);
 
     connect(&bgm, &QMediaPlayer::stateChanged, this,
             &InstallerWindow::bgm_stateChanged);
+
+    // gross but I haven't found any way to overlay a container over other
+    // widgets while passing through input events that don't hit any of its
+    // child widgets
+    QToolButton *crossButton = new QToolButton(this);
+    crossButton->setStyleSheet(
+        "QToolButton { image: url(':/cross.png'); }"
+        "QToolButton:hover { image: url(':/cross_hover.png'); }");
+    crossButton->setCursor(QCursor(Qt::PointingHandCursor));
+    crossButton->resize(18, 18);
+    crossButton->move(width() - (crossButton->width() + 12), 12);
+    connect(crossButton, &QAbstractButton::clicked, this,
+            &InstallerWindow::on_cancelButton_clicked);
+    QToolButton *muteButton = new QToolButton(this);
+    muteButton->setStyleSheet(
+        "QToolButton { image: url(':/mute.png'); }"
+        "QToolButton:hover { image: url(':/mute_hover.png'); }");
+    muteButton->setCursor(QCursor(Qt::PointingHandCursor));
+    muteButton->resize(18, 18);
+    muteButton->move(crossButton->x() - (muteButton->width() + 8), 12);
+    connect(muteButton, &QAbstractButton::clicked, this,
+            &InstallerWindow::on_muteButton_clicked);
 }
 
 InstallerWindow::~InstallerWindow() { delete ui; }

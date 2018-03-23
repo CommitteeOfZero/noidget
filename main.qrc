@@ -3,6 +3,9 @@
         <file alias="header.png">assets/header5.png</file>
         <file alias="pointer.png">assets/pointer.png</file>
         <file alias="mute.png">assets/mute.png</file>
+        <file alias="mute_hover.png">assets/mute_hover.png</file>
+        <file alias="cross.png">assets/cross.png</file>
+        <file alias="cross_hover.png">assets/cross_hover.png</file>
         <file alias="bgm.mp3">assets/bgm.mp3</file>
         <file>assets/disword.png</file>
         <file>assets/kozue48.png</file>

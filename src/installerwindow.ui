@@ -81,7 +81,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/header.png</pixmap>
+          <pixmap resource="../main.qrc">:/header.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -111,7 +111,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap>:/assets/disword.png</pixmap>
+            <pixmap resource="../main.qrc">:/assets/disword.png</pixmap>
            </property>
           </widget>
          </item>
@@ -137,39 +137,6 @@
              <property name="topMargin">
               <number>0</number>
              </property>
-             <item>
-              <widget class="QPushButton" name="muteButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>60</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Mute</string>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normalon>:/mute.png</normalon>
-                </iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-               <property name="hasIcon" stdset="0">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
              <item>
               <spacer name="horizontalSpacer">
                <property name="orientation">
