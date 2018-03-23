@@ -2,6 +2,7 @@
 #include "txsection.h"
 #include "installerapplication.h"
 #include "fs.h"
+#include <util/exception.h>
 #include <QProcess>
 
 Transaction::Transaction(QObject* parent = 0) : QObject(parent) {}
@@ -19,15 +20,24 @@ void Transaction::addExecuteAfterFinish(const QString& cmd) {
     _postFinishCmds.append(cmd);
 }
 
-qint64 Transaction::size() {
-    qint64 result = 0;
-    for (TxSection* section : _sections) {
-        result += section->size();
+// call this before run()
+qint64 Transaction::prepare() {
+    if (_isPrepared) {
+        throw NgException("Tried to prepare transaction twice");
     }
-    return result;
+    qint64 size = 0;
+    for (TxSection* section : _sections) {
+        section->prepare();
+        size += section->size();
+    }
+    _isPrepared = true;
+    return size;
 }
 
 void Transaction::run() {
+    if (!_isPrepared) {
+        throw NgException("Tried to run transaction before preparing it");
+    }
     for (int i = 0; i < _sections.count(); i++) {
         TxSection* section = _sections[i];
         emit sectionChanged(i, section->title());

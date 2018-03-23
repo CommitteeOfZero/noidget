@@ -42,6 +42,7 @@ class TxSection : public QObject, protected QScriptable {
     */
     void addAction(TxAction* action);
     qint64 size();
+    void prepare();
     void run();
 
    signals:

@@ -18,6 +18,12 @@ qint64 TxSection::size() {
     return result;
 }
 
+void TxSection::prepare() {
+    for (TxAction* action : _actions) {
+        action->prepare();
+    }
+}
+
 void TxSection::run() {
     for (TxAction* action : _actions) {
         action->run();

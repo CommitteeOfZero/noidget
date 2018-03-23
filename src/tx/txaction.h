@@ -9,6 +9,7 @@ class TxAction : public QObject, protected QScriptable {
    public:
     explicit TxAction(QObject* parent = 0) : QObject(parent) {}
     virtual ~TxAction() {}
+    virtual void prepare() {}
     virtual void run() = 0;
 
     qint64 size() { return _sizeOverridden ? _sizeOverride : calcSize(); }

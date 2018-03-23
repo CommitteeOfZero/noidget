@@ -31,11 +31,11 @@ class Transaction : public QObject, protected QScriptable {
     Q_INVOKABLE TxSection* addSection(const QString& title);
     Q_INVOKABLE void addExecuteAfterFinish(const QString& cmd);
 
+    qint64 prepare();  // returns size
     void run();
     void runPost();
 
     int sectionCount() { return _sections.count(); }
-    qint64 size();
 
    signals:
     void sectionChanged(int i, const QString& title);
@@ -47,4 +47,5 @@ class Transaction : public QObject, protected QScriptable {
    private:
     QVector<TxSection*> _sections;
     QVector<QString> _postFinishCmds;
+    bool _isPrepared = false;
 };
