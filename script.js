@@ -297,16 +297,16 @@ function DoTx() {
         var diffPath = '%SCRIPT_DIFFS%/' + entry.filename + '.vcdiff';
         if (ng.fs.global().pathIsFile(diffPath)) {
             var stream = ng.tx.diffStreamBuilder(inputPath, diffPath);
-            enscriptMpk.addStreamOpen(stream);
-            enscriptMpk.addFile({
+            enscriptMpk.streamOpen(stream);
+            enscriptMpk.file({
                 id: entry.id,
                 filename: entry.filename,
                 source: stream,
                 size: entry.size
             });
-            enscriptMpk.addStreamClose(stream);
+            enscriptMpk.streamClose(stream);
         } else {
-            enscriptMpk.addFile({
+            enscriptMpk.file({
                 id: entry.id,
                 filename: entry.filename,
                 source: inputPath,
@@ -320,18 +320,18 @@ function DoTx() {
     if (ng.fs.global().md5sum('%ORIG_GAMEEXE_PATH%') ===
         product.untouchedGameExeHash) {
         var stream = ng.tx.fileStreamBuilder('%ORIG_GAMEEXE_PATH%');
-        applyPatchesSection.addStreamOpen(stream);
-        applyPatchesSection.addStreamSeek(stream, product.gameExeSdWrapSize);
-        var writer = applyPatchesSection.addStreamWriter(
-            stream, '%PATCHED_GAMEEXE_PATH%');
+        applyPatchesSection.streamOpen(stream);
+        applyPatchesSection.streamSeek(stream, product.gameExeSdWrapSize);
+        var writer =
+            applyPatchesSection.streamWriter(stream, '%PATCHED_GAMEEXE_PATH%');
         writer.setSize(product.gameExeStrippedSize);
-        applyPatchesSection.addStreamClose(stream);
+        applyPatchesSection.streamClose(stream);
     } else {
         applyPatchesSection.copyFiles(
             '%ORIG_GAMEEXE_PATH%', '%PATCHED_GAMEEXE_PATH%');
     }
 
-    applyPatchesSection.addBinarySearchReplace(
+    applyPatchesSection.binarySearchReplace(
         '%PATCHED_GAMEEXE_PATH%', product.gameExeLaaNeedle,
         product.gameExeLaaReplace);
 
