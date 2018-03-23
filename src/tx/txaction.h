@@ -20,6 +20,7 @@ class TxAction : public QObject, protected QScriptable {
 
    signals:
     void log(const QString& text);
+    void progress(qint64 progress);
 
    protected:
     virtual qint64 calcSize() { return 0; }

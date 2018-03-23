@@ -40,12 +40,15 @@ class Transaction : public QObject, protected QScriptable {
    signals:
     void sectionChanged(int i, const QString& title);
     void log(const QString& text);
+    void progress(qint64 progress);
 
    private slots:
     void sectionLog(const QString& text);
 
    private:
     QVector<TxSection*> _sections;
+    QVector<qint64> _sectionSizes;
     QVector<QString> _postFinishCmds;
+    qint64 _roughProgress;
     bool _isPrepared = false;
 };

@@ -13,6 +13,11 @@ TxSection* Transaction::addSection(const QString& title) {
     section->setTitle(title);
     connect(section, &TxSection::log, this, &Transaction::sectionLog);
     _sections.append(section);
+    int i = _sections.count() - 1;
+    connect(section, &TxSection::progress, [i, this](qint64 sectionProgress) {
+        sectionProgress = qMin(_sectionSizes[i], sectionProgress);
+        emit progress(_roughProgress + sectionProgress);
+    });
     return section;
 }
 
@@ -28,7 +33,9 @@ qint64 Transaction::prepare() {
     qint64 size = 0;
     for (TxSection* section : _sections) {
         section->prepare();
-        size += section->size();
+        qint64 sectionSize = section->size();
+        _sectionSizes.append(sectionSize);
+        size += sectionSize;
     }
     _isPrepared = true;
     return size;
@@ -42,6 +49,8 @@ void Transaction::run() {
         TxSection* section = _sections[i];
         emit sectionChanged(i, section->title());
         section->run();
+        _roughProgress += _sectionSizes[i];
+        emit progress(_roughProgress);
     }
 }
 
@@ -52,3 +61,5 @@ void Transaction::runPost() {
         QProcess::startDetached(cmd);
     }
 }
+
+void Transaction::sectionLog(const QString& text) { emit log(text); }

@@ -34,8 +34,6 @@ void CopyFilesAction::prepare() {
     }
 }
 
-///////// TODO support individual files
-
 qint64 CopyFilesAction::calcSize() {
     qint64 result = 0;
     for (QString path : _srcPaths) {
@@ -71,7 +69,8 @@ void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
     if (!QFile(src).copy(dest)) {
         throw NgException(QString("Could not write file: %1").arg(dest));
     }
-    progress += QFileInfo(dest).size();
+    _progress += QFileInfo(dest).size();
+    emit progress(_progress);
 }
 
 // TODO symlink handling?

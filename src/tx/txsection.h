@@ -47,11 +47,14 @@ class TxSection : public QObject, protected QScriptable {
 
    signals:
     void log(const QString& text);
+    void progress(qint64 progress);
 
    private slots:
     void actionLog(const QString& text);
 
    private:
     QVector<TxAction*> _actions;
+    QVector<qint64> _actionSizes;
     QString _title;
+    qint64 _roughProgress = 0;
 };

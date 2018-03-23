@@ -25,7 +25,7 @@ class CopyFilesAction : public TxAction {
    private:
     QString _src, _dest;
     QVector<QString> _srcPaths;
-    qint64 progress = 0;
+    qint64 _progress = 0;
     Fs* _fs;
 
     qint64 calcSize() override;
