@@ -26,8 +26,5 @@ class FsHost : public QObject, protected QScriptable {
 
     Q_INVOKABLE QScriptValue createFs();
     Q_INVOKABLE Fs* global();
-
-   private:
-    Fs* _global;
 };
 }  // namespace api

@@ -5,6 +5,7 @@
 #include <QStyle>
 
 class InstallerWindow;
+class Fs;
 namespace api {
 class ApiHost;
 }
@@ -22,8 +23,10 @@ class InstallerApplication : public QApplication {
 
     InstallerWindow* window() { return w; }
     api::ApiHost* apiHost() { return h; }
+    Fs* globalFs() { return _fs; }
 
    private:
     InstallerWindow* w;
     api::ApiHost* h;
+    Fs* _fs;
 };

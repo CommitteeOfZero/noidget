@@ -1,6 +1,7 @@
 #include "installerapplication.h"
 #include "installerwindow.h"
 #include <api/apihost.h>
+#include "fs.h"
 #include <QFile>
 #include <QTextStream>
 #include <QStyleFactory>
@@ -17,6 +18,8 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     w->setStyleSheet(ts.readAll());
 
     h = new api::ApiHost(0);
+
+    _fs = new Fs(this);
 
     QFile scriptFile(":/script.js");
     scriptFile.open(QFile::ReadOnly | QFile::Text);

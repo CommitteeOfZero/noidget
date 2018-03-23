@@ -1,6 +1,7 @@
 #include "fshost.h"
 #include "apihost.h"
 #include "fs.h"
+#include "installerapplication.h"
 #include <api/exception.h>
 #include <QScriptValueIterator>
 
@@ -56,8 +57,6 @@ namespace api {
 FsHost::FsHost(ApiHost *parent) : QObject(parent) {
     QScriptEngine *engine = parent->engine();
     qScriptRegisterMetaType(engine, fsToScriptValue, fsFromScriptValue);
-
-    _global = new Fs(this);
 }
 void FsHost::setupScriptObject(QScriptValue &o) {}
 FsHost::~FsHost() {}
@@ -87,6 +86,6 @@ QScriptValue FsHost::createFs() {
  * @static
  * @returns {ng.fs.Fs}
  ^jsdoc*/
-Fs *FsHost::global() { return _global; }
+Fs *FsHost::global() { return ngApp->globalFs(); }
 
 }  // namespace api
