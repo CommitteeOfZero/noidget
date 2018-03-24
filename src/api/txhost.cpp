@@ -6,21 +6,23 @@
 #include "tx/copyfilesaction.h"
 #include "tx/logaction.h"
 #include "tx/createdirectoryaction.h"
+#include "tx/streamopenaction.h"
+#include "tx/streamcloseaction.h"
+#include "tx/streamseekaction.h"
+#include "tx/writestreamaction.h"
+#include "tx/txfilestream.h"
 #include "installerapplication.h"
 #include "progresspage.h"
 #include "installerwindow.h"
 #include <api/exception.h>
 
+static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine);
 static void modifyTransactionInstance(QScriptValue &o) {
-    // TODO stream builders
+    o.setProperty("fileStream", o.engine()->newFunction(fileStream));
 }
-/*  TODO:
 
+/*  TODO:
     Q_INVOKABLE void buildMpk(const QString& path);
-    Q_INVOKABLE void streamOpen(void* stream);
-    Q_INVOKABLE void streamClose(void* stream);
-    Q_INVOKABLE void streamSeek(void* stream, qint64 bytes);
-    Q_INVOKABLE void streamWriter(void* stream, const QString& path);
     Q_INVOKABLE void binarySearchReplace(const QString& path,
                                          const QString& needle,
                                          const QString& replace);
@@ -31,11 +33,27 @@ static QScriptValue txSectionLog(QScriptContext *context,
                                  QScriptEngine *engine);
 static QScriptValue txSectionCreateDirectory(QScriptContext *context,
                                              QScriptEngine *engine);
+
+static QScriptValue txSectionStreamOpen(QScriptContext *context,
+                                        QScriptEngine *engine);
+
+static QScriptValue txSectionStreamClose(QScriptContext *context,
+                                         QScriptEngine *engine);
+
+static QScriptValue txSectionStreamSeek(QScriptContext *context,
+                                        QScriptEngine *engine);
+
+static QScriptValue txSectionWriteStream(QScriptContext *context,
+                                         QScriptEngine *engine);
 static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("copyFiles", o.engine()->newFunction(txSectionCopyFiles));
     o.setProperty("log", o.engine()->newFunction(txSectionLog));
     o.setProperty("createDirectory",
                   o.engine()->newFunction(txSectionCreateDirectory));
+    o.setProperty("streamOpen", o.engine()->newFunction(txSectionStreamOpen));
+    o.setProperty("streamClose", o.engine()->newFunction(txSectionStreamClose));
+    o.setProperty("streamSeek", o.engine()->newFunction(txSectionStreamSeek));
+    o.setProperty("writeStream", o.engine()->newFunction(txSectionWriteStream));
 }
 
 QScriptValue transactionToScriptValue(QScriptEngine *engine,
@@ -88,6 +106,89 @@ QScriptValue createDirectoryActionToScriptValue(
 void createDirectoryActionFromScriptValue(const QScriptValue &object,
                                           CreateDirectoryAction *&out) {
     out = qobject_cast<CreateDirectoryAction *>(object.toQObject());
+}
+QScriptValue streamOpenActionToScriptValue(QScriptEngine *engine,
+                                           StreamOpenAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void streamOpenActionFromScriptValue(const QScriptValue &object,
+                                     StreamOpenAction *&out) {
+    out = qobject_cast<StreamOpenAction *>(object.toQObject());
+}
+QScriptValue streamCloseActionToScriptValue(QScriptEngine *engine,
+                                            StreamCloseAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void streamCloseActionFromScriptValue(const QScriptValue &object,
+                                      StreamCloseAction *&out) {
+    out = qobject_cast<StreamCloseAction *>(object.toQObject());
+}
+QScriptValue streamSeekActionToScriptValue(QScriptEngine *engine,
+                                           StreamSeekAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void streamSeekActionFromScriptValue(const QScriptValue &object,
+                                     StreamSeekAction *&out) {
+    out = qobject_cast<StreamSeekAction *>(object.toQObject());
+}
+QScriptValue writeStreamActionToScriptValue(QScriptEngine *engine,
+                                            WriteStreamAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void writeStreamActionFromScriptValue(const QScriptValue &object,
+                                      WriteStreamAction *&out) {
+    out = qobject_cast<WriteStreamAction *>(object.toQObject());
+}
+QScriptValue txStreamToScriptValue(QScriptEngine *engine, TxStream *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void txStreamFromScriptValue(const QScriptValue &object, TxStream *&out) {
+    out = qobject_cast<TxStream *>(object.toQObject());
+}
+QScriptValue txFileStreamToScriptValue(QScriptEngine *engine,
+                                       TxFileStream *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void txFileStreamFromScriptValue(const QScriptValue &object,
+                                 TxFileStream *&out) {
+    out = qobject_cast<TxFileStream *>(object.toQObject());
+}
+
+/*^jsdoc
+ * Prepare a stream for reading from file
+ * 
+ * @method fileStream
+ * @param {string} path
+ * @memberof ng.tx
+ * @returns {ng.tx.TxFileStream}
+ * @static
+ ^jsdoc*/
+static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 1) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue path = context->argument(0);
+    if (!path.isString()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    TxFileStream *stream = new TxFileStream();
+    stream->setInPath(path.toString());
+    ret = txFileStreamToScriptValue(engine, stream);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
 }
 
 /*^jsdoc
@@ -202,6 +303,167 @@ static QScriptValue txSectionCreateDirectory(QScriptContext *context,
     return ret;
 }
 
+/*^jsdoc
+ * Queue the opening of a stream
+ * 
+ * @method streamOpen
+ * @param {ng.tx.TxStream} stream
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.StreamOpenAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionStreamOpen(QScriptContext *context,
+                                        QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 1) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue _stream = context->argument(0);
+    TxStream *stream;
+    if (!_stream.isQObject() ||
+        (stream = qobject_cast<TxStream *>(_stream.toQObject())) == 0) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    StreamOpenAction *action = new StreamOpenAction(section);
+    action->setStream(stream);
+    section->addAction(action);
+    ret = streamOpenActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
+/*^jsdoc
+ * Queue the closing of a previously opened stream
+ * 
+ * @method streamClose
+ * @param {ng.tx.TxStream} stream
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.StreamCloseAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionStreamClose(QScriptContext *context,
+                                         QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 1) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue _stream = context->argument(0);
+    TxStream *stream;
+    if (!_stream.isQObject() ||
+        (stream = qobject_cast<TxStream *>(_stream.toQObject())) == 0) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    StreamCloseAction *action = new StreamCloseAction(section);
+    action->setStream(stream);
+    section->addAction(action);
+    ret = streamCloseActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
+/*^jsdoc
+ * Queue the seeking of a previously opened stream, relative to its last read 
+ * position
+ * 
+ * @method streamSeek
+ * @param {ng.tx.TxStream} stream
+ * @param {Number} count
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.StreamSeekAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionStreamSeek(QScriptContext *context,
+                                        QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 2) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue _stream = context->argument(0);
+    TxStream *stream;
+    QScriptValue count = context->argument(1);
+    if (!_stream.isQObject() ||
+        (stream = qobject_cast<TxStream *>(_stream.toQObject())) == 0 ||
+        !count.isNumber()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    StreamSeekAction *action = new StreamSeekAction(section);
+    action->setStream(stream);
+    action->setCount((qint64)count.toInteger());
+    section->addAction(action);
+    ret = streamSeekActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
+/*^jsdoc
+ * Write from a stream to a file
+ * 
+ * If the file `dest` already exists it will be overwritten. If `count` is not
+ * specified (or 0), all remaining data will be written.
+ * 
+ * The directory `dest` should reside in must already exist when this is executed.
+ * 
+ * @method writeStream
+ * @param {ng.tx.TxStream} stream
+ * @param {string} dest
+ * @param {Number} [count=0] number of bytes to write
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.WriteStreamAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionWriteStream(QScriptContext *context,
+                                         QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 2) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue _stream = context->argument(0);
+    TxStream *stream;
+    QScriptValue path = context->argument(1);
+    if (!_stream.isQObject() ||
+        (stream = qobject_cast<TxStream *>(_stream.toQObject())) == 0 ||
+        !path.isString()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    WriteStreamAction *action = new WriteStreamAction(section);
+    action->setStream(stream);
+    action->setPath(path.toString());
+    if (context->argumentCount() >= 3) {
+        QScriptValue count = context->argument(2);
+        if (count.isNumber()) {
+            action->setCount((qint64)count.toInteger());
+        }
+    }
+    section->addAction(action);
+    ret = writeStreamActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
 namespace api {
 TxHost::TxHost(ApiHost *parent) : QObject(parent) {
     QScriptEngine *engine = parent->engine();
@@ -217,6 +479,18 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
                             logActionFromScriptValue);
     qScriptRegisterMetaType(engine, createDirectoryActionToScriptValue,
                             createDirectoryActionFromScriptValue);
+    qScriptRegisterMetaType(engine, streamOpenActionToScriptValue,
+                            streamOpenActionFromScriptValue);
+    qScriptRegisterMetaType(engine, streamCloseActionToScriptValue,
+                            streamCloseActionFromScriptValue);
+    qScriptRegisterMetaType(engine, streamSeekActionToScriptValue,
+                            streamSeekActionFromScriptValue);
+    qScriptRegisterMetaType(engine, writeStreamActionToScriptValue,
+                            writeStreamActionFromScriptValue);
+    qScriptRegisterMetaType(engine, txStreamToScriptValue,
+                            txStreamFromScriptValue);
+    qScriptRegisterMetaType(engine, txFileStreamToScriptValue,
+                            txFileStreamFromScriptValue);
 }
 void TxHost::setupScriptObject(QScriptValue &o) {}
 TxHost::~TxHost() {}

@@ -1,0 +1,25 @@
+#pragma once
+
+#include "txaction.h"
+#include "txstream.h"
+#include <QObject>
+#include <QScriptable>
+
+class StreamSeekAction : public TxAction {
+    Q_OBJECT
+    Q_PROPERTY(TxStream* stream READ stream WRITE setStream)
+    Q_PROPERTY(qint64 count READ count WRITE setCount)
+
+   public:
+    explicit StreamSeekAction(QObject* parent = 0) : TxAction(parent) {}
+    void run() override;
+
+    TxStream* stream() { return _stream; }
+    void setStream(TxStream* const& stream) { _stream = stream; }
+    qint64 count() { return _count; }
+    void setCount(qint64 count) { _count = count; }
+
+   private:
+    TxStream* _stream;
+    qint64 _count;
+};
