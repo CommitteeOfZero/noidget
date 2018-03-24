@@ -39,6 +39,12 @@ void Page::back() {
     emit popRequested();
 }
 
+void Page::attached() {
+    // reset to default
+    emit backEnabled(true);
+    emit nextEnabled(true);
+}
+
 void Page::addSpace(int space) { _col->addSpace(space); }
 
 Label* Page::addLabel(const QScriptValue& obj) {

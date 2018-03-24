@@ -1,12 +1,21 @@
 #include "transaction.h"
 #include "txsection.h"
-#include "installerapplication.h"
 #include "fs.h"
 #include <util/exception.h>
 #include <QProcess>
 
-Transaction::Transaction(QObject* parent = 0) : QObject(parent) {}
+Transaction::Transaction(QObject* parent = 0) : QObject(parent) {
+    connect(ngApp, &InstallerApplication::currentStateChanged, this,
+            &Transaction::handleAppStateChange);
+}
 Transaction::~Transaction() {}
+
+void Transaction::handleAppStateChange(InstallerApplication::State newState) {
+    if (newState == InstallerApplication::State::Cancelled) {
+        _isCancelled = true;
+        emit cancelled();
+    }
+}
 
 /*^jsdoc
  * Append a section
@@ -21,6 +30,7 @@ TxSection* Transaction::addSection(const QString& title) {
     TxSection* section = new TxSection(this);
     section->setTitle(title);
     connect(section, &TxSection::log, this, &Transaction::sectionLog);
+    connect(this, &Transaction::cancelled, section, &TxSection::cancel);
     _sections.append(section);
     int i = _sections.count() - 1;
     connect(section, &TxSection::progress, [i, this](qint64 sectionProgress) {
@@ -65,12 +75,24 @@ void Transaction::run() {
     if (!_isPrepared) {
         throw NgException("Tried to run transaction before preparing it");
     }
+    if (_isStarted) {
+        throw NgException("Tried to start transaction twice");
+    }
+    _isStarted = true;
     for (int i = 0; i < _sections.count(); i++) {
+        if (_isCancelled) {
+            break;
+        }
         TxSection* section = _sections[i];
         emit sectionChanged(i, section->title());
         section->run();
         _roughProgress += _sectionSizes[i];
         emit progress(_roughProgress);
+    }
+    if (_isCancelled) {
+        emit log("User cancelled transaction");
+    } else {
+        ngApp->setCurrentState(InstallerApplication::State::Finished);
     }
 }
 

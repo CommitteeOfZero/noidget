@@ -46,8 +46,12 @@ class TxAction : public QObject, protected QScriptable {
     void log(const QString& text);
     void progress(qint64 progress);
 
+   public slots:
+    void cancel() { _isCancelled = true; }
+
    protected:
     virtual qint64 calcSize() { return 0; }
+    bool _isCancelled = false;
 
    private:
     bool _sizeOverridden = false;

@@ -9,6 +9,8 @@
 
 InstallerApplication::InstallerApplication(int& argc, char** argv)
     : QApplication(argc, argv) {
+    _currentState = State::Preparation;
+
     w = new InstallerWindow(0);
 
     // we do not set these globally so that we can have unthemed dialogs

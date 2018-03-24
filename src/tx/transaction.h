@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QScriptable>
 #include <QVector>
+#include "installerapplication.h"
 
 class TxSection;
 
@@ -35,12 +36,19 @@ class Transaction : public QObject, protected QScriptable {
     void run();
     void runPost();
 
+    bool isStarted() { return _isStarted; }
+    bool isCancelled() { return _isCancelled; }
+
     int sectionCount() { return _sections.count(); }
 
    signals:
     void sectionChanged(int i, const QString& title);
     void log(const QString& text);
     void progress(qint64 progress);
+    void cancelled();
+
+   public slots:
+    void handleAppStateChange(InstallerApplication::State newState);
 
    private slots:
     void sectionLog(const QString& text);
@@ -51,4 +59,6 @@ class Transaction : public QObject, protected QScriptable {
     QVector<QString> _postFinishCmds;
     qint64 _roughProgress = 0;
     bool _isPrepared = false;
+    bool _isStarted = false;
+    bool _isCancelled = false;
 };

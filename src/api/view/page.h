@@ -61,6 +61,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     explicit Page(QWidget* parent = 0);
     void next() override;
     void back() override;
+    void attached() override;
 
     QString title() const override { return _titleLbl->text(); }
     void setTitle(const QString& v) {

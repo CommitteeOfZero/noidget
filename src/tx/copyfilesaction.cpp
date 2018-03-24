@@ -71,6 +71,12 @@ void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
     void* buffer = malloc(1024 * 1024);
     qint64 bytesRead = 0;
     while ((bytesRead = in.read((char*)buffer, 1024 * 1024)) > 0) {
+        if (_isCancelled) {
+            emit log(QString("File copy to %1 aborted mid-write after user "
+                             "cancelled transaction")
+                         .arg(dest));
+            return;
+        }
         out.write((const char*)buffer, bytesRead);
         _progress += bytesRead;
         emit progress(_progress);
@@ -105,6 +111,9 @@ void CopyFilesAction::run() {
         QDir src(expandedSrc), dest(expandedDest);
 
         for (QString path : _srcPaths) {
+            if (_isCancelled) {
+                return;
+            }
             if (_fs->pathIsFile(path)) {
                 QString relativeSrc = src.relativeFilePath(path);
                 QString absoluteDest = dest.absoluteFilePath(relativeSrc);
@@ -116,6 +125,9 @@ void CopyFilesAction::run() {
                                 QDirIterator::Subdirectories |
                                     QDirIterator::FollowSymlinks);
                 while (it.hasNext()) {
+                    if (_isCancelled) {
+                        return;
+                    }
                     QString entryPath = it.next();
                     QString entryDest =
                         dest.absoluteFilePath(src.relativeFilePath(entryPath));

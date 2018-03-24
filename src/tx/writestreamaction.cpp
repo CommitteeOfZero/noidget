@@ -19,11 +19,19 @@ void WriteStreamAction::run() {
     qint64 bytesRead = 0;
     while ((bytesRead = _stream->read(buffer, qMin(bytesToRead, bufferSize))) >
            0) {
+        if (_isCancelled) {
+            break;
+        }
         out.write((const char*)buffer, bytesRead);
         _progress += bytesRead;
         if (_count > 0) {
             emit progress(_progress);
             bytesToRead -= bytesRead;
         }
+    }
+    if (_isCancelled) {
+        emit log(QString("Stream write to %1 aborted mid-write after user "
+                         "cancelled transaction")
+                     .arg(dest));
     }
 }

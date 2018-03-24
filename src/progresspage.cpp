@@ -6,8 +6,6 @@
 #include <QtConcurrent>
 #include <QScrollBar>
 
-// TODO handle cancel (currently the main window disappears but the installation keeps running)
-
 ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
     _layout = new QVBoxLayout(this);
     _layout->setMargin(0);
@@ -32,6 +30,8 @@ ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
     _logBox->setObjectName("logBox");
     _layout->addWidget(_logBox);
 
+    ngApp->setCurrentState(InstallerApplication::State::Installing);
+
     Transaction* tx = ngApp->tx();
     connect(tx, &Transaction::sectionChanged, this,
             &ProgressPage::txSectionChange);
@@ -53,11 +53,6 @@ ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
         startTx();
     });
     txSizeWatcher->setFuture(txSize);
-}
-
-void ProgressPage::attached() {
-    emit nextEnabled(false);
-    emit backEnabled(false);
 }
 
 void ProgressPage::startTx() {

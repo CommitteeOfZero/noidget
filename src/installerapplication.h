@@ -17,19 +17,35 @@ class InstallerApplication : public QApplication {
     Q_OBJECT
 
    public:
+    enum class State { Preparation, Installing, Cancelled, Finished };
+    Q_ENUM(State)
+    Q_PROPERTY(State currentState READ currentState WRITE setCurrentState NOTIFY
+                   currentStateChanged)
+
     explicit InstallerApplication(int& argc, char** argv);
     ~InstallerApplication();
 
     void showWindow();
+
+    State currentState() const { return _currentState; }
+    void setCurrentState(State currentState) {
+        _currentState = currentState;
+        emit currentStateChanged(currentState);
+    }
 
     InstallerWindow* window() { return w; }
     api::ApiHost* apiHost() { return h; }
     Fs* globalFs() { return _fs; }
     Transaction* tx() { return _tx; }
 
+   signals:
+    void currentStateChanged(State currentState);
+
    private:
     InstallerWindow* w;
     api::ApiHost* h;
     Fs* _fs;
     Transaction* _tx;
+
+    State _currentState;
 };

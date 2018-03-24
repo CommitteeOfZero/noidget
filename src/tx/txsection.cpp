@@ -7,6 +7,7 @@ TxSection::~TxSection() {}
 void TxSection::addAction(TxAction* action) {
     action->setParent(this);
     connect(action, &TxAction::log, this, &TxSection::actionLog);
+    connect(this, &TxSection::cancelled, action, &TxAction::cancel);
     _actions.append(action);
     int i = _actions.count() - 1;
     connect(action, &TxAction::progress, [i, this](qint64 actionProgress) {
@@ -33,6 +34,9 @@ void TxSection::prepare() {
 
 void TxSection::run() {
     for (int i = 0; i < _actions.count(); i++) {
+        if (_isCancelled) {
+            return;
+        }
         TxAction* action = _actions[i];
         action->run();
         _roughProgress += _actionSizes[i];

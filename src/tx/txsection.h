@@ -35,6 +35,13 @@ class TxSection : public QObject, protected QScriptable {
    signals:
     void log(const QString& text);
     void progress(qint64 progress);
+    void cancelled();
+
+   public slots:
+    void cancel() {
+        _isCancelled = true;
+        emit cancelled();
+    }
 
    private slots:
     void actionLog(const QString& text);
@@ -44,4 +51,5 @@ class TxSection : public QObject, protected QScriptable {
     QVector<qint64> _actionSizes;
     QString _title;
     qint64 _roughProgress = 0;
+    bool _isCancelled = false;
 };

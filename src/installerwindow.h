@@ -3,7 +3,9 @@
 #include <QMainWindow>
 #include <QtMultimedia/QMediaPlayer>
 #include <QEvent>
+#include <QCloseEvent>
 #include <view/ipagestack.h>
+#include "installerapplication.h"
 
 namespace Ui {
 class InstallerWindow;
@@ -27,14 +29,17 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
 
    protected:
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
    signals:
 
    public slots:
 
    private slots:
+    void handleAppStateChange(InstallerApplication::State newState);
+
     void bgm_stateChanged(QMediaPlayer::State state);
-    void on_cancelButton_clicked();
+    void cancelRequested();
     void on_muteButton_clicked();
 
     void on_nextButton_clicked();
