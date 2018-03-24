@@ -6,6 +6,8 @@
 #include <QtConcurrent>
 #include <QScrollBar>
 
+// TODO handle cancel (currently the main window disappears but the installation keeps running)
+
 ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
     _layout = new QVBoxLayout(this);
     _layout->setMargin(0);
@@ -75,10 +77,22 @@ void ProgressPage::txSectionChange(int i, const QString& sectionTitle) {
 }
 
 void ProgressPage::getLog(const QString& text) {
+    QScrollBar* textScroll = _logBox->verticalScrollBar();
+    int oldScroll = textScroll->value();
+    bool autoscrollEnabled = textScroll->value() == textScroll->maximum();
+    QTextCursor oldCursor = _logBox->textCursor();
+    QTextCursor newCursor(oldCursor);
+    newCursor.movePosition(QTextCursor::End);
+    _logBox->setTextCursor(newCursor);
+    // insertPlainText inserts at cursor, so we need to go to the end (in case user has selected something)
     _logBox->insertPlainText("\n" + text);
-    // autoscroll
-    _logBox->verticalScrollBar()->setValue(
-        _logBox->verticalScrollBar()->maximum());
+    // give selection back
+    _logBox->setTextCursor(oldCursor);
+    if (autoscrollEnabled) {
+        textScroll->setValue(textScroll->maximum());
+    } else {
+        textScroll->setValue(oldScroll);
+    }
 }
 
 void ProgressPage::updateProgressBar(qint64 progress) {
