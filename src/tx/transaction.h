@@ -49,6 +49,6 @@ class Transaction : public QObject, protected QScriptable {
     QVector<TxSection*> _sections;
     QVector<qint64> _sectionSizes;
     QVector<QString> _postFinishCmds;
-    qint64 _roughProgress;
+    qint64 _roughProgress = 0;
     bool _isPrepared = false;
 };
