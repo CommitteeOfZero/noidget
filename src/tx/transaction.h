@@ -16,10 +16,10 @@ class TxSection;
  * which are executed in order. The name of the current section is displayed on
  * the progress page.
  *
- * @namespace tx
- * @memberof ng
+ * @class Transaction
+ * @memberof ng.tx
  * @toplevel
- * @static
+ * @hideconstructor
  ^jsdoc*/
 class Transaction : public QObject, protected QScriptable {
     Q_OBJECT

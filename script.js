@@ -521,7 +521,17 @@ DirectoryPage.prototype.onNext = function() {
     state.shouldCreateStartMenuShortcut = this.startMenuShortcutCb.checked;
     state.shouldRunLauncher = this.launcherCb.checked;
 
-    (new DummyPage()).push();
+    //(new DummyPage()).push();
+
+    // ng.window.runTx();
+
+    var testSection = ng.tx.tx().addSection('Test section');
+    testSection.log('Log test');
+    testSection.createDirectory('G:/Games/SGTL/CHAOSCHILD_2/dummyDir');
+    testSection.copyFiles(
+        'G:/Games/SGTL/CHAOSCHILD', 'G:/Games/SGTL/CHAOSCHILD_2');
+    testSection.log('done');
+    ng.tx.run();
 };
 
 var DummyPage = function() {
