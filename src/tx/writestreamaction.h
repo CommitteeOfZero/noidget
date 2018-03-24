@@ -11,6 +11,8 @@
  * If the file `dest` already exists it will be overwritten. If `count` is not
  * specified (or 0), all remaining data will be written.
  * 
+ * Note that you *cannot overwrite the stream's source* with this.
+ * 
  * The directory `dest` should reside in must already exist when this is executed.
  * 
  * @class WriteStreamAction
