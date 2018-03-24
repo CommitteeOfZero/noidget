@@ -53,6 +53,11 @@ ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
     txSizeWatcher->setFuture(txSize);
 }
 
+void ProgressPage::attached() {
+    emit nextEnabled(false);
+    emit backEnabled(false);
+}
+
 void ProgressPage::startTx() {
     _sectionCount = ngApp->tx()->sectionCount();
 

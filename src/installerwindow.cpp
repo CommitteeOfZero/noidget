@@ -77,10 +77,17 @@ void InstallerWindow::on_muteButton_clicked() {
 }
 
 void InstallerWindow::push(view::Page *page) {
+    ui->backButton->setEnabled(true);
+    ui->nextButton->setEnabled(true);
+    connect(page, &view::Page::nextEnabled, this,
+            &InstallerWindow::page_nextEnabled);
+    connect(page, &view::Page::backEnabled, this,
+            &InstallerWindow::page_backEnabled);
     connect(page, &view::Page::popRequested, this,
             &InstallerWindow::page_popRequested);
     const int i = ui->stackedWidget->addWidget(page);
     ui->stackedWidget->setCurrentIndex(i);  // TODO necessary?
+    page->attached();
 }
 
 void InstallerWindow::pop() {
@@ -114,6 +121,14 @@ void InstallerWindow::on_backButton_clicked() {
 
 void InstallerWindow::on_stackedWidget_currentChanged(int i) {
     ui->backButton->setEnabled(ui->stackedWidget->count() > 1);
+}
+
+void InstallerWindow::page_nextEnabled(bool enabled) {
+    ui->nextButton->setEnabled(enabled);
+}
+
+void InstallerWindow::page_backEnabled(bool enabled) {
+    ui->backButton->setEnabled(enabled);
 }
 
 void InstallerWindow::page_popRequested() {

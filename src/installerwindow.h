@@ -42,6 +42,8 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
     void on_stackedWidget_currentChanged(int i);
 
     void page_popRequested();
+    void page_nextEnabled(bool enabled);
+    void page_backEnabled(bool enabled);
 
    private:
     Ui::InstallerWindow *ui;

@@ -15,6 +15,7 @@ class ProgressPage : public view::Page {
     explicit ProgressPage(QWidget* parent = 0);
     void next() override {}
     void back() override {}
+    void attached() override;
 
     QString title() const override { return _titleLbl->text(); }
 
