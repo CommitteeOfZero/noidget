@@ -63,7 +63,10 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     void back() override;
 
     QString title() const override { return _titleLbl->text(); }
-    void setTitle(const QString& v) { _titleLbl->setText(v); }
+    void setTitle(const QString& v) {
+        _titleLbl->setText(v);
+        emit titleChanged(v);
+    }
 
     QScriptValue onNext() const { return _onNext; }
     void setOnNext(const QScriptValue& v) { _onNext = v; }
