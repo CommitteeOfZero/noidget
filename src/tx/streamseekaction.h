@@ -5,6 +5,18 @@
 #include <QObject>
 #include <QScriptable>
 
+/*^jsdoc
+ * Action to queue the seeking of a previously opened stream
+ * 
+ * @class StreamSeekAction
+ * @extends ng.tx.TxAction
+ * @memberof ng.tx
+ * @static
+ * @toplevel
+ * @hideconstructor
+ * @property {ng.tx.TxStream} stream - stream this action is to be executed on
+ * @property {Number} count - bytes to seek relative to position at time of execution
+ ^jsdoc*/
 class StreamSeekAction : public TxAction {
     Q_OBJECT
     Q_PROPERTY(TxStream* stream READ stream WRITE setStream)

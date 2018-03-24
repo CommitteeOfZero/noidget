@@ -4,6 +4,17 @@
 #include <QObject>
 #include <QFile>
 
+/*^jsdoc
+ * File (read) stream builder
+ *
+ * @class TxFileStream
+ * @extends ng.tx.TxStream
+ * @memberof ng.tx
+ * @static
+ * @toplevel
+ * @hideconstructor
+ * @property {string} inPath - path to file to read from
+ ^jsdoc*/
 class TxFileStream : public TxStream {
     Q_OBJECT
     Q_PROPERTY(QString inPath READ inPath WRITE setInPath)

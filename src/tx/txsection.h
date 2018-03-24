@@ -11,8 +11,10 @@ class TxAction;
  *
  * @class TxSection
  * @memberof ng.tx
+ * @static
  * @toplevel
  * @hideconstructor
+ * @property {string} title - Section heading displayed in log and on progress page
  ^jsdoc*/
 class TxSection : public QObject, protected QScriptable {
     Q_OBJECT
@@ -25,21 +27,6 @@ class TxSection : public QObject, protected QScriptable {
     QString title() { return _title; }
     void setTitle(const QString& title) { _title = title; }
 
-    // TODO move all of this stuff into API, add types
-    /*
-    Q_INVOKABLE void copyFiles(const QString& source,
-                               const QString& destination);
-    Q_INVOKABLE void log(const QString& text);
-    Q_INVOKABLE void createDirectory(const QString& path);
-    Q_INVOKABLE void buildMpk(const QString& path);
-    Q_INVOKABLE void streamOpen(void* stream);
-    Q_INVOKABLE void streamClose(void* stream);
-    Q_INVOKABLE void streamSeek(void* stream, qint64 bytes);
-    Q_INVOKABLE void streamWriter(void* stream, const QString& path);
-    Q_INVOKABLE void binarySearchReplace(const QString& path,
-                                         const QString& needle,
-                                         const QString& replace);
-    */
     void addAction(TxAction* action);
     qint64 size();
     void prepare();

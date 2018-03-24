@@ -3,6 +3,15 @@
 #include <QObject>
 #include <QScriptable>
 
+/*^jsdoc
+ * Abstract base class for individual operations in a transaction
+ *
+ * @class TxAction
+ * @memberof ng.tx
+ * @static
+ * @toplevel
+ * @hideconstructor
+ ^jsdoc*/
 class TxAction : public QObject, protected QScriptable {
     Q_OBJECT
 
@@ -13,6 +22,21 @@ class TxAction : public QObject, protected QScriptable {
     virtual void run() = 0;
 
     qint64 size() { return _sizeOverridden ? _sizeOverride : calcSize(); }
+    /*^jsdoc
+     * Explicitly specify operation size in bytes (for progress bar)
+     *
+     * Passing 0 is allowed (this operation will then not count towards the progress
+     * bar). If this is never set (and the action supports it), operation size
+     * is calculated given its inputs before the transaction is committed.
+     * 
+     * Setting this can speed up the installation as the size does not have to
+     * be computed (and likely read from disk) in that case.
+     *
+     * @method overrideSize
+     * @param {Number} newSize
+     * @memberof ng.tx.TxAction
+     * @instance
+     ^jsdoc*/
     Q_INVOKABLE void overrideSize(qint64 newSize) {
         _sizeOverridden = true;
         _sizeOverride = newSize;

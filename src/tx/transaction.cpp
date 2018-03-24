@@ -8,6 +8,15 @@
 Transaction::Transaction(QObject* parent = 0) : QObject(parent) {}
 Transaction::~Transaction() {}
 
+/*^jsdoc
+ * Append a section
+ * 
+ * @method addSection
+ * @param {string} title
+ * @memberof ng.tx.Transaction
+ * @returns {ng.tx.TxSection}
+ * @instance
+ ^jsdoc*/
 TxSection* Transaction::addSection(const QString& title) {
     TxSection* section = new TxSection(this);
     section->setTitle(title);
@@ -21,6 +30,17 @@ TxSection* Transaction::addSection(const QString& title) {
     return section;
 }
 
+/*^jsdoc
+ * Add a command to run when the installer closes
+ * 
+ * Commands are started in the order they are added, but without waiting for each
+ * other to exit.
+ * 
+ * @method addExecuteAfterFinish
+ * @param {string} cmd
+ * @memberof ng.tx.Transaction
+ * @instance
+ ^jsdoc*/
 void Transaction::addExecuteAfterFinish(const QString& cmd) {
     _postFinishCmds.append(cmd);
 }

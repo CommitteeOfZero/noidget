@@ -5,6 +5,17 @@
 #include <QObject>
 #include <QScriptable>
 
+/*^jsdoc
+ * Action to queue the closing of a previously opened stream
+ * 
+ * @class StreamCloseAction
+ * @extends ng.tx.TxAction
+ * @memberof ng.tx
+ * @static
+ * @toplevel
+ * @hideconstructor
+ * @property {ng.tx.TxStream} stream - stream this action is to be executed on
+ ^jsdoc*/
 class StreamCloseAction : public TxAction {
     Q_OBJECT
     Q_PROPERTY(TxStream* stream READ stream WRITE setStream)

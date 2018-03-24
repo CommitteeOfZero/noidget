@@ -3,6 +3,15 @@
 #include <QObject>
 #include <QScriptable>
 
+/*^jsdoc
+ * Abstract stream (builder) to be operated on with various actions
+ *
+ * @class TxStream
+ * @memberof ng.tx
+ * @static
+ * @toplevel
+ * @hideconstructor
+ ^jsdoc*/
 class TxStream : public QObject, protected QScriptable {
     Q_OBJECT
 

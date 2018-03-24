@@ -7,6 +7,26 @@
 
 class Fs;
 
+/*^jsdoc
+ * Action to copy files
+ * 
+ * `src` can be a directory (in which case the directory is copied to `dest` whole),
+ * `/path/to/some/directory/*` (in which case all of its files and subdirectories
+ * are copied to the `dest` directory), or a single file (copied into `dest` if that 
+ * refers to a directory, or named `dest` otherwise).
+ * 
+ * Destination directory (and parents) do not need to exist and existing files
+ * will be overwritten.
+ * 
+ * @class CopyFilesAction
+ * @extends ng.tx.TxAction
+ * @memberof ng.tx
+ * @static
+ * @toplevel
+ * @hideconstructor
+ * @property {string} src
+ * @property {string} dest
+ ^jsdoc*/
 class CopyFilesAction : public TxAction {
     Q_OBJECT
     Q_PROPERTY(QString src READ src WRITE setSrc)

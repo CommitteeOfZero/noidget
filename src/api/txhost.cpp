@@ -164,7 +164,7 @@ void txFileStreamFromScriptValue(const QScriptValue &object,
  * Prepare a stream for reading from file
  * 
  * @method fileStream
- * @param {string} path
+ * @param {string} inPath
  * @memberof ng.tx
  * @returns {ng.tx.TxFileStream}
  * @static
@@ -192,20 +192,13 @@ static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine) {
 }
 
 /*^jsdoc
- * Adds a file copy operation to the section.
- * 
- * `src` can be a directory (in which case the directory is copied to `dest` whole),
- * `/path/to/some/directory/*` (in which case all of its files and subdirectories
- * are copied to the `dest` directory), or a single file (copied into `dest` if that 
- * refers to a directory, or named `dest` otherwise).
- * 
- * Destination directory (and parents) do not need to exist and existing files
- * will be overwritten.
+ * File copy operation
  * 
  * @method copyFiles
  * @param {string} src
  * @param {string} dest
  * @memberof ng.tx.TxSection
+ * @returns {ng.tx.CopyFilesAction}
  * @instance
  ^jsdoc*/
 static QScriptValue txSectionCopyFiles(QScriptContext *context,
@@ -237,12 +230,10 @@ static QScriptValue txSectionCopyFiles(QScriptContext *context,
 /*^jsdoc
  * Write plain text to the log during section
  * 
- * Rich text is not supported. Text will be displayed in the UI and written to
- * the plaintext log file.
- * 
  * @method log
  * @param {string} text
  * @memberof ng.tx.TxSection
+ * @returns {ng.tx.LogAction}
  * @instance
  ^jsdoc*/
 static QScriptValue txSectionLog(QScriptContext *context,
@@ -277,6 +268,7 @@ static QScriptValue txSectionLog(QScriptContext *context,
  * @method createDirectory
  * @param {string} path
  * @memberof ng.tx.TxSection
+ * @returns {ng.tx.CreateDirectoryAction}
  * @instance
  ^jsdoc*/
 static QScriptValue txSectionCreateDirectory(QScriptContext *context,
@@ -416,15 +408,10 @@ static QScriptValue txSectionStreamSeek(QScriptContext *context,
 /*^jsdoc
  * Write from a stream to a file
  * 
- * If the file `dest` already exists it will be overwritten. If `count` is not
- * specified (or 0), all remaining data will be written.
- * 
- * The directory `dest` should reside in must already exist when this is executed.
- * 
  * @method writeStream
  * @param {ng.tx.TxStream} stream
  * @param {string} dest
- * @param {Number} [count=0] number of bytes to write
+ * @param {Number} [count=0]
  * @memberof ng.tx.TxSection
  * @returns {ng.tx.WriteStreamAction}
  * @instance
@@ -441,17 +428,17 @@ static QScriptValue txSectionWriteStream(QScriptContext *context,
     }
     QScriptValue _stream = context->argument(0);
     TxStream *stream;
-    QScriptValue path = context->argument(1);
+    QScriptValue dest = context->argument(1);
     if (!_stream.isQObject() ||
         (stream = qobject_cast<TxStream *>(_stream.toQObject())) == 0 ||
-        !path.isString()) {
+        !dest.isString()) {
         SCRIPT_THROW_FUN("Parameter has invalid type")
         return ret;
     }
     SCRIPT_EX_GUARD_START_FUN
     WriteStreamAction *action = new WriteStreamAction(section);
     action->setStream(stream);
-    action->setPath(path.toString());
+    action->setDest(dest.toString());
     if (context->argumentCount() >= 3) {
         QScriptValue count = context->argument(2);
         if (count.isNumber()) {

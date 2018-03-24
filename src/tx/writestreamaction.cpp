@@ -8,7 +8,7 @@
 static const qint64 bufferSize = 1024 * 1024;
 
 void WriteStreamAction::run() {
-    QString dest = ngApp->globalFs()->expandedPath(_path);
+    QString dest = ngApp->globalFs()->expandedPath(_dest);
     QFile out(dest);
     if (!out.open(QIODevice::WriteOnly)) {
         throw NgException(QString("Could not write file: %1").arg(dest));
