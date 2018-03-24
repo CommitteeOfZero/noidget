@@ -58,19 +58,23 @@ qint64 CopyFilesAction::calcSize() {
 
 void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
     emit log(dest);
-    if (!_fs->pathIsReadable(src)) {
-        throw NgException(
-            QString("Tried to copy unreadable file: %1").arg(src));
+
+    QFile in(src);
+    if (!in.open(QIODevice::ReadOnly)) {
+        throw NgException(QString("Could not read file: %1").arg(src));
     }
-    if (_fs->pathExists(dest)) {
-        // TODO make this safer
-        QFile(dest).remove();
-    }
-    if (!QFile(src).copy(dest)) {
+    QFile out(dest);
+    if (!out.open(QIODevice::WriteOnly)) {
         throw NgException(QString("Could not write file: %1").arg(dest));
     }
-    _progress += QFileInfo(dest).size();
-    emit progress(_progress);
+
+    void* buffer = malloc(1024 * 1024);
+    qint64 bytesRead = 0;
+    while ((bytesRead = in.read((char*)buffer, 1024 * 1024)) > 0) {
+        out.write((const char*)buffer, bytesRead);
+        _progress += bytesRead;
+        emit progress(_progress);
+    }
 }
 
 // TODO symlink handling?
