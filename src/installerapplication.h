@@ -6,6 +6,7 @@
 
 class InstallerWindow;
 class Fs;
+class Transaction;
 namespace api {
 class ApiHost;
 }
@@ -24,9 +25,11 @@ class InstallerApplication : public QApplication {
     InstallerWindow* window() { return w; }
     api::ApiHost* apiHost() { return h; }
     Fs* globalFs() { return _fs; }
+    Transaction* tx() { return _tx; }
 
    private:
     InstallerWindow* w;
     api::ApiHost* h;
     Fs* _fs;
+    Transaction* _tx;
 };
