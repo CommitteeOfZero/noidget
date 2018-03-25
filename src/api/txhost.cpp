@@ -18,14 +18,6 @@
 #include "installerwindow.h"
 #include <api/exception.h>
 
-static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine);
-static QScriptValue xdelta3Stream(QScriptContext *context,
-                                  QScriptEngine *engine);
-static void modifyTransactionInstance(QScriptValue &o) {
-    o.setProperty("fileStream", o.engine()->newFunction(fileStream));
-    o.setProperty("xdelta3Stream", o.engine()->newFunction(xdelta3Stream));
-}
-
 /*  TODO:
     Q_INVOKABLE void binarySearchReplace(const QString& path,
                                          const QString& needle,
@@ -68,7 +60,6 @@ static void modifyBuildMpkActionInstance(QScriptValue &o) {
 QScriptValue transactionToScriptValue(QScriptEngine *engine,
                                       Transaction *const &in) {
     auto ret = engine->newQObject(in);
-    modifyTransactionInstance(ret);
     return ret;
 }
 void transactionFromScriptValue(const QScriptValue &object, Transaction *&out) {
@@ -186,68 +177,6 @@ QScriptValue txXdelta3StreamToScriptValue(QScriptEngine *engine,
 void txXdelta3StreamFromScriptValue(const QScriptValue &object,
                                     TxXdelta3Stream *&out) {
     out = qobject_cast<TxXdelta3Stream *>(object.toQObject());
-}
-
-/*^jsdoc
- * Prepare a stream for reading from file
- * 
- * @method fileStream
- * @param {string} inPath
- * @memberof ng.tx
- * @returns {ng.tx.TxFileStream}
- * @static
- ^jsdoc*/
-static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine) {
-    QScriptValue _this = context->thisObject();
-    QScriptValue ret;
-    if (context->argumentCount() < 1) {
-        SCRIPT_THROW_FUN("Missing required parameter")
-        return ret;
-    }
-    QScriptValue path = context->argument(0);
-    if (!path.isString()) {
-        SCRIPT_THROW_FUN("Parameter has invalid type")
-        return ret;
-    }
-    SCRIPT_EX_GUARD_START_FUN
-    TxFileStream *stream = new TxFileStream();
-    stream->setInPath(path.toString());
-    ret = txFileStreamToScriptValue(engine, stream);
-    SCRIPT_EX_GUARD_END_FUN(ret)
-    return ret;
-}
-
-/*^jsdoc
- * Prepare a stream for decoding a VCDIFF file
- * 
- * @method xdelta3Stream
- * @param {string} srcPath
- * @param {string} diffPath
- * @memberof ng.tx
- * @returns {ng.tx.TxXdelta3Stream}
- * @static
- ^jsdoc*/
-static QScriptValue xdelta3Stream(QScriptContext *context,
-                                  QScriptEngine *engine) {
-    QScriptValue _this = context->thisObject();
-    QScriptValue ret;
-    if (context->argumentCount() < 2) {
-        SCRIPT_THROW_FUN("Missing required parameter")
-        return ret;
-    }
-    QScriptValue srcPath = context->argument(0);
-    QScriptValue diffPath = context->argument(1);
-    if (!srcPath.isString() || !diffPath.isString()) {
-        SCRIPT_THROW_FUN("Parameter has invalid type")
-        return ret;
-    }
-    SCRIPT_EX_GUARD_START_FUN
-    TxXdelta3Stream *stream = new TxXdelta3Stream();
-    stream->setSrcPath(srcPath.toString());
-    stream->setDiffPath(diffPath.toString());
-    ret = txXdelta3StreamToScriptValue(engine, stream);
-    SCRIPT_EX_GUARD_END_FUN(ret)
-    return ret;
 }
 
 /*^jsdoc
@@ -597,6 +526,43 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
 }
 void TxHost::setupScriptObject(QScriptValue &o) {}
 TxHost::~TxHost() {}
+
+/*^jsdoc
+ * Prepare a stream for reading from file
+ * 
+ * @method fileStream
+ * @param {string} inPath
+ * @memberof ng.tx
+ * @returns {ng.tx.TxFileStream}
+ * @static
+ ^jsdoc*/
+TxFileStream *TxHost::fileStream(const QString &inPath) {
+    SCRIPT_EX_GUARD_START
+    TxFileStream *ret = new TxFileStream();
+    ret->setInPath(inPath);
+    return ret;
+    SCRIPT_EX_GUARD_END(nullptr)
+}
+
+/*^jsdoc
+ * Prepare a stream for decoding a VCDIFF file
+ * 
+ * @method xdelta3Stream
+ * @param {string} srcPath
+ * @param {string} diffPath
+ * @memberof ng.tx
+ * @returns {ng.tx.TxXdelta3Stream}
+ * @static
+ ^jsdoc*/
+TxXdelta3Stream *TxHost::xdelta3Stream(const QString &srcPath,
+                                       const QString &diffPath) {
+    SCRIPT_EX_GUARD_START
+    TxXdelta3Stream *ret = new TxXdelta3Stream();
+    ret->setSrcPath(srcPath);
+    ret->setDiffPath(diffPath);
+    return ret;
+    SCRIPT_EX_GUARD_END(nullptr)
+}
 
 /*^jsdoc
  * Returns the global {@link ng.tx.Transaction} instance.
