@@ -134,7 +134,8 @@ qint64 TxXdelta3Stream::read(void* buffer, qint64 max) {
         buffer = (char*)buffer + flushed;
         _outBuffer = (char*)_outBuffer + flushed;
         max -= flushed;
-        if (max > 0) {
+        _outBytesAvailable -= flushed;
+        if (_outBytesAvailable <= 0) {
             xd3_consume_output(&_xd3stream);
             readUntilOutput();
         }
