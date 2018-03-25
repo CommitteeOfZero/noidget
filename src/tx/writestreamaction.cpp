@@ -34,4 +34,5 @@ void WriteStreamAction::run() {
                          "cancelled transaction")
                      .arg(dest));
     }
+    free(buffer);
 }

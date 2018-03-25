@@ -13,6 +13,7 @@ void TxFileStream::open() {
     if (!_inFile->open(QIODevice::ReadOnly)) {
         throw NgException(QString("Couldn't open file: %1").arg(expandedPath));
     }
+    _isOpen = true;
 }
 
 void TxFileStream::close() {
@@ -22,6 +23,7 @@ void TxFileStream::close() {
                               .arg(expandedPath));
     }
     _inFile->close();
+    _isOpen = false;
 }
 
 void TxFileStream::seek(qint64 count) {

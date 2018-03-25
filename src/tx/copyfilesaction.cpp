@@ -75,12 +75,14 @@ void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
             emit log(QString("File copy to %1 aborted mid-write after user "
                              "cancelled transaction")
                          .arg(dest));
+            free(buffer);
             return;
         }
         out.write((const char*)buffer, bytesRead);
         _progress += bytesRead;
         emit progress(_progress);
     }
+    free(buffer);
 }
 
 // TODO symlink handling?

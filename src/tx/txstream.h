@@ -14,6 +14,7 @@
  ^jsdoc*/
 class TxStream : public QObject, protected QScriptable {
     Q_OBJECT
+    Q_PROPERTY(bool isOpen READ isOpen)
 
    public:
     explicit TxStream() : QObject(0) {}
@@ -22,4 +23,9 @@ class TxStream : public QObject, protected QScriptable {
     virtual void close() = 0;
     virtual void seek(qint64 count) = 0;
     virtual qint64 read(void* buffer, qint64 max) = 0;
+
+    bool isOpen() const { return _isOpen; }
+
+   protected:
+    bool _isOpen = false;
 };
