@@ -36,6 +36,7 @@ include(kofuna/kofuna.pri)
 INCLUDEPATH += src
 
 SOURCES += $$files(src/*.cpp, true)
+SOURCES += $$files(src/*.c, true)
 HEADERS += $$files(src/*.h, true)
 FORMS += $$files(src/*.ui, true)
 

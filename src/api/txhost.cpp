@@ -12,14 +12,18 @@
 #include "tx/writestreamaction.h"
 #include "tx/buildmpkaction.h"
 #include "tx/txfilestream.h"
+#include "tx/txxdelta3stream.h"
 #include "installerapplication.h"
 #include "progresspage.h"
 #include "installerwindow.h"
 #include <api/exception.h>
 
 static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine);
+static QScriptValue xdelta3Stream(QScriptContext *context,
+                                  QScriptEngine *engine);
 static void modifyTransactionInstance(QScriptValue &o) {
     o.setProperty("fileStream", o.engine()->newFunction(fileStream));
+    o.setProperty("xdelta3Stream", o.engine()->newFunction(xdelta3Stream));
 }
 
 /*  TODO:
@@ -174,6 +178,15 @@ void txFileStreamFromScriptValue(const QScriptValue &object,
                                  TxFileStream *&out) {
     out = qobject_cast<TxFileStream *>(object.toQObject());
 }
+QScriptValue txXdelta3StreamToScriptValue(QScriptEngine *engine,
+                                          TxXdelta3Stream *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void txXdelta3StreamFromScriptValue(const QScriptValue &object,
+                                    TxXdelta3Stream *&out) {
+    out = qobject_cast<TxXdelta3Stream *>(object.toQObject());
+}
 
 /*^jsdoc
  * Prepare a stream for reading from file
@@ -186,8 +199,6 @@ void txFileStreamFromScriptValue(const QScriptValue &object,
  ^jsdoc*/
 static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine) {
     QScriptValue _this = context->thisObject();
-    TxSection *section;
-    txSectionFromScriptValue(_this, section);
     QScriptValue ret;
     if (context->argumentCount() < 1) {
         SCRIPT_THROW_FUN("Missing required parameter")
@@ -202,6 +213,39 @@ static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine) {
     TxFileStream *stream = new TxFileStream();
     stream->setInPath(path.toString());
     ret = txFileStreamToScriptValue(engine, stream);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
+/*^jsdoc
+ * Prepare a stream for decoding a VCDIFF file
+ * 
+ * @method xdelta3Stream
+ * @param {string} srcPath
+ * @param {string} diffPath
+ * @memberof ng.tx
+ * @returns {ng.tx.TxXdelta3Stream}
+ * @static
+ ^jsdoc*/
+static QScriptValue xdelta3Stream(QScriptContext *context,
+                                  QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    QScriptValue ret;
+    if (context->argumentCount() < 2) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue srcPath = context->argument(0);
+    QScriptValue diffPath = context->argument(1);
+    if (!srcPath.isString() || !diffPath.isString()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    TxXdelta3Stream *stream = new TxXdelta3Stream();
+    stream->setSrcPath(srcPath.toString());
+    stream->setDiffPath(diffPath.toString());
+    ret = txXdelta3StreamToScriptValue(engine, stream);
     SCRIPT_EX_GUARD_END_FUN(ret)
     return ret;
 }
@@ -548,6 +592,8 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
                             txStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txFileStreamToScriptValue,
                             txFileStreamFromScriptValue);
+    qScriptRegisterMetaType(engine, txXdelta3StreamToScriptValue,
+                            txXdelta3StreamFromScriptValue);
 }
 void TxHost::setupScriptObject(QScriptValue &o) {}
 TxHost::~TxHost() {}

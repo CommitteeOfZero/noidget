@@ -8,6 +8,8 @@
 /*^jsdoc
  * Action to queue the seeking of a previously opened stream
  * 
+ * Not all streams are seekable.
+ * 
  * @class StreamSeekAction
  * @extends ng.tx.TxAction
  * @memberof ng.tx
