@@ -32,7 +32,7 @@ void TxFileStream::seek(qint64 count) {
         throw NgException(QString("Tried to seek file that wasn't open: %1")
                               .arg(expandedPath));
     }
-    if (_inFile->seek(_inFile->pos() + count) < 0) {
+    if (!_inFile->seek(_inFile->pos() + count)) {
         throw NgException(
             QString("Couldn't seek in file: %1").arg(expandedPath));
     }
