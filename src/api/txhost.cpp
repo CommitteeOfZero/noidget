@@ -10,6 +10,7 @@
 #include "tx/streamcloseaction.h"
 #include "tx/streamseekaction.h"
 #include "tx/writestreamaction.h"
+#include "tx/buildmpkaction.h"
 #include "tx/txfilestream.h"
 #include "installerapplication.h"
 #include "progresspage.h"
@@ -22,7 +23,6 @@ static void modifyTransactionInstance(QScriptValue &o) {
 }
 
 /*  TODO:
-    Q_INVOKABLE void buildMpk(const QString& path);
     Q_INVOKABLE void binarySearchReplace(const QString& path,
                                          const QString& needle,
                                          const QString& replace);
@@ -54,6 +54,11 @@ static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("streamClose", o.engine()->newFunction(txSectionStreamClose));
     o.setProperty("streamSeek", o.engine()->newFunction(txSectionStreamSeek));
     o.setProperty("writeStream", o.engine()->newFunction(txSectionWriteStream));
+}
+
+static QScriptValue mpkAddEntry(QScriptContext *context, QScriptEngine *engine);
+static void modifyBuildMpkActionInstance(QScriptValue &o) {
+    o.setProperty("addEntry", o.engine()->newFunction(mpkAddEntry));
 }
 
 QScriptValue transactionToScriptValue(QScriptEngine *engine,
@@ -143,6 +148,16 @@ void writeStreamActionFromScriptValue(const QScriptValue &object,
                                       WriteStreamAction *&out) {
     out = qobject_cast<WriteStreamAction *>(object.toQObject());
 }
+QScriptValue buildMpkActionToScriptValue(QScriptEngine *engine,
+                                         BuildMpkAction *const &in) {
+    auto ret = engine->newQObject(in);
+    modifyBuildMpkActionInstance(ret);
+    return ret;
+}
+void buildMpkActionFromScriptValue(const QScriptValue &object,
+                                   BuildMpkAction *&out) {
+    out = qobject_cast<BuildMpkAction *>(object.toQObject());
+}
 QScriptValue txStreamToScriptValue(QScriptEngine *engine, TxStream *const &in) {
     auto ret = engine->newQObject(in);
     return ret;
@@ -187,6 +202,59 @@ static QScriptValue fileStream(QScriptContext *context, QScriptEngine *engine) {
     TxFileStream *stream = new TxFileStream();
     stream->setInPath(path.toString());
     ret = txFileStreamToScriptValue(engine, stream);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
+/*^jsdoc
+ * Add a file to the archive
+ * 
+ * @method addEntry
+ * @param {Object} params
+ * @param {Number} params.id
+ * @param {string} params.name - archive-internal file name/path (ISO-8859-1, max. 223 characters)
+ * @param {Number} [params.displaySize=0] - file size in bytes (purely for progress indicator, BuildMpkAction always copies all data)
+ * @param params.source - either a file path or a {@link ng.tx.TxStream}
+ * @memberof ng.tx.BuildMpkAction
+ * @instance
+ ^jsdoc*/
+static QScriptValue mpkAddEntry(QScriptContext *context,
+                                QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    BuildMpkAction *action;
+    buildMpkActionFromScriptValue(_this, action);
+    QScriptValue ret;
+    if (context->argumentCount() < 1) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue obj = context->argument(0);
+    if (!obj.isObject()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    if (!obj.property("id").isNumber() || !obj.property("name").isString() ||
+        (!obj.property("source").isString() &&
+         (!obj.property("source").isQObject() ||
+          qobject_cast<TxStream *>(obj.property("source").toQObject()) == 0))) {
+        SCRIPT_THROW_FUN("Missing required parameter / invalid type")
+        return ret;
+    }
+    int id = obj.property("id").toInt32();
+    QString name = obj.property("name").toString();
+    qint64 displaySize = 0;
+    if (obj.property("displaySize").isNumber()) {
+        displaySize = (qint64)obj.property("displaySize").toInteger();
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    if (obj.property("source").isString()) {
+        QString path = obj.property("source").toString();
+        action->addEntry(id, name, path, displaySize);
+    } else {
+        TxStream *stream =
+            qobject_cast<TxStream *>(obj.property("source").toQObject());
+        action->addEntry(id, name, stream, displaySize);
+    }
     SCRIPT_EX_GUARD_END_FUN(ret)
     return ret;
 }
@@ -474,6 +542,8 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
                             streamSeekActionFromScriptValue);
     qScriptRegisterMetaType(engine, writeStreamActionToScriptValue,
                             writeStreamActionFromScriptValue);
+    qScriptRegisterMetaType(engine, buildMpkActionToScriptValue,
+                            buildMpkActionFromScriptValue);
     qScriptRegisterMetaType(engine, txStreamToScriptValue,
                             txStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txFileStreamToScriptValue,
