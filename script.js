@@ -528,8 +528,15 @@ DirectoryPage.prototype.onNext = function() {
     var testSection = ng.tx.tx().addSection('Test section');
     testSection.log('Log test');
     testSection.createDirectory('G:/Games/SGTL/CHAOSCHILD_2/dummyDir');
-    testSection.copyFiles(
-        'G:/Games/SGTL/CHAOSCHILD', 'G:/Games/SGTL/CHAOSCHILD_2');
+    /*testSection.copyFiles(
+        'G:/Games/SGTL/CHAOSCHILD', 'G:/Games/SGTL/CHAOSCHILD_2');*/
+    var diffStream = ng.tx.xdelta3Stream(
+        'G:/Games/SGTL/CHAOSCHILD/Game_orig.exe',
+        'G:/Games/SGTL/cc_work/GameExe_xdelta_test.vcdiff');
+    testSection.streamOpen(diffStream);
+    testSection.writeStream(
+        diffStream, 'G:/Games/SGTL/CHAOSCHILD_2/Game.2.exe');
+    testSection.streamClose(diffStream);
     testSection.log('done');
     ng.tx.run();
 };

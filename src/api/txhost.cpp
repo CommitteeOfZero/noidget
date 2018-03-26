@@ -11,6 +11,7 @@
 #include "tx/streamseekaction.h"
 #include "tx/writestreamaction.h"
 #include "tx/buildmpkaction.h"
+#include "tx/binarysearchreplaceaction.h"
 #include "tx/txfilestream.h"
 #include "tx/txxdelta3stream.h"
 #include "installerapplication.h"
@@ -18,29 +19,24 @@
 #include "installerwindow.h"
 #include <api/exception.h>
 
-/*  TODO:
-    Q_INVOKABLE void binarySearchReplace(const QString& path,
-                                         const QString& needle,
-                                         const QString& replace);
-    */
 static QScriptValue txSectionCopyFiles(QScriptContext *context,
                                        QScriptEngine *engine);
 static QScriptValue txSectionLog(QScriptContext *context,
                                  QScriptEngine *engine);
 static QScriptValue txSectionCreateDirectory(QScriptContext *context,
                                              QScriptEngine *engine);
-
 static QScriptValue txSectionStreamOpen(QScriptContext *context,
                                         QScriptEngine *engine);
-
 static QScriptValue txSectionStreamClose(QScriptContext *context,
                                          QScriptEngine *engine);
-
 static QScriptValue txSectionStreamSeek(QScriptContext *context,
                                         QScriptEngine *engine);
-
 static QScriptValue txSectionWriteStream(QScriptContext *context,
                                          QScriptEngine *engine);
+static QScriptValue txSectionBuildMpk(QScriptContext *context,
+                                      QScriptEngine *engine);
+static QScriptValue txSectionBinarySearchReplace(QScriptContext *context,
+                                                 QScriptEngine *engine);
 static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("copyFiles", o.engine()->newFunction(txSectionCopyFiles));
     o.setProperty("log", o.engine()->newFunction(txSectionLog));
@@ -50,6 +46,9 @@ static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("streamClose", o.engine()->newFunction(txSectionStreamClose));
     o.setProperty("streamSeek", o.engine()->newFunction(txSectionStreamSeek));
     o.setProperty("writeStream", o.engine()->newFunction(txSectionWriteStream));
+    o.setProperty("buildMpk", o.engine()->newFunction(txSectionBuildMpk));
+    o.setProperty("binarySearchReplace",
+                  o.engine()->newFunction(txSectionBinarySearchReplace));
 }
 
 static QScriptValue mpkAddEntry(QScriptContext *context, QScriptEngine *engine);
@@ -152,6 +151,15 @@ QScriptValue buildMpkActionToScriptValue(QScriptEngine *engine,
 void buildMpkActionFromScriptValue(const QScriptValue &object,
                                    BuildMpkAction *&out) {
     out = qobject_cast<BuildMpkAction *>(object.toQObject());
+}
+QScriptValue binarySearchReplaceActionToScriptValue(
+    QScriptEngine *engine, BinarySearchReplaceAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void binarySearchReplaceActionFromScriptValue(const QScriptValue &object,
+                                              BinarySearchReplaceAction *&out) {
+    out = qobject_cast<BinarySearchReplaceAction *>(object.toQObject());
 }
 QScriptValue txStreamToScriptValue(QScriptEngine *engine, TxStream *const &in) {
     auto ret = engine->newQObject(in);
@@ -492,6 +500,78 @@ static QScriptValue txSectionWriteStream(QScriptContext *context,
     return ret;
 }
 
+/*^jsdoc
+ * Build an MPK archive
+ * 
+ * @method buildMpk
+ * @param {string} path
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.BuildMpkAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionBuildMpk(QScriptContext *context,
+                                      QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 1) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue path = context->argument(0);
+    if (!path.isString()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    BuildMpkAction *action = new BuildMpkAction(section);
+    action->setPath(path.toString());
+    section->addAction(action);
+    ret = buildMpkActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
+/*^jsdoc
+ * Search and replace a pattern in a binary file
+ * 
+ * @method binarySearchReplace
+ * @param {string} path
+ * @param {string} needle
+ * @param {string} replace
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.LogAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionBinarySearchReplace(QScriptContext *context,
+                                                 QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 3) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue path = context->argument(0);
+    QScriptValue needle = context->argument(1);
+    QScriptValue replace = context->argument(2);
+    if (!path.isString() || !needle.isString() || !replace.isString()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    BinarySearchReplaceAction *action = new BinarySearchReplaceAction(section);
+    action->setPath(path.toString());
+    action->setNeedle(needle.toString());
+    action->setReplace(replace.toString());
+    section->addAction(action);
+    ret = binarySearchReplaceActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
 namespace api {
 TxHost::TxHost(ApiHost *parent) : QObject(parent) {
     QScriptEngine *engine = parent->engine();
@@ -517,6 +597,8 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
                             writeStreamActionFromScriptValue);
     qScriptRegisterMetaType(engine, buildMpkActionToScriptValue,
                             buildMpkActionFromScriptValue);
+    qScriptRegisterMetaType(engine, binarySearchReplaceActionToScriptValue,
+                            binarySearchReplaceActionFromScriptValue);
     qScriptRegisterMetaType(engine, txStreamToScriptValue,
                             txStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txFileStreamToScriptValue,
