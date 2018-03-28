@@ -1,4 +1,5 @@
 #include "fs.h"
+#include <util/systeminfo.h>
 #include <api/exception.h>
 #include <QFileInfo>
 #include <QRegularExpression>
@@ -196,6 +197,18 @@ void Fs::rename(const QString& from, const QString& to) const {
     bool ok = QFile::rename(expandedPath(from), expandedPath(to));
     if (!ok) SCRIPT_THROW("Renaming failed");
 }
+
+void Fs::tryCreateSubPath(const QString& workPath,
+                          const QString& fullPath) const {
+    if (pathIsDirectory(workPath)) return;
+    if (pathIsFile(workPath))
+        throw NgException(
+            QString("Path %1 contains existing file").arg(fullPath));
+    if (!QDir(workPath).mkdir("."))
+        throw NgException(
+            QString("Couldn't create directory %1").arg(workPath));
+}
+
 /*^jsdoc
  * Tries to create directory `path`. Throws if create operation
  fails for some reason - does *not* throw if directory already exists.
@@ -205,6 +218,32 @@ void Fs::rename(const QString& from, const QString& to) const {
  * @param {string} path
  ^jsdoc*/
 void Fs::createDirectory(const QString& path) const {
-    bool ok = QDir(expandedPath(path)).mkpath(".");
-    if (!ok) SCRIPT_THROW("Directory creation failed");
+    // we can't use mkpath here because we need to log each directory creation
+
+    QString fullPath = QDir::toNativeSeparators(QDir::cleanPath(path));
+
+    if (pathIsDirectory(fullPath)) return;
+    if (pathIsFile(fullPath)) {
+        SCRIPT_THROW(QString("Path %1 is an existing file").arg(fullPath));
+        return;
+    }
+
+    int pos = 0;
+    if (util::SystemInfo::platform() == util::SystemInfo::OsFamily::Windows) {
+        if (fullPath.startsWith("\\\\")) {
+            // UNC path
+            pos = fullPath.indexOf(QDir::separator(), 2);
+        } else if (fullPath.length() > 1 && fullPath[1] == ':') {
+            // drive
+            pos = 2;
+        }
+    }
+    // try to create upper directories
+    SCRIPT_EX_GUARD_START
+    while ((pos = fullPath.indexOf(QDir::separator(), pos + 1)) > -1) {
+        QString workPath = fullPath.left(pos);
+        tryCreateSubPath(workPath, fullPath);
+    }
+    tryCreateSubPath(fullPath, fullPath);
+    SCRIPT_EX_GUARD_END()
 }

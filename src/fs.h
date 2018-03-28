@@ -55,4 +55,7 @@ class Fs : public QObject, protected QScriptable {
 
    private:
     QHash<QString, QString> macros;
+
+    void tryCreateSubPath(const QString& workPath,
+                          const QString& fullPath) const;
 };
