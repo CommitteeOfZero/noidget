@@ -7,6 +7,7 @@
 class InstallerWindow;
 class Fs;
 class Transaction;
+class Receipt;
 namespace api {
 class ApiHost;
 }
@@ -37,6 +38,7 @@ class InstallerApplication : public QApplication {
     api::ApiHost* apiHost() { return h; }
     Fs* globalFs() { return _fs; }
     Transaction* tx() { return _tx; }
+    Receipt* receipt() { return _receipt; }
 
    signals:
     void currentStateChanged(State currentState);
@@ -46,6 +48,7 @@ class InstallerApplication : public QApplication {
     api::ApiHost* h;
     Fs* _fs;
     Transaction* _tx;
+    Receipt* _receipt = nullptr;
 
     State _currentState;
 };

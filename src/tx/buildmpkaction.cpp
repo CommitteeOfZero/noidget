@@ -1,6 +1,7 @@
 #include "buildmpkaction.h"
 #include "installerapplication.h"
 #include "fs.h"
+#include "receipt.h"
 #include "txstream.h"
 #include "txfilestream.h"
 #include <util/exception.h>
@@ -52,8 +53,12 @@ void BuildMpkAction::run() {
     QString archivePath = ngApp->globalFs()->expandedPath(_path);
     emit log(QString("Building archive: %1...").arg(archivePath));
     QFile outFile(archivePath);
+    bool archiveIsNew = !outFile.exists();
     if (!outFile.open(QIODevice::WriteOnly)) {
         throw NgException(QString("Could not write file: %1").arg(archivePath));
+    }
+    if (archiveIsNew) {
+        ngApp->receipt()->logFileCreate(archivePath);
     }
 
     // write header

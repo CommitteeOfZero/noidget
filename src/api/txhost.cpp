@@ -1,5 +1,6 @@
 #include "txhost.h"
 #include "apihost.h"
+#include "receipt.h"
 #include "tx/transaction.h"
 #include "tx/txsection.h"
 #include "tx/txaction.h"
@@ -654,6 +655,15 @@ TxXdelta3Stream *TxHost::xdelta3Stream(const QString &srcPath,
  * @returns {ng.tx.Transaction}
  ^jsdoc*/
 Transaction *TxHost::tx() { return ngApp->tx(); }
+
+/*^jsdoc
+ * Start logging write actions to an uninstall receipt
+ * @method openReceipt
+ * @param {string} path **Folder** to open/create the receipt in
+ * @memberof ng.tx
+ * @static
+ ^jsdoc*/
+void TxHost::openReceipt(const QString &path) { ngApp->receipt()->open(path); }
 
 /*^jsdoc
  * Moves to the progress page and starts the installation. **This must be

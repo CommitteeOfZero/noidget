@@ -1,4 +1,6 @@
 #include "fs.h"
+#include "installerapplication.h"
+#include "receipt.h"
 #include <util/systeminfo.h>
 #include <api/exception.h>
 #include <QFileInfo>
@@ -187,6 +189,8 @@ QString Fs::md5sum(const QString& filePath) const {
 /*^jsdoc
  * Tries to rename file/directory `from` to `to`. Throws if rename operation
  fails for some reason.
+ *
+ * Renames **are not logged** to the uninstall receipt.
  * @method rename
  * @memberof ng.fs.Fs
  * @instance
@@ -207,6 +211,7 @@ void Fs::tryCreateSubPath(const QString& workPath,
     if (!QDir(workPath).mkdir("."))
         throw NgException(
             QString("Couldn't create directory %1").arg(workPath));
+    ngApp->receipt()->logFileCreate(workPath);
 }
 
 /*^jsdoc

@@ -524,7 +524,7 @@ DirectoryPage.prototype.onNext = function() {
     //(new DummyPage()).push();
 
     // ng.window.runTx();
-
+    ng.tx.openReceipt('G:/Games/SGTL/CHAOSCHILD_3');
     var testSection = ng.tx.tx().addSection('Test section');
     testSection.log('Log test');
     testSection.createDirectory('G:/Games/SGTL/CHAOSCHILD_2/dummyDir');

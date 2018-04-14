@@ -1,5 +1,6 @@
 #include "writestreamaction.h"
 #include "installerapplication.h"
+#include "receipt.h"
 #include "fs.h"
 #include <util/exception.h>
 #include <QDir>
@@ -10,9 +11,11 @@ static const qint64 bufferSize = 1024 * 1024;
 void WriteStreamAction::run() {
     QString dest = ngApp->globalFs()->expandedPath(_dest);
     QFile out(dest);
+    bool fileIsNew = !out.exists();
     if (!out.open(QIODevice::WriteOnly)) {
         throw NgException(QString("Could not write file: %1").arg(dest));
     }
+    if (fileIsNew) ngApp->receipt()->logFileCreate(dest);
     void* buffer = malloc(bufferSize);
     qint64 bytesToRead = _count;
     if (_count <= 0) bytesToRead = bufferSize;

@@ -3,6 +3,7 @@
 #include <api/apihost.h>
 #include "fs.h"
 #include <tx/transaction.h>
+#include "receipt.h"
 #include <QFile>
 #include <QTextStream>
 #include <QStyleFactory>
@@ -23,6 +24,8 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     h = new api::ApiHost(0);
 
     _fs = new Fs(this);
+
+    _receipt = new Receipt(this);
 
     _tx = new Transaction(this);
 

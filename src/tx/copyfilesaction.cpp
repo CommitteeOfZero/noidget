@@ -1,5 +1,6 @@
 #include "copyfilesaction.h"
 #include "installerapplication.h"
+#include "receipt.h"
 #include "fs.h"
 #include <util/exception.h>
 #include <QDir>
@@ -64,9 +65,11 @@ void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
         throw NgException(QString("Could not read file: %1").arg(src));
     }
     QFile out(dest);
+    bool fileIsNew = !out.exists();
     if (!out.open(QIODevice::WriteOnly)) {
         throw NgException(QString("Could not write file: %1").arg(dest));
     }
+    if (fileIsNew) ngApp->receipt()->logFileCreate(dest);
 
     void* buffer = malloc(1024 * 1024);
     qint64 bytesRead = 0;
