@@ -14,6 +14,11 @@ void Receipt::open(const QString& dir) {
     _isLogging = true;
     ngApp->globalFs()->createDirectory(dir);
     QString filePath = ngApp->globalFs()->expandedPath(dir + "/ngreceipt.bin");
+
+    QSet<QString> filesToWrite = _store.filesCreated;
+    QSet<RegKeyRecord> regKeysToWrite = _store.regKeysCreated;
+    QSet<RegValRecord> regValsToWrite = _store.regValsCreated;
+
     if (ngApp->globalFs()->pathExists(filePath)) {
         Store oldStore;
         try {
@@ -22,9 +27,7 @@ void Receipt::open(const QString& dir) {
             _isLogging = false;
             throw;
         }
-        QSet<QString> newFiles;
-        newFiles = _store.filesCreated;
-        newFiles.subtract(oldStore.filesCreated);
+
         _outFile = new QFile(filePath, this);
         if (!_outFile->open(QIODevice::ReadWrite | QIODevice::Append |
                             QIODevice::Unbuffered)) {
@@ -37,11 +40,10 @@ void Receipt::open(const QString& dir) {
         // TODO handle version upgrades?
         _out.setDevice(_outFile);
         _out.setVersion(QDataStream::Qt_5_9);
-        for (const QString& f : newFiles) {
-            _out << (int)TokenType::File;
-            _out << f;
-        }
-        _outFile->flush();
+
+        filesToWrite.subtract(oldStore.filesCreated);
+        regKeysToWrite.subtract(oldStore.regKeysCreated);
+        regValsToWrite.subtract(oldStore.regValsCreated);
     } else {
         _outFile = new QFile(filePath, this);
         if (!_outFile->open(QIODevice::WriteOnly | QIODevice::Unbuffered)) {
@@ -54,12 +56,17 @@ void Receipt::open(const QString& dir) {
         _out.setDevice(_outFile);
         _out.setVersion(QDataStream::Qt_5_9);
         _out << FileFormatVersion;
-        for (const QString& f : _store.filesCreated) {
-            _out << (int)TokenType::File;
-            _out << f;
-        }
-        _outFile->flush();
         logFileCreate(filePath);
+    }
+
+    for (const QString& f : filesToWrite) {
+        writeLogFileCreate(f);
+    }
+    for (const RegKeyRecord& r : regKeysToWrite) {
+        writeLogRegKeyCreate(r);
+    }
+    for (const RegValRecord& r : regValsToWrite) {
+        writeLogRegValueCreate(r);
     }
 }
 
@@ -79,11 +86,58 @@ void Receipt::logFileCreate(const QString& path) {
         QFileInfo(ngApp->globalFs()->expandedPath(path)).canonicalFilePath();
     if (!_store.filesCreated.contains(expandedPath)) {
         _store.filesCreated << expandedPath;
-        if (_outFile != nullptr && _outFile->isOpen()) {
-            _out << (int)TokenType::File;
-            _out << expandedPath;
-            _outFile->flush();
-        }
+        writeLogFileCreate(path);
+    }
+}
+
+void Receipt::writeLogFileCreate(const QString& path) {
+    if (_outFile != nullptr && _outFile->isOpen()) {
+        _out << (int)TokenType::File;
+        _out << path;
+        _outFile->flush();
+    }
+}
+
+void Receipt::logRegKeyCreate(Registry::RootKey root, const QString& key,
+                              bool use64bit) {
+    if (!_isLogging) return;
+    RegKeyRecord record;
+    record.key = key.toLower();
+    record.use64bit = use64bit;
+    if (!_store.regKeysCreated.contains(record)) {
+        _store.regKeysCreated << record;
+        writeLogRegKeyCreate(record);
+    }
+}
+void Receipt::writeLogRegKeyCreate(const RegKeyRecord& record) {
+    if (_outFile != nullptr && _outFile->isOpen()) {
+        _out << (int)TokenType::RegKey;
+        _out << (int)record.root;
+        _out << record.key;
+        _out << record.use64bit;
+        _outFile->flush();
+    }
+}
+void Receipt::logRegValueCreate(Registry::RootKey root, const QString& key,
+                                bool use64bit, const QString& valName) {
+    if (!_isLogging) return;
+    RegValRecord record;
+    record.key = key.toLower();
+    record.use64bit = use64bit;
+    record.valName = valName.toLower();
+    if (!_store.regValsCreated.contains(record)) {
+        _store.regValsCreated << record;
+        writeLogRegValueCreate(record);
+    }
+}
+void Receipt::writeLogRegValueCreate(const RegValRecord& record) {
+    if (_outFile != nullptr && _outFile->isOpen()) {
+        _out << (int)TokenType::RegValue;
+        _out << (int)record.root;
+        _out << record.key;
+        _out << record.use64bit;
+        _out << record.valName;
+        _outFile->flush();
     }
 }
 
@@ -104,6 +158,24 @@ Receipt::Store Receipt::loadOldLog(const QString& path) {
                 QString createdFile;
                 in >> createdFile;
                 result.filesCreated << createdFile;
+                break;
+            }
+            case TokenType::RegKey: {
+                RegKeyRecord record;
+                in >> (qint32&)record.root;
+                in >> record.key;
+                in >> record.use64bit;
+                result.regKeysCreated << record;
+                break;
+            }
+            case TokenType::RegValue: {
+                RegValRecord record;
+                in >> (qint32&)record.root;
+                in >> record.key;
+                in >> record.use64bit;
+                in >> record.valName;
+                result.regValsCreated << record;
+                break;
             }
         }
     }

@@ -4,6 +4,7 @@
 #include "fs.h"
 #include <tx/transaction.h>
 #include "receipt.h"
+#include "win32_registry.h"
 #include <QFile>
 #include <QTextStream>
 #include <QStyleFactory>
@@ -24,6 +25,9 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     h = new api::ApiHost(0);
 
     _fs = new Fs(this);
+#ifdef Q_OS_WIN32
+    _registry = new Registry(this);
+#endif
 
     _receipt = new Receipt(this);
 

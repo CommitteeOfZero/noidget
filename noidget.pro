@@ -3,6 +3,15 @@ QT += core gui multimedia widgets script concurrent
 TARGET = noidget
 TEMPLATE = app
 
+win32 {
+    CONFIG += embed_manifest_exe
+    QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'requireAdministrator\'
+    # registry
+    DEFINES += WIN32_LEAN_AND_MEAN
+    LIBS += Advapi32.lib
+}
+
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the

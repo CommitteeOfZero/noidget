@@ -7,6 +7,9 @@
 class InstallerWindow;
 class Fs;
 class Transaction;
+#ifdef Q_OS_WIN32
+class Registry;
+#endif
 class Receipt;
 namespace api {
 class ApiHost;
@@ -38,6 +41,9 @@ class InstallerApplication : public QApplication {
     api::ApiHost* apiHost() { return h; }
     Fs* globalFs() { return _fs; }
     Transaction* tx() { return _tx; }
+#ifdef Q_OS_WIN32
+    Registry* registry() { return _registry; }
+#endif
     Receipt* receipt() { return _receipt; }
 
    signals:
@@ -48,6 +54,9 @@ class InstallerApplication : public QApplication {
     api::ApiHost* h;
     Fs* _fs;
     Transaction* _tx;
+#ifdef Q_OS_WIN32
+    Registry* _registry;
+#endif
     Receipt* _receipt = nullptr;
 
     State _currentState;

@@ -7,6 +7,7 @@
 #include "systeminfo.h"
 #include "fshost.h"
 #include "txhost.h"
+#include "win32.h"
 
 namespace api {
 
@@ -35,6 +36,13 @@ ApiHost::ApiHost(QObject *parent) : QObject(parent) {
     auto ng_tx = _engine->newQObject(txHost);
     txHost->setupScriptObject(ng_tx);
     root_.setProperty("tx", ng_tx);
+
+#ifdef Q_OS_WIN32
+    auto win32 = new Win32(this);
+    auto ng_win32 = _engine->newQObject(win32);
+    win32->setupScriptObject(ng_win32);
+    root_.setProperty("win32", ng_win32);
+#endif
 
     _engine->globalObject().setProperty("ng", root_);
 
