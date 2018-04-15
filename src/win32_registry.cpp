@@ -4,6 +4,20 @@
 #include "receipt.h"
 #include <QDebug>
 
+/*^jsdoc
+ * Does `root\\key` exist?
+ * 
+ * This will also return `false` if the key is inaccessible for read
+ * (though noidget is always run as Administrator).
+ * 
+ * @method keyExists
+ * @memberof ng.win32.Registry
+ * @instance
+ * @param {ng.win32.RootKey} root
+ * @param {string} key
+ * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
+ * @returns {boolean}
+ ^jsdoc*/
 bool Registry::keyExists(RootKey root, const QString& key, bool use64bit) {
     // wchar_t is 16 bit on windows, so we can use QString::utf16() directly
     HKEY hKey;
@@ -17,6 +31,22 @@ bool Registry::keyExists(RootKey root, const QString& key, bool use64bit) {
     return success;
 }
 
+/*^jsdoc
+ * Does `valName` in `root\\key` exist?
+ * 
+ * This will also return `false` if the value is inaccessible for read
+ * (though noidget is always run as Administrator) or `keyExists()` returns `false`
+ * for this `root\\key`.
+ * 
+ * @method valueExists
+ * @memberof ng.win32.Registry
+ * @instance
+ * @param {ng.win32.RootKey} root
+ * @param {string} key
+ * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
+ * @param {string} valName
+ * @returns {boolean}
+ ^jsdoc*/
 bool Registry::valueExists(RootKey root, const QString& key, bool use64bit,
                            const QString& valName) {
     HKEY hKey;
@@ -33,6 +63,20 @@ bool Registry::valueExists(RootKey root, const QString& key, bool use64bit,
     return success;
 }
 
+/*^jsdoc
+ * Create `root\\key`
+ * 
+ * Parent keys do not need to exist, they will be created recursively. Returns
+ * `false` on error - some of the parent keys may have been created by then.
+ * 
+ * @method createKey
+ * @memberof ng.win32.Registry
+ * @instance
+ * @param {ng.win32.RootKey} root
+ * @param {string} key
+ * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
+ * @returns {boolean} - `false` on error.
+ ^jsdoc*/
 bool Registry::createKey(RootKey root, const QString& key, bool use64bit) {
     // While RegCreateKey(Ex) does work recursively, we need to log
     // each subkey creation, so we still need to iterate manually
@@ -66,6 +110,21 @@ bool Registry::createKey(RootKey root, const QString& key, bool use64bit) {
     return true;
 }
 
+/*^jsdoc
+ * Gets `valName` in `root\\key`
+ * 
+ * Only `REG_SZ`, `REG_EXPAND_SZ` and `REG_DWORD` supported. `REG_EXPAND_SZ` strings
+ * will be expanded.
+ * 
+ * @method value
+ * @memberof ng.win32.Registry
+ * @instance
+ * @param {ng.win32.RootKey} root
+ * @param {string} key
+ * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
+ * @param {string} valName
+ * @returns `undefined` on error, or (string/number) value
+ ^jsdoc*/
 QVariant Registry::value(RootKey root, const QString& key, bool use64bit,
                          const QString& valName) {
     HKEY hKey;
@@ -105,6 +164,24 @@ QVariant Registry::value(RootKey root, const QString& key, bool use64bit,
     return result;
 }
 
+/*^jsdoc
+ * Sets `valName` in `root\\key`
+ * 
+ * Parent keys do not need to exist, they will be created recursively. Returns
+ * `false` on error - some of the parent keys may have been created by then.
+ * 
+ * TODO: test overwriting REG_EXPAND_SZ
+ * 
+ * @method setValue
+ * @memberof ng.win32.Registry
+ * @instance
+ * @param {ng.win32.RootKey} root
+ * @param {string} key
+ * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
+ * @param {string} valName
+ * @param value - string or number (converted to unsigned 32-bit integer REG_DWORD)
+ * @returns {boolean} - `false` on error
+ ^jsdoc*/
 bool Registry::setValue(RootKey root, const QString& key, bool use64bit,
                         const QString& valName, const QVariant& value) {
     if (value.type() != QMetaType::QString && !value.canConvert<uint>()) {

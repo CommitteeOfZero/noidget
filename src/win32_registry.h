@@ -19,7 +19,7 @@
  * 
  * The desired registry view - *64-bit* or *32-bit* - must be explicitly specified.
  * See https://msdn.microsoft.com/en-us/library/windows/desktop/ms724072(v=vs.85).aspx
- * for further information.
+ * for further information. `use64bit` has no effect on 32-bit Windows.
  * 
  * @class Registry
  * @memberof ng.win32
