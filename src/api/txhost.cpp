@@ -19,6 +19,7 @@
 #include "progresspage.h"
 #include "installerwindow.h"
 #include <api/exception.h>
+#include "tx/setregistryvalueaction.h"
 
 static QScriptValue txSectionCopyFiles(QScriptContext *context,
                                        QScriptEngine *engine);
@@ -38,6 +39,10 @@ static QScriptValue txSectionBuildMpk(QScriptContext *context,
                                       QScriptEngine *engine);
 static QScriptValue txSectionBinarySearchReplace(QScriptContext *context,
                                                  QScriptEngine *engine);
+#ifdef Q_OS_WIN32
+static QScriptValue txSectionSetRegistryValue(QScriptContext *context,
+                                              QScriptEngine *engine);
+#endif
 static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("copyFiles", o.engine()->newFunction(txSectionCopyFiles));
     o.setProperty("log", o.engine()->newFunction(txSectionLog));
@@ -50,6 +55,10 @@ static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("buildMpk", o.engine()->newFunction(txSectionBuildMpk));
     o.setProperty("binarySearchReplace",
                   o.engine()->newFunction(txSectionBinarySearchReplace));
+#ifdef Q_OS_WIN32
+    o.setProperty("setRegistryValue",
+                  o.engine()->newFunction(txSectionSetRegistryValue));
+#endif
 }
 
 static QScriptValue mpkAddEntry(QScriptContext *context, QScriptEngine *engine);
@@ -162,6 +171,17 @@ void binarySearchReplaceActionFromScriptValue(const QScriptValue &object,
                                               BinarySearchReplaceAction *&out) {
     out = qobject_cast<BinarySearchReplaceAction *>(object.toQObject());
 }
+#ifdef Q_OS_WIN32
+QScriptValue setRegistryValueActionToScriptValue(
+    QScriptEngine *engine, SetRegistryValueAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void setRegistryValueActionFromScriptValue(const QScriptValue &object,
+                                           SetRegistryValueAction *&out) {
+    out = qobject_cast<SetRegistryValueAction *>(object.toQObject());
+}
+#endif
 QScriptValue txStreamToScriptValue(QScriptEngine *engine, TxStream *const &in) {
     auto ret = engine->newQObject(in);
     return ret;
@@ -542,7 +562,7 @@ static QScriptValue txSectionBuildMpk(QScriptContext *context,
  * @param {string} needle
  * @param {string} replace
  * @memberof ng.tx.TxSection
- * @returns {ng.tx.LogAction}
+ * @returns {ng.tx.BinarySearchReplaceAction}
  * @instance
  ^jsdoc*/
 static QScriptValue txSectionBinarySearchReplace(QScriptContext *context,
@@ -573,6 +593,54 @@ static QScriptValue txSectionBinarySearchReplace(QScriptContext *context,
     return ret;
 }
 
+#ifdef Q_OS_WIN32
+/*^jsdoc
+ * Set a registry value (Win32 only)
+ * 
+ * @method setRegistryValue
+ * @param {ng.win32.RootKey} root
+ * @param {string} key
+ * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
+ * @param {string} valName
+ * @param value - string or number (converted to unsigned 32-bit integer REG_DWORD)
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.SetRegistryValueAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionSetRegistryValue(QScriptContext *context,
+                                              QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 5) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue root = context->argument(0);
+    QScriptValue key = context->argument(1);
+    QScriptValue use64bit = context->argument(2);
+    QScriptValue valName = context->argument(3);
+    QScriptValue value = context->argument(4);
+    if (!root.isNumber() || !key.isString() || !use64bit.isBool() ||
+        !valName.isString() || !value.toVariant().isValid()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    SCRIPT_EX_GUARD_START_FUN
+    SetRegistryValueAction *action = new SetRegistryValueAction(section);
+    action->setRoot((Registry::RootKey)root.toUInt32());
+    action->setKey(key.toString());
+    action->setUse64bit(use64bit.toBool());
+    action->setValName(valName.toString());
+    action->setValue(value.toVariant());
+    section->addAction(action);
+    ret = setRegistryValueActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+#endif
+
 namespace api {
 TxHost::TxHost(ApiHost *parent) : QObject(parent) {
     QScriptEngine *engine = parent->engine();
@@ -600,6 +668,10 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
                             buildMpkActionFromScriptValue);
     qScriptRegisterMetaType(engine, binarySearchReplaceActionToScriptValue,
                             binarySearchReplaceActionFromScriptValue);
+#ifdef Q_OS_WIN32
+    qScriptRegisterMetaType(engine, setRegistryValueActionToScriptValue,
+                            setRegistryValueActionFromScriptValue);
+#endif
     qScriptRegisterMetaType(engine, txStreamToScriptValue,
                             txStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txFileStreamToScriptValue,

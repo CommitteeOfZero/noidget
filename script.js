@@ -538,6 +538,10 @@ DirectoryPage.prototype.onNext = function() {
         diffStream, 'G:/Games/SGTL/CHAOSCHILD_2/Game.2.exe');
     testSection.streamClose(diffStream);
     testSection.log('done');
+    testSection.setRegistryValue(
+        ng.win32.RootKey.HKLM,
+        'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Foo', true,
+        'Bar', 42);
     ng.tx.run();
 };
 
