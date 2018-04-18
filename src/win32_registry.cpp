@@ -123,7 +123,7 @@ bool Registry::createKey(RootKey root, const QString& key, bool use64bit) {
  * @param {string} key
  * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
  * @param {string} valName
- * @returns `undefined` on error, or (string/number) value
+ * @returns {{string|Number}} - `undefined` on error, or value
  ^jsdoc*/
 QVariant Registry::value(RootKey root, const QString& key, bool use64bit,
                          const QString& valName) {
@@ -179,7 +179,7 @@ QVariant Registry::value(RootKey root, const QString& key, bool use64bit,
  * @param {string} key
  * @param {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
  * @param {string} valName
- * @param value - string or number (converted to unsigned 32-bit integer REG_DWORD)
+ * @param {{string|Number}} value - string or number (converted to unsigned 32-bit integer REG_DWORD)
  * @returns {boolean} - `false` on error
  ^jsdoc*/
 bool Registry::setValue(RootKey root, const QString& key, bool use64bit,

@@ -24,7 +24,7 @@
  * @property {string} key
  * @property {boolean} use64bit - request 64-bit (`true`) or 32-bit (`false`) registry view on 64-bit Windows
  * @property {string} valName
- * @property value - string or number (converted to unsigned 32-bit integer REG_DWORD)
+ * @property {{string|Number}} value - string or number (converted to unsigned 32-bit integer REG_DWORD)
  ^jsdoc*/
 class SetRegistryValueAction : public TxAction {
     Q_OBJECT
