@@ -6,9 +6,9 @@ TEMPLATE = app
 win32 {
     CONFIG += embed_manifest_exe
     QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'requireAdministrator\'
-    # registry
+    # registry, shortcuts
     DEFINES += WIN32_LEAN_AND_MEAN
-    LIBS += Advapi32.lib
+    LIBS += Advapi32.lib Shell32.lib Ole32.lib
 }
 
 

@@ -20,6 +20,7 @@
 #include "installerwindow.h"
 #include <api/exception.h>
 #include "tx/setregistryvalueaction.h"
+#include "tx/createshortcutaction.h"
 
 static QScriptValue txSectionCopyFiles(QScriptContext *context,
                                        QScriptEngine *engine);
@@ -43,6 +44,8 @@ static QScriptValue txSectionBinarySearchReplace(QScriptContext *context,
 static QScriptValue txSectionSetRegistryValue(QScriptContext *context,
                                               QScriptEngine *engine);
 #endif
+static QScriptValue txSectionCreateShortcut(QScriptContext *context,
+                                            QScriptEngine *engine);
 static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("copyFiles", o.engine()->newFunction(txSectionCopyFiles));
     o.setProperty("log", o.engine()->newFunction(txSectionLog));
@@ -59,6 +62,8 @@ static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("setRegistryValue",
                   o.engine()->newFunction(txSectionSetRegistryValue));
 #endif
+    o.setProperty("createShortcut",
+                  o.engine()->newFunction(txSectionCreateShortcut));
 }
 
 static QScriptValue mpkAddEntry(QScriptContext *context, QScriptEngine *engine);
@@ -182,6 +187,15 @@ void setRegistryValueActionFromScriptValue(const QScriptValue &object,
     out = qobject_cast<SetRegistryValueAction *>(object.toQObject());
 }
 #endif
+QScriptValue createShortcutActionToScriptValue(
+    QScriptEngine *engine, CreateShortcutAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void createShortcutActionFromScriptValue(const QScriptValue &object,
+                                         CreateShortcutAction *&out) {
+    out = qobject_cast<CreateShortcutAction *>(object.toQObject());
+}
 QScriptValue txStreamToScriptValue(QScriptEngine *engine, TxStream *const &in) {
     auto ret = engine->newQObject(in);
     return ret;
@@ -641,6 +655,77 @@ static QScriptValue txSectionSetRegistryValue(QScriptContext *context,
 }
 #endif
 
+/*^jsdoc
+ * Create a (desktop/start menu) shortcut (Win32, Linux only)
+ * 
+ * @method createShortcut
+ * @param {Object} params
+ * @param {string} params.shortcutPath **(Required)** File path of the shortcut itself
+ * @param {string} params.version Linux only. Display version
+ * @param {string} params.displayName Linux only. Display name - on Windows, that's just the shortcut's filename itself minus .lnk.
+ * @param {string} params.targetPath **(Required)** File path to the shortcut's target
+ * @param {string} params.targetArgs Command-line arguments (if any). Note these are *not* parsed for FS macros.
+ * @param {string} params.workingDir Working directory to execute the target in (or default)
+ * @param {string} params.iconPath (Persistent) path to the icon to use (or default). On Windows, always uses the first icon present in that file.
+ * @param {string} params.tooltip Display description
+ * @param {string} params.xdgCategories Linux only. Semicolon-separated list of [XDG menu entry categories]{@link https://standards.freedesktop.org/menu-spec/latest/apa.html}
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.CreateShortcutAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionCreateShortcut(QScriptContext *context,
+                                            QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 1) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+
+    QScriptValue obj = context->argument(0);
+    if (!obj.isObject()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+    if (!obj.property("shortcutPath").isString() ||
+        !obj.property("targetPath").isString()) {
+        SCRIPT_THROW_FUN("Missing required parameter / invalid type")
+        return ret;
+    }
+
+    SCRIPT_EX_GUARD_START_FUN
+    CreateShortcutAction *action = new CreateShortcutAction(section);
+    action->setShortcutPath(obj.property("shortcutPath").toString());
+    action->setTargetPath(obj.property("targetPath").toString());
+    if (obj.property("version").isString()) {
+        action->setVersion(obj.property("version").toString());
+    }
+    if (obj.property("displayName").isString()) {
+        action->setDisplayName(obj.property("displayName").toString());
+    }
+    if (obj.property("targetArgs").isString()) {
+        action->setTargetArgs(obj.property("targetArgs").toString());
+    }
+    if (obj.property("workingDir").isString()) {
+        action->setWorkingDir(obj.property("workingDir").toString());
+    }
+    if (obj.property("iconPath").isString()) {
+        action->setIconPath(obj.property("iconPath").toString());
+    }
+    if (obj.property("tooltip").isString()) {
+        action->setTooltip(obj.property("tooltip").toString());
+    }
+    if (obj.property("xdgCategories").isString()) {
+        action->setXdgCategories(obj.property("xdgCategories").toString());
+    }
+    section->addAction(action);
+    ret = createShortcutActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
 namespace api {
 TxHost::TxHost(ApiHost *parent) : QObject(parent) {
     QScriptEngine *engine = parent->engine();
@@ -672,6 +757,8 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
     qScriptRegisterMetaType(engine, setRegistryValueActionToScriptValue,
                             setRegistryValueActionFromScriptValue);
 #endif
+    qScriptRegisterMetaType(engine, createShortcutActionToScriptValue,
+                            createShortcutActionFromScriptValue);
     qScriptRegisterMetaType(engine, txStreamToScriptValue,
                             txStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txFileStreamToScriptValue,
