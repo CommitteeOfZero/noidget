@@ -316,6 +316,7 @@ static QScriptValue txSectionCopyFiles(QScriptContext *context,
  * 
  * @method log
  * @param {string} text
+ * @param {boolean} [fileOnly=false]
  * @memberof ng.tx.TxSection
  * @returns {ng.tx.LogAction}
  * @instance
@@ -335,9 +336,15 @@ static QScriptValue txSectionLog(QScriptContext *context,
         SCRIPT_THROW_FUN("Parameter has invalid type")
         return ret;
     }
+    bool fileOnly = false;
+    if (context->argumentCount() >= 2) {
+        QScriptValue _fileOnly = context->argument(1);
+        if (_fileOnly.isBool()) fileOnly = _fileOnly.toBool();
+    }
     SCRIPT_EX_GUARD_START_FUN
     LogAction *action = new LogAction(section);
     action->setText(text.toString());
+    action->setFileOnly(fileOnly);
     section->addAction(action);
     ret = logActionToScriptValue(engine, action);
     SCRIPT_EX_GUARD_END_FUN(ret)
