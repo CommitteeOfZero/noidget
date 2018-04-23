@@ -11,6 +11,10 @@
 
 InstallerApplication::InstallerApplication(int& argc, char** argv)
     : QApplication(argc, argv) {
+    // Despite Q_ENUM this is apparently required for use in signals
+    qRegisterMetaType<InstallerApplication::State>(
+        "InstallerApplication::State");
+
     _currentState = State::Preparation;
 
     w = new InstallerWindow(0);

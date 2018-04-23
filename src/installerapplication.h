@@ -47,7 +47,7 @@ class InstallerApplication : public QApplication {
     Receipt* receipt() { return _receipt; }
 
    signals:
-    void currentStateChanged(State currentState);
+    void currentStateChanged(InstallerApplication::State currentState);
 
    private:
     InstallerWindow* w;
