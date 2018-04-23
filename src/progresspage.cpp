@@ -59,11 +59,6 @@ void ProgressPage::startTx() {
     _sectionCount = ngApp->tx()->sectionCount();
 
     QFuture<void> f = QtConcurrent::run(ngApp->tx(), &Transaction::run);
-    QFutureWatcher<void>* w = new QFutureWatcher<void>(this);
-    connect(w, &QFutureWatcher<void>::finished, [&]() {
-        // TODO do something
-    });
-    w->setFuture(f);
 }
 
 void ProgressPage::txSectionChange(int i, const QString& sectionTitle) {

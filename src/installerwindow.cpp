@@ -86,6 +86,7 @@ void InstallerWindow::handleAppStateChange(
             ui->cancelButton->setEnabled(false);
             break;
         case InstallerApplication::State::Cancelled:
+        case InstallerApplication::State::Error:
             ui->nextButton->setText("Quit");
             ui->nextButton->setEnabled(true);
             ui->backButton->setEnabled(false);
@@ -107,7 +108,8 @@ void InstallerWindow::closeEvent(QCloseEvent *event) {
 
 void InstallerWindow::cancelRequested() {
     if (ngApp->currentState() == InstallerApplication::State::Cancelled ||
-        ngApp->currentState() == InstallerApplication::State::Finished) {
+        ngApp->currentState() == InstallerApplication::State::Finished ||
+        ngApp->currentState() == InstallerApplication::State::Error) {
         // X button, alt+f4
         QApplication::quit();
         return;

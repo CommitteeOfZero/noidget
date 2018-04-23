@@ -28,6 +28,8 @@ void Transaction::handleAppStateChange(InstallerApplication::State newState) {
         _isCancelled = true;
         logToFile("User cancelled transaction.");
         emit cancelled();
+    } else if (newState == InstallerApplication::State::Finished) {
+        logToFile("Transaction finished.");
     }
 }
 
@@ -81,15 +83,26 @@ qint64 Transaction::prepare() {
     _logFile->setTextModeEnabled(true);
     sectionLog(QString("Logging to %1").arg(_logFile->fileName()));
 
-    qint64 size = 0;
-    for (TxSection* section : _sections) {
-        section->prepare();
-        qint64 sectionSize = section->size();
-        _sectionSizes.append(sectionSize);
-        size += sectionSize;
+    try {
+        qint64 size = 0;
+        for (TxSection* section : _sections) {
+            section->prepare();
+            qint64 sectionSize = section->size();
+            _sectionSizes.append(sectionSize);
+            size += sectionSize;
+        }
+        _isPrepared = true;
+        return size;
+    } catch (const NgException& ex) {
+        logToFile(QString("Error during preparation: %1")
+                      .arg(QString::fromUtf8(ex.what())));
+        ngApp->setCurrentState(InstallerApplication::State::Error);
+        throw;
+    } catch (...) {
+        logToFile("Unhandled exception during preparation");
+        ngApp->setCurrentState(InstallerApplication::State::Error);
+        throw;
     }
-    _isPrepared = true;
-    return size;
 }
 
 void Transaction::run() {
@@ -99,19 +112,32 @@ void Transaction::run() {
     if (_isStarted) {
         throw NgException("Tried to start transaction twice");
     }
-    _isStarted = true;
-    for (int i = 0; i < _sections.count(); i++) {
-        if (_isCancelled) {
-            break;
+
+    try {
+        _isStarted = true;
+        for (int i = 0; i < _sections.count(); i++) {
+            if (_isCancelled) {
+                break;
+            }
+            TxSection* section = _sections[i];
+            emit sectionChanged(i, section->title());
+            section->run();
+            _roughProgress += _sectionSizes[i];
+            emit progress(_roughProgress);
         }
-        TxSection* section = _sections[i];
-        emit sectionChanged(i, section->title());
-        section->run();
-        _roughProgress += _sectionSizes[i];
-        emit progress(_roughProgress);
+    } catch (const NgException& ex) {
+        logToFile(QString("Error during transaction: %1")
+                      .arg(QString::fromUtf8(ex.what())));
+        ngApp->setCurrentState(InstallerApplication::State::Error);
+        throw;
+    } catch (...) {
+        logToFile("Unhandled exception during transaction");
+        ngApp->setCurrentState(InstallerApplication::State::Error);
+        throw;
     }
+
     if (_isCancelled) {
-        emit log("User cancelled transaction");
+        ngApp->setCurrentState(InstallerApplication::State::Cancelled);
     } else {
         ngApp->setCurrentState(InstallerApplication::State::Finished);
     }

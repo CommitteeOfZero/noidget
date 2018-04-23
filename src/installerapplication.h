@@ -21,7 +21,7 @@ class InstallerApplication : public QApplication {
     Q_OBJECT
 
    public:
-    enum class State { Preparation, Installing, Cancelled, Finished };
+    enum class State { Preparation, Installing, Cancelled, Finished, Error };
     Q_ENUM(State)
     Q_PROPERTY(State currentState READ currentState WRITE setCurrentState NOTIFY
                    currentStateChanged)
