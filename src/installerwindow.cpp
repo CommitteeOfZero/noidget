@@ -3,6 +3,7 @@
 #include <view/page.h>
 #include "installerapplication.h"
 #include <tx/transaction.h>
+#include "finishpage.h"
 
 #include <QMouseEvent>
 #include <QToolButton>
@@ -84,6 +85,7 @@ void InstallerWindow::handleAppStateChange(
             ui->nextButton->setEnabled(true);
             ui->backButton->setEnabled(false);
             ui->cancelButton->setEnabled(false);
+            push(new FinishPage(this));
             break;
         case InstallerApplication::State::Cancelled:
         case InstallerApplication::State::Error:
@@ -91,6 +93,7 @@ void InstallerWindow::handleAppStateChange(
             ui->nextButton->setEnabled(true);
             ui->backButton->setEnabled(false);
             ui->cancelButton->setEnabled(false);
+            push(new FinishPage(this));
             break;
     }
 }
@@ -108,10 +111,14 @@ void InstallerWindow::closeEvent(QCloseEvent *event) {
 
 void InstallerWindow::cancelRequested() {
     if (ngApp->currentState() == InstallerApplication::State::Cancelled ||
-        ngApp->currentState() == InstallerApplication::State::Finished ||
         ngApp->currentState() == InstallerApplication::State::Error) {
         // X button, alt+f4
         QApplication::quit();
+        return;
+    }
+    if (ngApp->currentState() == InstallerApplication::State::Finished) {
+        // Post-finish commands
+        currentPage()->next();
         return;
     }
 

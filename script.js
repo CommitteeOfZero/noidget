@@ -525,6 +525,9 @@ DirectoryPage.prototype.onNext = function() {
 
     // ng.window.runTx();
     ng.tx.openReceipt('G:/Games/SGTL/CHAOSCHILD_3');
+    ng.tx.tx().finishText = 'Wee!';
+    ng.tx.tx().cancelText = 'You cancelled.\n\n%LOGPATH%';
+    ng.tx.tx().errorText = 'There was an error.\n\n%LOGPATH%';
     var testSection = ng.tx.tx().addSection('Test section');
     testSection.log('Log test');
     testSection.createDirectory('G:/Games/SGTL/CHAOSCHILD_2/dummyDir');
