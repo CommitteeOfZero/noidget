@@ -824,12 +824,19 @@ Transaction *TxHost::tx() { return ngApp->tx(); }
 
 /*^jsdoc
  * Start logging write actions to an uninstall receipt
+ * 
+ * Throws if unsuccessful.
+ * 
  * @method openReceipt
  * @param {string} path **Folder** to open/create the receipt in
  * @memberof ng.tx
  * @static
  ^jsdoc*/
-void TxHost::openReceipt(const QString &path) { ngApp->receipt()->open(path); }
+void TxHost::openReceipt(const QString &path) {
+    SCRIPT_EX_GUARD_START
+    ngApp->receipt()->open(path);
+    SCRIPT_EX_GUARD_END()
+}
 
 /*^jsdoc
  * Moves to the progress page and starts the installation. **This must be
