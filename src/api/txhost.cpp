@@ -780,7 +780,7 @@ TxHost::~TxHost() {}
  ^jsdoc*/
 TxFileStream *TxHost::fileStream(const QString &inPath) {
     SCRIPT_EX_GUARD_START
-    TxFileStream *ret = new TxFileStream();
+    TxFileStream *ret = new TxFileStream(tx());
     ret->setInPath(inPath);
     return ret;
     SCRIPT_EX_GUARD_END(nullptr)
@@ -799,7 +799,7 @@ TxFileStream *TxHost::fileStream(const QString &inPath) {
 TxXdelta3Stream *TxHost::xdelta3Stream(const QString &srcPath,
                                        const QString &diffPath) {
     SCRIPT_EX_GUARD_START
-    TxXdelta3Stream *ret = new TxXdelta3Stream();
+    TxXdelta3Stream *ret = new TxXdelta3Stream(tx());
     ret->setSrcPath(srcPath);
     ret->setDiffPath(diffPath);
     return ret;

@@ -17,7 +17,7 @@ class TxStream : public QObject, protected QScriptable {
     Q_PROPERTY(bool isOpen READ isOpen)
 
    public:
-    explicit TxStream() : QObject(0) {}
+    explicit TxStream(QObject* parent = 0) : QObject(parent) {}
     virtual ~TxStream() {}
     virtual void open() = 0;
     virtual void close() = 0;

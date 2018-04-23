@@ -20,7 +20,7 @@ class TxFileStream : public TxStream {
     Q_PROPERTY(QString inPath READ inPath WRITE setInPath)
 
    public:
-    explicit TxFileStream() : TxStream() {}
+    explicit TxFileStream(QObject* parent = 0) : TxStream(parent) {}
     ~TxFileStream() {}
     void open() override;
     void close() override;

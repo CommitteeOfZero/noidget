@@ -27,7 +27,7 @@ class TxXdelta3Stream : public TxStream {
     Q_PROPERTY(QString diffPath READ diffPath WRITE setDiffPath)
 
    public:
-    explicit TxXdelta3Stream() : TxStream() {}
+    explicit TxXdelta3Stream(QObject* parent = 0) : TxStream(parent) {}
     ~TxXdelta3Stream() {}
     void open() override;
     void close() override;
