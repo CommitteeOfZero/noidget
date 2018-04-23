@@ -26,6 +26,7 @@ QString Transaction::logFileName() {
 void Transaction::handleAppStateChange(InstallerApplication::State newState) {
     if (newState == InstallerApplication::State::Cancelled) {
         _isCancelled = true;
+        logToFile("User cancelled transaction.");
         emit cancelled();
     }
 }
