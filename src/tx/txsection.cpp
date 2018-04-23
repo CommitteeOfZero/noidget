@@ -6,7 +6,8 @@ TxSection::~TxSection() {}
 
 void TxSection::addAction(TxAction* action) {
     action->setParent(this);
-    connect(action, &TxAction::log, this, &TxSection::actionLog);
+    connect(action, &TxAction::log, this, &TxSection::actionLog,
+            Qt::DirectConnection);
     connect(this, &TxSection::cancelled, action, &TxAction::cancel);
     _actions.append(action);
     int i = _actions.count() - 1;

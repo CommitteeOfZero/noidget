@@ -17,6 +17,7 @@ class NgException : public QException {
     }
 
     const char* what() const noexcept { return _what.toUtf8().constData(); }
+    QString qWhat() const noexcept { return _what; }
 
    private:
     QString _what;

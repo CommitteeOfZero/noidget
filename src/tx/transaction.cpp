@@ -45,7 +45,8 @@ void Transaction::handleAppStateChange(InstallerApplication::State newState) {
 TxSection* Transaction::addSection(const QString& title) {
     TxSection* section = new TxSection(this);
     section->setTitle(title);
-    connect(section, &TxSection::log, this, &Transaction::sectionLog);
+    connect(section, &TxSection::log, this, &Transaction::sectionLog,
+            Qt::DirectConnection);
     connect(this, &Transaction::cancelled, section, &TxSection::cancel);
     _sections.append(section);
     int i = _sections.count() - 1;
@@ -94,8 +95,7 @@ qint64 Transaction::prepare() {
         _isPrepared = true;
         return size;
     } catch (const NgException& ex) {
-        logToFile(QString("Error during preparation: %1")
-                      .arg(QString::fromUtf8(ex.what())));
+        logToFile(QString("Error during preparation: %1").arg(ex.qWhat()));
         ngApp->setCurrentState(InstallerApplication::State::Error);
         throw;
     } catch (...) {
@@ -126,8 +126,7 @@ void Transaction::run() {
             emit progress(_roughProgress);
         }
     } catch (const NgException& ex) {
-        logToFile(QString("Error during transaction: %1")
-                      .arg(QString::fromUtf8(ex.what())));
+        logToFile(QString("Error during transaction: %1").arg(ex.qWhat()));
         ngApp->setCurrentState(InstallerApplication::State::Error);
         throw;
     } catch (...) {
