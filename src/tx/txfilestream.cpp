@@ -3,13 +3,15 @@
 #include "installerapplication.h"
 #include "fs.h"
 
+TxFileStream::~TxFileStream() { doClose(); }
+
 void TxFileStream::open() {
     QString expandedPath = ngApp->globalFs()->expandedPath(_inPath);
     if (_inFile != nullptr) {
         throw NgException(
             QString("Tried to open file twice: %1").arg(expandedPath));
     }
-    _inFile = new QFile(expandedPath, this);
+    _inFile = new QFile(expandedPath);
     if (!_inFile->open(QIODevice::ReadOnly)) {
         throw NgException(QString("Couldn't open file: %1").arg(expandedPath));
     }
@@ -22,7 +24,15 @@ void TxFileStream::close() {
         throw NgException(QString("Tried to close file that wasn't open: %1")
                               .arg(expandedPath));
     }
-    _inFile->close();
+    doClose();
+}
+
+void TxFileStream::doClose() {
+    if (_inFile != nullptr) {
+        _inFile->close();
+        delete _inFile;
+        _inFile = nullptr;
+    }
     _isOpen = false;
 }
 

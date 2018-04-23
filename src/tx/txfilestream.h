@@ -21,7 +21,7 @@ class TxFileStream : public TxStream {
 
    public:
     explicit TxFileStream(QObject* parent = 0) : TxStream(parent) {}
-    ~TxFileStream() {}
+    ~TxFileStream();
     void open() override;
     void close() override;
     void seek(qint64 count) override;
@@ -33,4 +33,6 @@ class TxFileStream : public TxStream {
    private:
     QString _inPath;
     QFile* _inFile = 0;
+
+    void doClose();
 };

@@ -5,6 +5,8 @@
 
 static const qint64 bufferSize = 1024 * 1024;
 
+TxXdelta3Stream::~TxXdelta3Stream() { doClose(); }
+
 void TxXdelta3Stream::open() {
     QString expandedSrcPath = ngApp->globalFs()->expandedPath(_srcPath);
     QString expandedDiffPath = ngApp->globalFs()->expandedPath(_diffPath);
@@ -12,8 +14,8 @@ void TxXdelta3Stream::open() {
         throw NgException(QString("Tried to open diff stream twice: %1 / %2")
                               .arg(expandedSrcPath, expandedDiffPath));
     }
-    _srcFile = new QFile(expandedSrcPath, this);
-    _diffFile = new QFile(expandedDiffPath, this);
+    _srcFile = new QFile(expandedSrcPath);
+    _diffFile = new QFile(expandedDiffPath);
     if (!_srcFile->open(QIODevice::ReadOnly) ||
         !_diffFile->open(QIODevice::ReadOnly)) {
         throw NgException(QString("Couldn't open diff file pair: %1 / %2")
@@ -54,12 +56,32 @@ void TxXdelta3Stream::close() {
             QString("Tried to close diff stream that wasn't open: %1 / %2")
                 .arg(expandedSrcPath, expandedDiffPath));
     }
-    xd3_close_stream(&_xd3stream);
-    xd3_free_stream(&_xd3stream);
-    _srcFile->close();
-    _diffFile->close();
-    free(_srcBuffer);
-    free(_diffBuffer);
+    doClose();
+}
+
+void TxXdelta3Stream::doClose() {
+    if (_isOpen) {
+        xd3_close_stream(&_xd3stream);
+        xd3_free_stream(&_xd3stream);
+    }
+    if (_srcFile != nullptr) {
+        _srcFile->close();
+        delete _srcFile;
+        _srcFile = nullptr;
+    }
+    if (_diffFile != nullptr) {
+        _diffFile->close();
+        delete _diffFile;
+        _diffFile = nullptr;
+    }
+    if (_srcBuffer != nullptr) {
+        free(_srcBuffer);
+        _srcBuffer = nullptr;
+    }
+    if (_diffBuffer != nullptr) {
+        free(_diffBuffer);
+        _diffBuffer = nullptr;
+    }
     _isOpen = false;
 }
 

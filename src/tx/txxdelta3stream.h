@@ -28,7 +28,7 @@ class TxXdelta3Stream : public TxStream {
 
    public:
     explicit TxXdelta3Stream(QObject* parent = 0) : TxStream(parent) {}
-    ~TxXdelta3Stream() {}
+    ~TxXdelta3Stream();
     void open() override;
     void close() override;
     void seek(qint64 count) override;
@@ -55,4 +55,5 @@ class TxXdelta3Stream : public TxStream {
     xd3_source _xd3source;
 
     void readUntilOutput();
+    void doClose();
 };
