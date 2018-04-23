@@ -19,6 +19,10 @@ void CreateShortcutAction::run() {
             "Missing required parameter trying to create shortcut");
     }
 
+    emit log(QString("Creating shortcut to %1 at %2")
+                 .arg(_targetPath, _shortcutPath),
+             true);
+
     HRESULT hres;
     IShellLink* psl;
 

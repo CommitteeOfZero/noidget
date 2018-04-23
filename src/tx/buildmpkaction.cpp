@@ -57,6 +57,7 @@ void BuildMpkAction::run() {
     if (!outFile.open(QIODevice::WriteOnly)) {
         throw NgException(QString("Could not write file: %1").arg(archivePath));
     }
+    emit log(QString("(File is new: %1)").arg(archiveIsNew), true);
     if (archiveIsNew) {
         ngApp->receipt()->logFileCreate(archivePath);
     }
@@ -82,6 +83,7 @@ void BuildMpkAction::run() {
         }
         emit log(QString::fromLatin1(entry.name));
         bool streamWasOpen = entry.source->isOpen();
+        emit log(QString("(Stream was open: %1)").arg(streamWasOpen), true);
         if (!streamWasOpen) {
             entry.source->open();
         }
@@ -110,6 +112,7 @@ void BuildMpkAction::run() {
     free(buffer);
 
     // write TOC
+    emit log("Writing TOC", true);
     for (int i = 0; i < _entries.count(); i++) {
         MpkMetaEntry& entry = _entries[i];
         outFile.seek(mpkHeaderSize + mpkEntrySize * i);

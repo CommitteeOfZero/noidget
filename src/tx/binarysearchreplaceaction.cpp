@@ -14,7 +14,7 @@ void BinarySearchReplaceAction::run() {
     if (!in.open(QIODevice::ReadOnly)) {
         throw NgException(QString("Could not read file: %1").arg(expandedPath));
     }
-
+    emit log(QString("Input size: %1").arg(in.size()), true);
     QByteArray data =
         in.readAll().replace(QByteArray::fromHex(_needle.toLatin1()),
                              QByteArray::fromHex(_replace.toLatin1()));

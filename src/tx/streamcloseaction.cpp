@@ -1,3 +1,6 @@
 #include "streamcloseaction.h"
 
-void StreamCloseAction::run() { _stream->close(); }
+void StreamCloseAction::run() {
+    emit log("Closing stream", true);
+    _stream->close();
+}

@@ -12,6 +12,13 @@ void WriteStreamAction::run() {
     QString dest = ngApp->globalFs()->expandedPath(_dest);
     QFile out(dest);
     bool fileIsNew = !out.exists();
+
+    emit log(
+        QString("Writing stream to %1 (%2 bytes, file previously existed: "
+                "%3)")
+            .arg(dest, QString("%1").arg(_count), QString("%1").arg(fileIsNew)),
+        true);
+
     if (!out.open(QIODevice::WriteOnly)) {
         throw NgException(QString("Could not write file: %1").arg(dest));
     }
