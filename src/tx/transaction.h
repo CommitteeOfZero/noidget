@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QScriptable>
 #include <QVector>
+#include <QTemporaryFile>
 #include "installerapplication.h"
 
 class TxSection;
@@ -41,6 +42,8 @@ class Transaction : public QObject, protected QScriptable {
 
     int sectionCount() { return _sections.count(); }
 
+    QString logFileName();
+
    signals:
     void sectionChanged(int i, const QString& title);
     void log(const QString& text);
@@ -57,8 +60,11 @@ class Transaction : public QObject, protected QScriptable {
     QVector<TxSection*> _sections;
     QVector<qint64> _sectionSizes;
     QVector<QString> _postFinishCmds;
+    QTemporaryFile* _logFile = nullptr;
     qint64 _roughProgress = 0;
     bool _isPrepared = false;
     bool _isStarted = false;
     bool _isCancelled = false;
+
+    void logToFile(const QString& text);
 };

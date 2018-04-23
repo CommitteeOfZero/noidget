@@ -3,12 +3,25 @@
 #include "fs.h"
 #include <util/exception.h>
 #include <QProcess>
+#include <QDir>
+#include <QTextStream>
+#include <QDateTime>
 
 Transaction::Transaction(QObject* parent = 0) : QObject(parent) {
     connect(ngApp, &InstallerApplication::currentStateChanged, this,
             &Transaction::handleAppStateChange);
 }
-Transaction::~Transaction() {}
+Transaction::~Transaction() {
+    if (_logFile != nullptr) {
+        delete _logFile;
+        _logFile = nullptr;
+    }
+}
+
+QString Transaction::logFileName() {
+    if (_logFile == nullptr) return QString();
+    return _logFile->fileName();
+}
 
 void Transaction::handleAppStateChange(InstallerApplication::State newState) {
     if (newState == InstallerApplication::State::Cancelled) {
@@ -60,6 +73,13 @@ qint64 Transaction::prepare() {
     if (_isPrepared) {
         throw NgException("Tried to prepare transaction twice");
     }
+
+    _logFile = new QTemporaryFile(QDir::tempPath() + "/noidget.XXXXXX.txt");
+    _logFile->setAutoRemove(false);
+    _logFile->open();
+    _logFile->setTextModeEnabled(true);
+    sectionLog(QString("Logging to %1").arg(_logFile->fileName()));
+
     qint64 size = 0;
     for (TxSection* section : _sections) {
         section->prepare();
@@ -104,4 +124,15 @@ void Transaction::runPost() {
     }
 }
 
-void Transaction::sectionLog(const QString& text) { emit log(text); }
+void Transaction::sectionLog(const QString& text) {
+    emit log(text);
+    logToFile(text);
+}
+
+void Transaction::logToFile(const QString& text) {
+    if (_logFile == nullptr || !_logFile->isOpen()) return;
+    QTextStream stream(_logFile);
+    QString timestamp =
+        QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
+    stream << QString("[%1 UTC] %2").arg(timestamp, text) << endl;
+}
