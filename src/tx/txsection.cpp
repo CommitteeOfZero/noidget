@@ -44,4 +44,6 @@ void TxSection::run() {
     }
 }
 
-void TxSection::actionLog(const QString& text) { emit log(text); }
+void TxSection::actionLog(const QString& text, bool fileOnly) {
+    emit log(text, fileOnly);
+}

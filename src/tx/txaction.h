@@ -43,7 +43,7 @@ class TxAction : public QObject, protected QScriptable {
     }
 
    signals:
-    void log(const QString& text);
+    void log(const QString& text, bool fileOnly = false);
     void progress(qint64 progress);
 
    public slots:

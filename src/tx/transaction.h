@@ -54,7 +54,7 @@ class Transaction : public QObject, protected QScriptable {
     void handleAppStateChange(InstallerApplication::State newState);
 
    private slots:
-    void sectionLog(const QString& text);
+    void sectionLog(const QString& text, bool fileOnly = false);
 
    private:
     QVector<TxSection*> _sections;

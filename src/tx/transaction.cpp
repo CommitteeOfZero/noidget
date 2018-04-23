@@ -124,8 +124,10 @@ void Transaction::runPost() {
     }
 }
 
-void Transaction::sectionLog(const QString& text) {
-    emit log(text);
+void Transaction::sectionLog(const QString& text, bool fileOnly) {
+    if (!fileOnly) {
+        emit log(text);
+    }
     logToFile(text);
 }
 

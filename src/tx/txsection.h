@@ -33,7 +33,7 @@ class TxSection : public QObject, protected QScriptable {
     void run();
 
    signals:
-    void log(const QString& text);
+    void log(const QString& text, bool fileOnly = false);
     void progress(qint64 progress);
     void cancelled();
 
@@ -44,7 +44,7 @@ class TxSection : public QObject, protected QScriptable {
     }
 
    private slots:
-    void actionLog(const QString& text);
+    void actionLog(const QString& text, bool fileOnly = false);
 
    private:
     QVector<TxAction*> _actions;
