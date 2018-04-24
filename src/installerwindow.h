@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QtMultimedia/QMediaPlayer>
+#include <QtMultimedia/QMediaPlaylist>
 #include <QEvent>
 #include <QCloseEvent>
 #include <view/ipagestack.h>
@@ -38,7 +39,6 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
    private slots:
     void handleAppStateChange(InstallerApplication::State newState);
 
-    void bgm_stateChanged(QMediaPlayer::State state);
     void cancelRequested();
     void on_muteButton_clicked();
 
@@ -53,6 +53,7 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
    private:
     Ui::InstallerWindow *ui;
     QMediaPlayer bgm;
+    QMediaPlaylist playlist;
 
     void removePage(view::Page *page);
 };

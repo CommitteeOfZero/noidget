@@ -57,9 +57,6 @@ InstallerWindow::InstallerWindow(QWidget *parent)
         ui->backButton->style()->polish(ui->backButton);
     }
 
-    connect(&bgm, &QMediaPlayer::stateChanged, this,
-            &InstallerWindow::bgm_stateChanged);
-
     // gross but I haven't found any way to overlay a container over other
     // widgets while passing through input events that don't hit any of its
     // child widgets
@@ -134,12 +131,6 @@ void InstallerWindow::handleAppStateChange(
     }
 }
 
-void InstallerWindow::bgm_stateChanged(QMediaPlayer::State state) {
-    if (state == QMediaPlayer::StoppedState) {
-        bgm.play();
-    }
-}
-
 void InstallerWindow::closeEvent(QCloseEvent *event) {
     event->ignore();
     cancelRequested();
@@ -201,7 +192,11 @@ view::Page *InstallerWindow::currentPage() {
 }
 
 void InstallerWindow::setBgm(const QUrl &url) {
-    bgm.setMedia(url);
+    // TODO gapless?
+    playlist.clear();
+    playlist.addMedia(url);
+    playlist.setPlaybackMode(QMediaPlaylist::Loop);
+    bgm.setPlaylist(&playlist);
     bgm.setVolume(50);
     bgm.play();
 }
