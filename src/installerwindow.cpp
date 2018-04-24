@@ -8,18 +8,54 @@
 #include <QMouseEvent>
 #include <QToolButton>
 #include <QMessageBox>
+#include <QFileInfo>
 
 InstallerWindow::InstallerWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::InstallerWindow) {
     setWindowFlag(Qt::FramelessWindowHint);
     ui->setupUi(this);
 
-    ui->headerImage->setStyleSheet(
-        "background-color: #000");  // TODO parameterize
-
-    // TODO parameterize whole window layout
+    ui->headerImage->setStyleSheet("background-color: #000");
 
     ui->headerImage->installEventFilter(this);
+
+    if (QFileInfo(":/userdata/header.png").exists()) {
+        ui->headerImage->setPixmap(QPixmap(":/userdata/header.png"));
+    }
+    if (QFileInfo(":/userdata/left.png").exists()) {
+        ui->leftImage->setPixmap(QPixmap(":/userdata/left.png"));
+        QMargins margins = ui->belowHeaderColumns->contentsMargins();
+        margins.setLeft(margins.left() - 4);
+        ui->belowHeaderColumns->setContentsMargins(margins);
+    } else {
+        ui->belowHeaderColumns->removeWidget(
+            ui->leftImage);  // get rid of spacing
+    }
+    if (QFileInfo(":/userdata/right.png").exists()) {
+        ui->rightImage->setPixmap(QPixmap(":/userdata/right.png"));
+        QMargins margins = ui->belowHeaderColumns->contentsMargins();
+        margins.setLeft(margins.right() - 4);
+        ui->belowHeaderColumns->setContentsMargins(margins);
+    } else {
+        ui->belowHeaderColumns->removeWidget(
+            ui->rightImage);  // get rid of spacing
+    }
+    if (QFileInfo(":/userdata/next_button.png").exists()) {
+        ui->nextButton->setIcon(QIcon(":/userdata/next_button.png"));
+        ui->nextButton->setIconSize(QSize(24, 24));
+        ui->nextButton->setProperty("hasIcon", true);
+        // following is needed for dynamic property based styles to update
+        ui->nextButton->style()->unpolish(ui->nextButton);
+        ui->nextButton->style()->polish(ui->nextButton);
+    }
+    if (QFileInfo(":/userdata/back_button.png").exists()) {
+        ui->backButton->setIcon(QIcon(":/userdata/back_button.png"));
+        ui->backButton->setIconSize(QSize(24, 24));
+        ui->backButton->setProperty("hasIcon", true);
+        // following is needed for dynamic property based styles to update
+        ui->backButton->style()->unpolish(ui->backButton);
+        ui->backButton->style()->polish(ui->backButton);
+    }
 
     connect(&bgm, &QMediaPlayer::stateChanged, this,
             &InstallerWindow::bgm_stateChanged);
@@ -122,10 +158,9 @@ void InstallerWindow::cancelRequested() {
         return;
     }
 
-    QString question = "Really abort the installation?";
+    QString question = "Really abort the process?";
     if (ngApp->currentState() == InstallerApplication::State::Installing) {
-        question +=
-            "\n\nChanges already made by the installer will not be undone!";
+        question += "\n\nChanges already made will not be undone!";
     }
     QMessageBox mb(this);
     mb.setText(question);

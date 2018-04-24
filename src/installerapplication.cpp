@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStyleFactory>
+#include <QResource>
 
 InstallerApplication::InstallerApplication(int& argc, char** argv)
     : QApplication(argc, argv) {
@@ -16,6 +17,8 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
         "InstallerApplication::State");
 
     _currentState = State::Preparation;
+
+    QResource::registerResource("userdata.rcc");
 
     w = new InstallerWindow(0);
 
@@ -37,7 +40,7 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
 
     _tx = new Transaction(this);
 
-    QFile scriptFile(":/script.js");
+    QFile scriptFile(":/userdata/script.js");
     scriptFile.open(QFile::ReadOnly | QFile::Text);
     QTextStream ts2(&scriptFile);
     h->engine()->evaluate(ts2.readAll());

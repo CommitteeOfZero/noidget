@@ -80,21 +80,18 @@
          <property name="text">
           <string/>
          </property>
-         <property name="pixmap">
-          <pixmap resource="../main.qrc">:/header.png</pixmap>
-         </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="belowHeaderColumns">
          <property name="spacing">
           <number>20</number>
          </property>
          <property name="leftMargin">
-          <number>16</number>
+          <number>20</number>
          </property>
          <property name="topMargin">
           <number>0</number>
@@ -106,12 +103,9 @@
           <number>20</number>
          </property>
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="leftImage">
            <property name="text">
             <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="../main.qrc">:/assets/disword.png</pixmap>
            </property>
           </widget>
          </item>
@@ -165,7 +159,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>&lt; Back</string>
+                <string>Back</string>
                </property>
               </widget>
              </item>
@@ -185,20 +179,6 @@
                </property>
                <property name="text">
                 <string>Next</string>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normalon>:/pointer.png</normalon>
-                </iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="hasIcon" stdset="0">
-                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -240,6 +220,13 @@
             </layout>
            </item>
           </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="rightImage">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
