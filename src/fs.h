@@ -48,6 +48,8 @@ class Fs : public QObject, protected QScriptable {
     Q_INVOKABLE bool pathIsReadable(const QString& path) const;
     Q_INVOKABLE bool pathIsWritable(const QString& path) const;
 
+    Q_INVOKABLE QString readTextFile(const QString& filePath) const;
+
     Q_INVOKABLE QString md5sum(const QString& filePath) const;
 
     Q_INVOKABLE void rename(const QString& from, const QString& to) const;

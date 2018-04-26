@@ -9,6 +9,7 @@
 #include <QCryptographicHash>
 #include <QFile>
 #include <QDir>
+#include <QTextStream>
 
 // http://doc.qt.io/qt-5/qfileinfo.html#ntfs-permissions
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
@@ -160,6 +161,26 @@ bool Fs::pathIsWritable(const QString& path) const {
     bool result = QFileInfo(expandedPath(path)).isWritable();
     qt_ntfs_permission_lookup--;
     return result;
+}
+
+/*^jsdoc
+ * Reads UTF-8 text file at `filePath` into string. Throws if file does not exist /
+ * is not readable.
+ * @method readTextFile
+ * @memberof ng.fs.Fs
+ * @instance
+ * @param {string} filePath
+ * @returns {string}
+ ^jsdoc*/
+QString Fs::readTextFile(const QString& filePath) const {
+    QFile f(expandedPath(filePath));
+    if (!f.open(QIODevice::ReadOnly)) {
+        SCRIPT_THROW("Can't open file")
+        return "";
+    }
+    QTextStream in(&f);
+    in.setCodec("UTF-8");
+    return in.readAll();
 }
 
 /*^jsdoc
