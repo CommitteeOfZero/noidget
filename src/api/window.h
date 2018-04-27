@@ -34,6 +34,7 @@ class Window : public QObject, protected QScriptable {
 
     Q_INVOKABLE void playBgm(const QString& url);
     Q_INVOKABLE void setMessageBoxIcon(const QString& url);
+    Q_INVOKABLE void setTitle(const QString& title);
 
     Q_INVOKABLE void messageBox(const QScriptValue& v);
     Q_INVOKABLE bool modal(api::view::Dialog::DlgType type,

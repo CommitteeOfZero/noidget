@@ -120,6 +120,17 @@ void Window::messageBox(const QScriptValue &v) {
 void Window::setMessageBoxIcon(const QString &url) { _mbIcon = QPixmap(url); }
 
 /*^jsdoc
+ * Set the window title
+ * @method setTitle
+ * @memberof ng.window
+ * @static
+ * @param {string} title
+ ^jsdoc*/
+void Window::setTitle(const QString &title) {
+    ngApp->window()->setTitle(title);
+}
+
+/*^jsdoc
  * Displays a customized modal {@link ng.view.Dialog}. Returns only after user
  closes the dialog.
  * @method modal
