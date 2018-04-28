@@ -127,7 +127,7 @@ void Window::setMessageBoxIcon(const QString &url) { _mbIcon = QPixmap(url); }
  * @param {string} title
  ^jsdoc*/
 void Window::setTitle(const QString &title) {
-    ngApp->window()->setTitle(title);
+    ngApp->window()->setWindowTitle(title);
 }
 
 /*^jsdoc
