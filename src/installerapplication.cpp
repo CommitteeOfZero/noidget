@@ -12,6 +12,7 @@
 
 #ifdef QT_DEBUG
 #include <QScriptEngineDebugger>
+#include <QAction>
 #endif
 
 InstallerApplication::InstallerApplication(int& argc, char** argv)
@@ -48,8 +49,11 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     scriptFile.open(QFile::ReadOnly | QFile::Text);
     QTextStream ts2(&scriptFile);
 #ifdef QT_DEBUG
-    QScriptEngineDebugger debugger;
-    debugger.attachTo(h->engine());
+    QScriptEngineDebugger* debugger = new QScriptEngineDebugger(this);
+    debugger->attachTo(h->engine());
+    #if 0
+    debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
+    #endif
 #endif
     h->engine()->evaluate(ts2.readAll());
 }
