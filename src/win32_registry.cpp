@@ -55,9 +55,9 @@ bool Registry::valueExists(RootKey root, const QString& key, bool use64bit,
                       KEY_READ | (use64bit ? KEY_WOW64_64KEY : KEY_WOW64_32KEY),
                       &hKey) == ERROR_SUCCESS;
     if (success) {
-        success =
-            RegGetValueW(hKey, NULL, (LPCWSTR)valName.utf16(),
-                         RRF_RT_REG_DWORD | RRF_RT_REG_SZ, NULL, NULL, NULL);
+        success = RegGetValueW(hKey, NULL, (LPCWSTR)valName.utf16(),
+                               RRF_RT_REG_DWORD | RRF_RT_REG_SZ, NULL, NULL,
+                               NULL) == ERROR_SUCCESS;
         RegCloseKey(hKey);
     }
     return success;
