@@ -5,12 +5,17 @@
 #include <util/exception.h>
 #include <QDir>
 #include <QDirIterator>
+#include <QDebug>
 
 CopyFilesAction::CopyFilesAction(QObject* parent = 0) : TxAction(parent) {
     _fs = ngApp->globalFs();
 }
 
 void CopyFilesAction::prepare() {
+    if (!_deferredCollect) collect();
+}
+
+void CopyFilesAction::collect() {
     if (_src.endsWith('*')) {
         QString srcDir = _src.left(_src.length() - 1);
         if (!_fs->pathIsDirectory(srcDir)) {
@@ -90,10 +95,17 @@ void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
 
 // TODO symlink handling?
 void CopyFilesAction::run() {
-    QString expandedSrc = _fs->expandedPath(_src);
-    QString expandedDest = _fs->expandedPath(_dest);
+    QString expandedSrc = QDir::toNativeSeparators(_fs->expandedPath(_src));
+    QString expandedDest = QDir::toNativeSeparators(_fs->expandedPath(_dest));
 
     emit log(QString("Copying %1 to %2...").arg(expandedSrc, expandedDest));
+
+    if (_deferredCollect) collect();
+
+    bool glob = expandedSrc.endsWith('*');
+    if (glob) {
+        expandedSrc = expandedSrc.left(expandedSrc.length() - 1);
+    }
 
     if (_fs->pathIsFile(expandedSrc)) {
         // copy single file
@@ -104,11 +116,11 @@ void CopyFilesAction::run() {
             _fs->createDirectory(expandedDest);
             QString destFile =
                 QDir(expandedDest)
-                    .absoluteFilePath(QFile(expandedSrc).fileName());
+                    .absoluteFilePath(QFileInfo(expandedSrc).fileName());
             copySingleFile(expandedSrc, destFile);
         } else {
             // to a (named) file
-            _fs->createDirectory(QFileInfo(expandedDest).dir().absolutePath());
+            _fs->createDirectory(QFileInfo(expandedDest).absolutePath());
             copySingleFile(expandedSrc, expandedDest);
         }
     } else {
@@ -116,14 +128,19 @@ void CopyFilesAction::run() {
         QDir src(expandedSrc), dest(expandedDest);
 
         for (QString path : _srcPaths) {
+            path = QDir::toNativeSeparators(path);
+
             if (_isCancelled) {
                 return;
             }
             if (_fs->pathIsFile(path)) {
-                QString relativeSrc = src.relativeFilePath(path);
-                QString absoluteDest = dest.absoluteFilePath(relativeSrc);
-                copySingleFile(path, absoluteDest);
+                copySingleFile(
+                    path, dest.absoluteFilePath(QFileInfo(path).fileName()));
             } else {
+                _fs->createDirectory(
+                    dest.absoluteFilePath(QDir(path).dirName()));
+                QString base = QFileInfo(path).absolutePath() + "/";
+                int skip = base.length();
                 QDirIterator it(path,
                                 QDir::AllEntries | QDir::Hidden | QDir::System |
                                     QDir::NoDotAndDotDot,
@@ -133,9 +150,9 @@ void CopyFilesAction::run() {
                     if (_isCancelled) {
                         return;
                     }
-                    QString entryPath = it.next();
+                    QString entryPath = QFileInfo(it.next()).absoluteFilePath();
                     QString entryDest =
-                        dest.absoluteFilePath(src.relativeFilePath(entryPath));
+                        dest.absoluteFilePath(entryPath.mid(skip));
                     if (_fs->pathIsDirectory(entryPath)) {
                         _fs->createDirectory(entryDest);
                     } else {

@@ -26,11 +26,14 @@ class Fs;
  * @hideconstructor
  * @property {string} src
  * @property {string} dest
+ * @property {bool} deferredCollect - default false. If true, source will only be searched right before the action runs, instead of before the transaction starts. Useful for copying files created during installation.
  ^jsdoc*/
 class CopyFilesAction : public TxAction {
     Q_OBJECT
     Q_PROPERTY(QString src READ src WRITE setSrc)
     Q_PROPERTY(QString dest READ dest WRITE setDest)
+    Q_PROPERTY(
+        bool deferredCollect READ deferredCollect WRITE setDeferredCollect)
 
    public:
     explicit CopyFilesAction(QObject* parent);
@@ -41,13 +44,19 @@ class CopyFilesAction : public TxAction {
     void setSrc(const QString& src) { _src = src; }
     QString dest() { return _dest; }
     void setDest(const QString& dest) { _dest = dest; }
+    bool deferredCollect() { return _deferredCollect; }
+    void setDeferredCollect(bool deferredCollect) {
+        _deferredCollect = deferredCollect;
+    }
 
    private:
     QString _src, _dest;
+    bool _deferredCollect = false;
     QVector<QString> _srcPaths;
     qint64 _progress = 0;
     Fs* _fs;
 
     qint64 calcSize() override;
     void copySingleFile(const QString& src, const QString& dest);
+    void collect();
 };

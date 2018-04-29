@@ -246,7 +246,8 @@ void Fs::tryCreateSubPath(const QString& workPath,
 void Fs::createDirectory(const QString& path) const {
     // we can't use mkpath here because we need to log each directory creation
 
-    QString fullPath = QDir::toNativeSeparators(QDir::cleanPath(path));
+    QString fullPath =
+        QDir::toNativeSeparators(QDir::cleanPath(expandedPath(path)));
 
     if (pathIsDirectory(fullPath)) return;
     if (pathIsFile(fullPath)) {

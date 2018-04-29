@@ -35,6 +35,7 @@ void BinarySearchReplaceAction::run() {
         }
         qint64 curBytes = qMin(blockSize, bytesToWrite);
         out.write(rawData, curBytes);
+        rawData += curBytes;
         totalWritten += curBytes;
         bytesToWrite -= curBytes;
         emit progress(totalWritten);

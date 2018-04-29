@@ -51,9 +51,9 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
 #ifdef QT_DEBUG
     QScriptEngineDebugger* debugger = new QScriptEngineDebugger(this);
     debugger->attachTo(h->engine());
-    #if 0
+#if 0
     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
-    #endif
+#endif
 #endif
     h->engine()->evaluate(ts2.readAll());
 }

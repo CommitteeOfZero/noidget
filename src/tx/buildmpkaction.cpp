@@ -43,7 +43,8 @@ void BuildMpkAction::addEntry(int id, const QString& name, TxStream* source,
     entry.id = id;
     entry.source = source;
     entry.displaySize = displaySize;
-    const char* _name = name.toLatin1().constData();
+    QByteArray latin1Name = name.toLatin1();
+    const char* _name = latin1Name.constData();
     strncpy(entry.name, _name, sizeof(entry.name));
     entry.name[sizeof(entry.name) - 1] = '\0';
     _entries.append(entry);
