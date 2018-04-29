@@ -10,6 +10,10 @@
 #include <QStyleFactory>
 #include <QResource>
 
+#ifdef QT_DEBUG
+#include <QScriptEngineDebugger>
+#endif
+
 InstallerApplication::InstallerApplication(int& argc, char** argv)
     : QApplication(argc, argv) {
     // Despite Q_ENUM this is apparently required for use in signals
@@ -43,6 +47,10 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     QFile scriptFile(":/userdata/script.js");
     scriptFile.open(QFile::ReadOnly | QFile::Text);
     QTextStream ts2(&scriptFile);
+#ifdef QT_DEBUG
+    QScriptEngineDebugger debugger;
+    debugger.attachTo(h->engine());
+#endif
     h->engine()->evaluate(ts2.readAll());
 }
 
