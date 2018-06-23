@@ -19,8 +19,11 @@ void CreateShortcutAction::run() {
             "Missing required parameter trying to create shortcut");
     }
 
+    QString _targetExpanded = ngApp->globalFs()->expandedPath(_targetPath);
+    QString _shortcutExpanded = ngApp->globalFs()->expandedPath(_shortcutPath);
+
     emit log(QString("Creating shortcut to %1 at %2")
-                 .arg(_targetPath, _shortcutPath),
+                 .arg(_targetExpanded, _shortcutExpanded),
              true);
 
     HRESULT hres;
@@ -31,8 +34,7 @@ void CreateShortcutAction::run() {
     if (SUCCEEDED(hres)) {
         IPersistFile* ppf;
 
-        psl->SetPath(
-            (LPCWSTR)ngApp->globalFs()->expandedPath(_targetPath).utf16());
+        psl->SetPath((LPCWSTR)_targetExpanded.utf16());
         if (!_targetArgs.isEmpty()) {
             psl->SetArguments((LPCWSTR)_targetArgs.utf16());
         }
@@ -52,17 +54,13 @@ void CreateShortcutAction::run() {
 
         if (SUCCEEDED(hres)) {
             ngApp->globalFs()->createDirectory(
-                QFileInfo(ngApp->globalFs()->expandedPath(_shortcutPath))
-                    .path());
-            hres = ppf->Save((LPCOLESTR)ngApp->globalFs()
-                                 ->expandedPath(_shortcutPath)
-                                 .utf16(),
-                             TRUE);
+                QFileInfo(_shortcutExpanded).path());
+            hres = ppf->Save((LPCOLESTR)_shortcutExpanded.utf16(), TRUE);
             if (!SUCCEEDED(hres)) {
                 ppf->Release();
                 psl->Release();
                 throw NgException(QString("Failed to save shortcut at %1")
-                                      .arg(_shortcutPath));
+                                      .arg(_shortcutExpanded));
             }
             ppf->Release();
         } else {
