@@ -10,7 +10,7 @@
 #include <QStyleFactory>
 #include <QResource>
 
-#ifdef QT_DEBUG
+#ifdef SCRIPT_DEBUG
 #include <QScriptEngineDebugger>
 #include <QAction>
 #endif
@@ -48,12 +48,10 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     QFile scriptFile(":/userdata/script.js");
     scriptFile.open(QFile::ReadOnly | QFile::Text);
     QTextStream ts2(&scriptFile);
-#ifdef QT_DEBUG
+#ifdef SCRIPT_DEBUG
     QScriptEngineDebugger* debugger = new QScriptEngineDebugger(this);
     debugger->attachTo(h->engine());
-#if 0
     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
-#endif
 #endif
     h->engine()->evaluate(ts2.readAll());
 }

@@ -11,7 +11,8 @@ win32 {
     LIBS += Advapi32.lib Shell32.lib Ole32.lib
 }
 
-CONFIG(debug, debug|release) {
+CONFIG(scriptdebug) {
+    DEFINES += SCRIPT_DEBUG
     QT += scripttools
 }
 
