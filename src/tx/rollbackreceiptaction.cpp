@@ -32,7 +32,7 @@ void RollbackReceiptAction::run() {
                 QString path = *(QString*)entry->data;
                 if (ngApp->globalFs()->pathIsDirectory(path)) {
                     if (QDir(path).isEmpty()) {
-                        QFile::remove(path);
+                        QDir(path).removeRecursively();
                         emit log(QString("Deleted %1").arg(path));
                     } else {
                         emit log(QString("Not deleting %1: Directory not empty")
