@@ -103,6 +103,7 @@ void ReceiptWriter::logRegKeyCreate(Registry::RootKey root, const QString& key,
                                     bool use64bit) {
     if (!_isLogging) return;
     RegKeyRecord record;
+    record.root = root;
     record.key = key.toLower();
     record.use64bit = use64bit;
     if (!_store.regKeysCreated.contains(record)) {
@@ -124,6 +125,7 @@ void ReceiptWriter::logRegValueCreate(Registry::RootKey root,
                                       const QString& valName) {
     if (!_isLogging) return;
     RegValRecord record;
+    record.root = root;
     record.key = key.toLower();
     record.use64bit = use64bit;
     record.valName = valName.toLower();
