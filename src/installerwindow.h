@@ -8,6 +8,8 @@
 #include <view/ipagestack.h>
 #include "installerapplication.h"
 
+class QToolButton;
+
 namespace Ui {
 class InstallerWindow;
 }
@@ -42,6 +44,8 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
     void cancelRequested();
     void on_muteButton_clicked();
 
+    void InstallerWindow::onBgmAvailabilityChanged(bool available);
+
     void on_nextButton_clicked();
     void on_backButton_clicked();
     void on_stackedWidget_currentChanged(int i);
@@ -52,6 +56,7 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
 
    private:
     Ui::InstallerWindow *ui;
+    QToolButton *_muteButton;
     QMediaPlayer bgm;
     QMediaPlaylist playlist;
 

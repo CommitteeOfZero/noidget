@@ -69,15 +69,20 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     crossButton->move(width() - (crossButton->width() + 12), 12);
     connect(crossButton, &QAbstractButton::clicked, this,
             &InstallerWindow::cancelRequested);
-    QToolButton *muteButton = new QToolButton(this);
-    muteButton->setStyleSheet(
+    _muteButton = new QToolButton(this);
+    _muteButton->setStyleSheet(
         "QToolButton { image: url(':/mute.png'); }"
         "QToolButton:hover { image: url(':/mute_hover.png'); }");
-    muteButton->setCursor(QCursor(Qt::PointingHandCursor));
-    muteButton->resize(18, 18);
-    muteButton->move(crossButton->x() - (muteButton->width() + 8), 12);
-    connect(muteButton, &QAbstractButton::clicked, this,
+    _muteButton->setCursor(QCursor(Qt::PointingHandCursor));
+    _muteButton->resize(18, 18);
+    _muteButton->move(crossButton->x() - (_muteButton->width() + 8), 12);
+    connect(_muteButton, &QAbstractButton::clicked, this,
             &InstallerWindow::on_muteButton_clicked);
+
+    // only show muteButton when BGM has started playing
+    connect(&bgm, &QMediaPlayer::audioAvailableChanged, this,
+            &InstallerWindow::onBgmAvailabilityChanged);
+    _muteButton->setVisible(false);
 
     connect(ngApp, &InstallerApplication::currentStateChanged, this,
             &InstallerWindow::handleAppStateChange);
@@ -199,6 +204,12 @@ void InstallerWindow::setBgm(const QUrl &url) {
     bgm.setPlaylist(&playlist);
     bgm.setVolume(50);
     bgm.play();
+}
+
+void InstallerWindow::onBgmAvailabilityChanged(bool available) {
+    if (_muteButton) {
+        _muteButton->setVisible(available);
+    }
 }
 
 void InstallerWindow::on_nextButton_clicked() {
