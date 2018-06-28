@@ -218,6 +218,48 @@ bool Registry::setValue(RootKey root, const QString& key, bool use64bit,
     return success;
 }
 
+bool Registry::keyHasContent(RootKey root, const QString& key, bool use64bit) {
+    if (!keyExists(root, key, use64bit)) return false;
+    HKEY hKey;
+    bool success =
+        RegOpenKeyExW(
+            rootKeyToHkey(root), (LPCWSTR)key.utf16(), NULL,
+            KEY_QUERY_VALUE | (use64bit ? KEY_WOW64_64KEY : KEY_WOW64_32KEY),
+            &hKey) == ERROR_SUCCESS;
+    if (!success) return false;
+    DWORD cSubKeys, cValues;
+    RegQueryInfoKeyW(hKey, NULL, NULL, NULL, &cSubKeys, NULL, NULL, &cValues,
+                     NULL, NULL, NULL, NULL);
+    bool result = cSubKeys > 0 || cValues > 0;
+    RegCloseKey(hKey);
+}
+
+bool Registry::deleteKeyNonRecursive(RootKey root, const QString& key,
+                                     bool use64bit) {
+    if (!keyExists(root, key, use64bit) || keyHasContent(root, key, use64bit))
+        return false;
+    return RegDeleteKeyExW(rootKeyToHkey(root), (LPCWSTR)key.utf16(),
+                           use64bit ? KEY_WOW64_64KEY : KEY_WOW64_32KEY,
+                           0) == ERROR_SUCCESS;
+}
+
+bool Registry::deleteValue(RootKey root, const QString& key, bool use64bit,
+                           const QString& valName) {
+    if (!valueExists(root, key, use64bit, valName)) return false;
+    HKEY hKey;
+    bool success =
+        RegOpenKeyExW(
+            rootKeyToHkey(root), (LPCWSTR)key.utf16(), NULL,
+            KEY_SET_VALUE | (use64bit ? KEY_WOW64_64KEY : KEY_WOW64_32KEY),
+            &hKey) == ERROR_SUCCESS;
+    if (success) {
+        success =
+            RegDeleteValueW(hKey, (LPCWSTR)valName.utf16()) == ERROR_SUCCESS;
+        RegCloseKey(hKey);
+    }
+    return success;
+}
+
 HKEY Registry::rootKeyToHkey(RootKey root) {
     switch (root) {
         case RootKey::HKLM:

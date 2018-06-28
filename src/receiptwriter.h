@@ -5,55 +5,14 @@
 #include <QString>
 #include <QFile>
 #include <QDataStream>
-#include "win32_registry.h"
-
-struct RegKeyRecord {
-    Registry::RootKey root;
-    QString key;
-    bool use64bit;
-    bool operator==(const RegKeyRecord& other) const {
-        return root == other.root && key == other.key &&
-               use64bit == other.use64bit;
-    }
-};
-struct RegValRecord {
-    Registry::RootKey root;
-    QString key;
-    bool use64bit;
-    QString valName;
-    bool operator==(const RegValRecord& other) const {
-        return root == other.root && key == other.key &&
-               use64bit == other.use64bit && valName == other.valName;
-    }
-};
-// I don't know what I'm doing help
-// https://stackoverflow.com/a/22402626
-inline uint qHash(const RegKeyRecord& record, uint seed = 0) {
-    return qHash((int)record.root) ^ qHash(record.key) + qHash(record.use64bit);
-}
-inline uint qHash(const RegValRecord& record, uint seed = 0) {
-    return qHash((int)record.root) ^
-           qHash(record.key) + qHash(record.use64bit) + qHash(record.valName);
-}
-inline uint qHash(const QSet<RegKeyRecord>& set, uint seed = 0) {
-    return std::accumulate(set.begin(), set.end(), seed,
-                           [](uint seed, const RegKeyRecord& value) {
-                               return seed + qHash(value);  // or ^
-                           });
-}
-inline uint qHash(const QSet<RegValRecord>& set, uint seed = 0) {
-    return std::accumulate(set.begin(), set.end(), seed,
-                           [](uint seed, const RegValRecord& value) {
-                               return seed + qHash(value);  // or ^
-                           });
-}
+#include "receipt.h"
 
 class ReceiptWriter : public QObject {
     Q_OBJECT
 
    public:
     explicit ReceiptWriter(QObject* parent = 0) : QObject(parent) {
-        _store.version = FileFormatVersion;
+        _store.version = Receipt::FileFormatVersion;
     };
     ~ReceiptWriter(){};
 
@@ -68,9 +27,6 @@ class ReceiptWriter : public QObject {
                            bool use64bit, const QString& valName);
 
    private:
-    const qint32 FileFormatVersion = 1;
-    enum class TokenType { File = 0, RegKey = 1, RegValue = 2 };
-
     struct Store {
         qint32 version;
         QSet<QString> filesCreated;

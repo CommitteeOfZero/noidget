@@ -56,6 +56,12 @@ class Registry : public QObject, protected QScriptable {
     Q_INVOKABLE bool setValue(RootKey root, const QString& key, bool use64bit,
                               const QString& valName, const QVariant& value);
 
+    // currently not part of the scripting API
+    bool keyHasContent(RootKey root, const QString& key, bool use64bit);
+    bool deleteKeyNonRecursive(RootKey root, const QString& key, bool use64bit);
+    bool deleteValue(RootKey root, const QString& key, bool use64bit,
+                     const QString& valName);
+
    private:
     HKEY rootKeyToHkey(RootKey root);
 #endif

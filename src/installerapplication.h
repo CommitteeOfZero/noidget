@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QCoreApplication>
 #include <QStyle>
+#include <QMetaEnum>
+#include <QString>
 
 class InstallerWindow;
 class Fs;
@@ -16,6 +18,11 @@ class ApiHost;
 }
 
 #define ngApp static_cast<::InstallerApplication*>(QCoreApplication::instance())
+
+template <typename Enum>
+QString EnumToString(Enum e) {
+    return QString(QMetaEnum::fromType<Enum>().valueToKey((int)e));
+}
 
 class InstallerApplication : public QApplication {
     Q_OBJECT

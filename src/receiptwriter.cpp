@@ -3,6 +3,7 @@
 #include "fs.h"
 #include "util/exception.h"
 #include <QFileInfo>
+#include "receipt.h"
 
 // NOTE: QIODevice::Unbuffered is not supported on Windows, hence we still need to flush() manually
 
@@ -39,7 +40,7 @@ void ReceiptWriter::open(const QString& dir) {
         }
         // TODO handle version upgrades?
         _out.setDevice(_outFile);
-        _out.setVersion(QDataStream::Qt_5_9);
+        _out.setVersion(Receipt::DataStreamVersion);
 
         filesToWrite.subtract(oldStore.filesCreated);
         regKeysToWrite.subtract(oldStore.regKeysCreated);
@@ -54,8 +55,8 @@ void ReceiptWriter::open(const QString& dir) {
                 QString("Couldn't create receipt at %1").arg(filePath));
         }
         _out.setDevice(_outFile);
-        _out.setVersion(QDataStream::Qt_5_9);
-        _out << FileFormatVersion;
+        _out.setVersion(Receipt::DataStreamVersion);
+        _out << Receipt::FileFormatVersion;
         logFileCreate(filePath);
     }
 
@@ -92,7 +93,7 @@ void ReceiptWriter::logFileCreate(const QString& path) {
 
 void ReceiptWriter::writeLogFileCreate(const QString& path) {
     if (_outFile != nullptr && _outFile->isOpen()) {
-        _out << (int)TokenType::File;
+        _out << (int)Receipt::TokenType::File;
         _out << path;
         _outFile->flush();
     }
@@ -111,7 +112,7 @@ void ReceiptWriter::logRegKeyCreate(Registry::RootKey root, const QString& key,
 }
 void ReceiptWriter::writeLogRegKeyCreate(const RegKeyRecord& record) {
     if (_outFile != nullptr && _outFile->isOpen()) {
-        _out << (int)TokenType::RegKey;
+        _out << (int)Receipt::TokenType::RegKey;
         _out << (int)record.root;
         _out << record.key;
         _out << record.use64bit;
@@ -133,7 +134,7 @@ void ReceiptWriter::logRegValueCreate(Registry::RootKey root,
 }
 void ReceiptWriter::writeLogRegValueCreate(const RegValRecord& record) {
     if (_outFile != nullptr && _outFile->isOpen()) {
-        _out << (int)TokenType::RegValue;
+        _out << (int)Receipt::TokenType::RegValue;
         _out << (int)record.root;
         _out << record.key;
         _out << record.use64bit;
@@ -143,41 +144,20 @@ void ReceiptWriter::writeLogRegValueCreate(const RegValRecord& record) {
 }
 
 ReceiptWriter::Store ReceiptWriter::loadOldLog(const QString& path) {
-    QFile inFile(path);
-    if (!inFile.open(QIODevice::ReadOnly)) {
-        throw NgException(QString("Couldn't open receipt at %1").arg(path));
-    }
+    Receipt oldReceipt(path);
     Store result;
-    QDataStream in(&inFile);
-    in.setVersion(QDataStream::Qt_5_9);
-    in >> result.version;
-    while (!in.atEnd()) {
-        TokenType type;
-        in >> (qint32&)type;
-        switch (type) {
-            case TokenType::File: {
-                QString createdFile;
-                in >> createdFile;
-                result.filesCreated << createdFile;
+    result.version = oldReceipt.version();
+    for (const auto& entry : oldReceipt.entries()) {
+        switch (entry.type) {
+            case Receipt::TokenType::File:
+                result.filesCreated << *(QString*)entry.data;
                 break;
-            }
-            case TokenType::RegKey: {
-                RegKeyRecord record;
-                in >> (qint32&)record.root;
-                in >> record.key;
-                in >> record.use64bit;
-                result.regKeysCreated << record;
+            case Receipt::TokenType::RegKey:
+                result.regKeysCreated << *(RegKeyRecord*)entry.data;
                 break;
-            }
-            case TokenType::RegValue: {
-                RegValRecord record;
-                in >> (qint32&)record.root;
-                in >> record.key;
-                in >> record.use64bit;
-                in >> record.valName;
-                result.regValsCreated << record;
+            case Receipt::TokenType::RegValue:
+                result.regValsCreated << *(RegValRecord*)entry.data;
                 break;
-            }
         }
     }
     return result;
