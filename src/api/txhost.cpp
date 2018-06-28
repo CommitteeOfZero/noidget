@@ -21,6 +21,7 @@
 #include <api/exception.h>
 #include "tx/setregistryvalueaction.h"
 #include "tx/createshortcutaction.h"
+#include "tx/removedirectoryaction.h"
 
 static QScriptValue txSectionCopyFiles(QScriptContext *context,
                                        QScriptEngine *engine);
@@ -46,6 +47,8 @@ static QScriptValue txSectionSetRegistryValue(QScriptContext *context,
 #endif
 static QScriptValue txSectionCreateShortcut(QScriptContext *context,
                                             QScriptEngine *engine);
+static QScriptValue txSectionRemoveDirectory(QScriptContext *context,
+                                             QScriptEngine *engine);
 static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("copyFiles", o.engine()->newFunction(txSectionCopyFiles));
     o.setProperty("log", o.engine()->newFunction(txSectionLog));
@@ -64,6 +67,8 @@ static void modifyTxSectionInstance(QScriptValue &o) {
 #endif
     o.setProperty("createShortcut",
                   o.engine()->newFunction(txSectionCreateShortcut));
+    o.setProperty("removeDirectory",
+                  o.engine()->newFunction(txSectionRemoveDirectory));
 }
 
 static QScriptValue mpkAddEntry(QScriptContext *context, QScriptEngine *engine);
@@ -195,6 +200,15 @@ QScriptValue createShortcutActionToScriptValue(
 void createShortcutActionFromScriptValue(const QScriptValue &object,
                                          CreateShortcutAction *&out) {
     out = qobject_cast<CreateShortcutAction *>(object.toQObject());
+}
+QScriptValue removeDirectoryActionToScriptValue(
+    QScriptEngine *engine, RemoveDirectoryAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void removeDirectoryActionFromScriptValue(const QScriptValue &object,
+                                          RemoveDirectoryAction *&out) {
+    out = qobject_cast<RemoveDirectoryAction *>(object.toQObject());
 }
 QScriptValue txStreamToScriptValue(QScriptEngine *engine, TxStream *const &in) {
     auto ret = engine->newQObject(in);
@@ -733,6 +747,49 @@ static QScriptValue txSectionCreateShortcut(QScriptContext *context,
     return ret;
 }
 
+/*^jsdoc
+ * Remove directory operation (recursive)
+ * 
+ * Parent directories will be created when this is executed.
+ * 
+ * @method removeDirectory
+ * @param {string} path
+ * @param {bool} [onlyIfEmpty=false]
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.RemoveDirectoryAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionRemoveDirectory(QScriptContext *context,
+                                             QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    if (context->argumentCount() < 1) {
+        SCRIPT_THROW_FUN("Missing required parameter")
+        return ret;
+    }
+    QScriptValue path = context->argument(0);
+    if (!path.isString()) {
+        SCRIPT_THROW_FUN("Parameter has invalid type")
+        return ret;
+    }
+
+    SCRIPT_EX_GUARD_START_FUN
+    RemoveDirectoryAction *action = new RemoveDirectoryAction(section);
+    action->setPath(path.toString());
+    if (context->argumentCount() >= 2) {
+        QScriptValue onlyIfEmpty = context->argument(1);
+        if (onlyIfEmpty.isBool()) {
+            action->setOnlyIfEmpty(onlyIfEmpty.toBool());
+        }
+    }
+    section->addAction(action);
+    ret = removeDirectoryActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
 namespace api {
 TxHost::TxHost(ApiHost *parent) : QObject(parent) {
     QScriptEngine *engine = parent->engine();
@@ -766,6 +823,8 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
 #endif
     qScriptRegisterMetaType(engine, createShortcutActionToScriptValue,
                             createShortcutActionFromScriptValue);
+    qScriptRegisterMetaType(engine, removeDirectoryActionToScriptValue,
+                            removeDirectoryActionFromScriptValue);
     qScriptRegisterMetaType(engine, txStreamToScriptValue,
                             txStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txFileStreamToScriptValue,
