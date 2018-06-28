@@ -1,4 +1,4 @@
-#include "receipt.h"
+#include "receiptwriter.h"
 #include "installerapplication.h"
 #include "fs.h"
 #include "util/exception.h"
@@ -6,7 +6,7 @@
 
 // NOTE: QIODevice::Unbuffered is not supported on Windows, hence we still need to flush() manually
 
-void Receipt::open(const QString& dir) {
+void ReceiptWriter::open(const QString& dir) {
     if (_outFile != nullptr) {
         throw NgException("Tried to open receipt twice");
     }
@@ -70,7 +70,7 @@ void Receipt::open(const QString& dir) {
     }
 }
 
-void Receipt::close() {
+void ReceiptWriter::close() {
     if (_outFile == nullptr | !_outFile->isOpen()) {
         throw NgException("Tried to close receipt that wasn't open");
     }
@@ -80,7 +80,7 @@ void Receipt::close() {
     _isLogging = false;
 }
 
-void Receipt::logFileCreate(const QString& path) {
+void ReceiptWriter::logFileCreate(const QString& path) {
     if (!_isLogging) return;
     auto expandedPath =
         QFileInfo(ngApp->globalFs()->expandedPath(path)).canonicalFilePath();
@@ -90,7 +90,7 @@ void Receipt::logFileCreate(const QString& path) {
     }
 }
 
-void Receipt::writeLogFileCreate(const QString& path) {
+void ReceiptWriter::writeLogFileCreate(const QString& path) {
     if (_outFile != nullptr && _outFile->isOpen()) {
         _out << (int)TokenType::File;
         _out << path;
@@ -98,8 +98,8 @@ void Receipt::writeLogFileCreate(const QString& path) {
     }
 }
 
-void Receipt::logRegKeyCreate(Registry::RootKey root, const QString& key,
-                              bool use64bit) {
+void ReceiptWriter::logRegKeyCreate(Registry::RootKey root, const QString& key,
+                                    bool use64bit) {
     if (!_isLogging) return;
     RegKeyRecord record;
     record.key = key.toLower();
@@ -109,7 +109,7 @@ void Receipt::logRegKeyCreate(Registry::RootKey root, const QString& key,
         writeLogRegKeyCreate(record);
     }
 }
-void Receipt::writeLogRegKeyCreate(const RegKeyRecord& record) {
+void ReceiptWriter::writeLogRegKeyCreate(const RegKeyRecord& record) {
     if (_outFile != nullptr && _outFile->isOpen()) {
         _out << (int)TokenType::RegKey;
         _out << (int)record.root;
@@ -118,8 +118,9 @@ void Receipt::writeLogRegKeyCreate(const RegKeyRecord& record) {
         _outFile->flush();
     }
 }
-void Receipt::logRegValueCreate(Registry::RootKey root, const QString& key,
-                                bool use64bit, const QString& valName) {
+void ReceiptWriter::logRegValueCreate(Registry::RootKey root,
+                                      const QString& key, bool use64bit,
+                                      const QString& valName) {
     if (!_isLogging) return;
     RegValRecord record;
     record.key = key.toLower();
@@ -130,7 +131,7 @@ void Receipt::logRegValueCreate(Registry::RootKey root, const QString& key,
         writeLogRegValueCreate(record);
     }
 }
-void Receipt::writeLogRegValueCreate(const RegValRecord& record) {
+void ReceiptWriter::writeLogRegValueCreate(const RegValRecord& record) {
     if (_outFile != nullptr && _outFile->isOpen()) {
         _out << (int)TokenType::RegValue;
         _out << (int)record.root;
@@ -141,7 +142,7 @@ void Receipt::writeLogRegValueCreate(const RegValRecord& record) {
     }
 }
 
-Receipt::Store Receipt::loadOldLog(const QString& path) {
+ReceiptWriter::Store ReceiptWriter::loadOldLog(const QString& path) {
     QFile inFile(path);
     if (!inFile.open(QIODevice::ReadOnly)) {
         throw NgException(QString("Couldn't open receipt at %1").arg(path));

@@ -1,6 +1,6 @@
 #include "fs.h"
 #include "installerapplication.h"
-#include "receipt.h"
+#include "receiptwriter.h"
 #include <util/systeminfo.h>
 #include <api/exception.h>
 #include <QFileInfo>

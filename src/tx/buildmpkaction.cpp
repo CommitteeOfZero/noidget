@@ -1,7 +1,7 @@
 #include "buildmpkaction.h"
 #include "installerapplication.h"
 #include "fs.h"
-#include "receipt.h"
+#include "receiptwriter.h"
 #include "txstream.h"
 #include "txfilestream.h"
 #include <util/exception.h>

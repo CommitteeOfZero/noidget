@@ -1,6 +1,6 @@
 #include "txhost.h"
 #include "apihost.h"
-#include "receipt.h"
+#include "receiptwriter.h"
 #include "tx/transaction.h"
 #include "tx/txsection.h"
 #include "tx/txaction.h"

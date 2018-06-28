@@ -48,14 +48,14 @@ inline uint qHash(const QSet<RegValRecord>& set, uint seed = 0) {
                            });
 }
 
-class Receipt : public QObject {
+class ReceiptWriter : public QObject {
     Q_OBJECT
 
    public:
-    explicit Receipt(QObject* parent = 0) : QObject(parent) {
+    explicit ReceiptWriter(QObject* parent = 0) : QObject(parent) {
         _store.version = FileFormatVersion;
     };
-    ~Receipt(){};
+    ~ReceiptWriter(){};
 
     void open(const QString& dir);
     void close();

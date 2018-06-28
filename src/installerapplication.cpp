@@ -3,7 +3,7 @@
 #include <api/apihost.h>
 #include "fs.h"
 #include <tx/transaction.h>
-#include "receipt.h"
+#include "receiptwriter.h"
 #include "win32_registry.h"
 #include <QFile>
 #include <QTextStream>
@@ -41,7 +41,7 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     _registry = new Registry(this);
 #endif
 
-    _receipt = new Receipt(this);
+    _receipt = new ReceiptWriter(this);
 
     _tx = new Transaction(this);
 

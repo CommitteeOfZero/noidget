@@ -1,7 +1,7 @@
 #include "win32_registry.h"
 #ifdef Q_OS_WIN32
 #include "installerapplication.h"
-#include "receipt.h"
+#include "receiptwriter.h"
 #include <QDebug>
 
 /*^jsdoc

@@ -1,6 +1,6 @@
 #include "copyfilesaction.h"
 #include "installerapplication.h"
-#include "receipt.h"
+#include "receiptwriter.h"
 #include "fs.h"
 #include <util/exception.h>
 #include <QDir>

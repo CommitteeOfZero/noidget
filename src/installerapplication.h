@@ -10,7 +10,7 @@ class Transaction;
 #ifdef Q_OS_WIN32
 class Registry;
 #endif
-class Receipt;
+class ReceiptWriter;
 namespace api {
 class ApiHost;
 }
@@ -44,7 +44,7 @@ class InstallerApplication : public QApplication {
 #ifdef Q_OS_WIN32
     Registry* registry() { return _registry; }
 #endif
-    Receipt* receipt() { return _receipt; }
+    ReceiptWriter* receipt() { return _receipt; }
 
    signals:
     void currentStateChanged(InstallerApplication::State currentState);
@@ -57,7 +57,7 @@ class InstallerApplication : public QApplication {
 #ifdef Q_OS_WIN32
     Registry* _registry;
 #endif
-    Receipt* _receipt = nullptr;
+    ReceiptWriter* _receipt = nullptr;
 
     State _currentState;
 };
