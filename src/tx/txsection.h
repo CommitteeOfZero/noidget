@@ -29,12 +29,14 @@ class TxSection : public QObject, protected QScriptable {
 
     void addAction(TxAction* action);
     qint64 size();
+    qint64 subactionCount();
     void prepare();
     void run();
 
    signals:
     void log(const QString& text, bool fileOnly = false);
     void progress(qint64 progress);
+    void subactionProgress(qint64 progress);
     void cancelled();
 
    public slots:
@@ -49,7 +51,9 @@ class TxSection : public QObject, protected QScriptable {
    private:
     QVector<TxAction*> _actions;
     QVector<qint64> _actionSizes;
+    QVector<qint64> _actionSubactionCounts;
     QString _title;
     qint64 _roughProgress = 0;
+    qint64 _roughSubactionProgress = 0;
     bool _isCancelled = false;
 };

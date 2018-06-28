@@ -55,6 +55,12 @@ TxSection* Transaction::addSection(const QString& title) {
         sectionProgress = qMin(_sectionSizes[i], sectionProgress);
         emit progress(_roughProgress + sectionProgress);
     });
+    connect(
+        section, &TxSection::subactionProgress,
+        [i, this](qint64 sectionProgress) {
+            sectionProgress = qMin(_sectionSubactionCounts[i], sectionProgress);
+            emit subactionProgress(_roughSubactionProgress + sectionProgress);
+        });
     return section;
 }
 
@@ -74,7 +80,7 @@ void Transaction::addExecuteAfterFinish(const QString& cmd) {
 }
 
 // call this before run()
-qint64 Transaction::prepare() {
+std::pair<qint64, qint64> Transaction::prepare() {
     if (_isPrepared) {
         throw NgException("Tried to prepare transaction twice");
     }
@@ -91,14 +97,18 @@ qint64 Transaction::prepare() {
 
     try {
         qint64 size = 0;
+        qint64 subactionCount = 0;
         for (TxSection* section : _sections) {
             section->prepare();
             qint64 sectionSize = section->size();
+            qint64 sectionSubactionCount = section->subactionCount();
             _sectionSizes.append(sectionSize);
+            _sectionSubactionCounts.append(sectionSubactionCount);
             size += sectionSize;
+            subactionCount += sectionSubactionCount;
         }
         _isPrepared = true;
-        return size;
+        return std::make_pair(subactionCount, size);
     } catch (const NgException& ex) {
         logToFile(QString("Error during preparation: %1").arg(ex.qWhat()));
         ngApp->setCurrentState(InstallerApplication::State::Error);
@@ -128,7 +138,9 @@ void Transaction::run() {
             emit sectionChanged(i, section->title());
             section->run();
             _roughProgress += _sectionSizes[i];
+            _roughSubactionProgress += _sectionSubactionCounts[i];
             emit progress(_roughProgress);
+            emit subactionProgress(_roughSubactionProgress);
         }
     } catch (const NgException& ex) {
         logToFile(QString("Error during transaction: %1").arg(ex.qWhat()));

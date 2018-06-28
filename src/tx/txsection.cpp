@@ -15,6 +15,11 @@ void TxSection::addAction(TxAction* action) {
         actionProgress = qMin(_actionSizes[i], actionProgress);
         emit progress(_roughProgress + actionProgress);
     });
+    connect(
+        action, &TxAction::subactionProgress, [i, this](qint64 actionProgress) {
+            actionProgress = qMin(_actionSubactionCounts[i], actionProgress);
+            emit subactionProgress(_roughSubactionProgress + actionProgress);
+        });
 }
 
 qint64 TxSection::size() {
@@ -23,6 +28,16 @@ qint64 TxSection::size() {
         qint64 actionSize = action->size();
         _actionSizes.append(actionSize);
         result += actionSize;
+    }
+    return result;
+}
+
+qint64 TxSection::subactionCount() {
+    qint64 result = 0;
+    for (TxAction* action : _actions) {
+        qint64 subactionCount = action->subactionCount();
+        _actionSubactionCounts.append(subactionCount);
+        result += subactionCount;
     }
     return result;
 }
@@ -41,7 +56,9 @@ void TxSection::run() {
         TxAction* action = _actions[i];
         action->run();
         _roughProgress += _actionSizes[i];
+        _roughSubactionProgress += _actionSubactionCounts[i];
         emit progress(_roughProgress);
+        emit subactionProgress(_roughSubactionProgress);
     }
 }
 

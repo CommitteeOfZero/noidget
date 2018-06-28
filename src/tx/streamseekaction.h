@@ -36,4 +36,6 @@ class StreamSeekAction : public TxAction {
    private:
     TxStream* _stream;
     qint64 _count;
+
+    qint64 calcSubactionCount() override { return 0; }
 };

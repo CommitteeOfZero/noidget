@@ -22,8 +22,11 @@ class TxAction : public QObject, protected QScriptable {
     virtual void run() = 0;
 
     qint64 size() { return _sizeOverridden ? _sizeOverride : calcSize(); }
+    qint64 subactionCount() {
+        return _sizeOverridden ? _sizeOverride : calcSubactionCount();
+    }
     /*^jsdoc
-     * Explicitly specify operation size in bytes (for progress bar)
+     * Explicitly specify operation size in bytes or subactions (for progress bar)
      *
      * Passing 0 is allowed (this operation will then not count towards the progress
      * bar). If this is never set (and the action supports it), operation size
@@ -45,12 +48,14 @@ class TxAction : public QObject, protected QScriptable {
    signals:
     void log(const QString& text, bool fileOnly = false);
     void progress(qint64 progress);
+    void subactionProgress(qint64 progress);
 
    public slots:
     void cancel() { _isCancelled = true; }
 
    protected:
     virtual qint64 calcSize() { return 0; }
+    virtual qint64 calcSubactionCount() { return 1; }
     bool _isCancelled = false;
 
    private:

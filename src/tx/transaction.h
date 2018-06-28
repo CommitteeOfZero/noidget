@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QTemporaryFile>
 #include "installerapplication.h"
+#include <utility>
 
 class TxSection;
 
@@ -39,8 +40,9 @@ class Transaction : public QObject, protected QScriptable {
     /*^jsdoc
      * Use uninstall mode?
      * 
-     * In uninstall mode, no receipt will be written. It is otherwise equivalent
-     * to install mode.
+     * In uninstall mode, no receipt will be written and progress will be
+     * displayed in sub-actions (e.g. one file deletion) instead of bytes.
+     * It is otherwise equivalent to install mode.
      * @member {boolean} uninstallMode
      * @default false
      * @instance
@@ -55,7 +57,7 @@ class Transaction : public QObject, protected QScriptable {
     Q_INVOKABLE TxSection* addSection(const QString& title);
     Q_INVOKABLE void addExecuteAfterFinish(const QString& cmd);
 
-    qint64 prepare();  // returns size
+    std::pair<qint64, qint64> prepare();  // returns (subaction count, size)
     void run();
     void runPost();
 
@@ -85,6 +87,7 @@ class Transaction : public QObject, protected QScriptable {
     void sectionChanged(int i, const QString& title);
     void log(const QString& text);
     void progress(qint64 progress);
+    void subactionProgress(qint64 progress);
     void cancelled();
 
    public slots:
@@ -96,9 +99,11 @@ class Transaction : public QObject, protected QScriptable {
    private:
     QVector<TxSection*> _sections;
     QVector<qint64> _sectionSizes;
+    QVector<qint64> _sectionSubactionCounts;
     QVector<QString> _postFinishCmds;
     QTemporaryFile* _logFile = nullptr;
     qint64 _roughProgress = 0;
+    qint64 _roughSubactionProgress = 0;
     bool _isPrepared = false;
     bool _isStarted = false;
     bool _isCancelled = false;

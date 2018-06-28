@@ -54,9 +54,11 @@ class CopyFilesAction : public TxAction {
     bool _deferredCollect = false;
     QVector<QString> _srcPaths;
     qint64 _progress = 0;
+    qint64 _subactionProgress = 0;
     Fs* _fs;
 
     qint64 calcSize() override;
+    qint64 calcSubactionCount() override;
     void copySingleFile(const QString& src, const QString& dest);
     void collect();
 };

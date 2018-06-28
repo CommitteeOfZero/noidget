@@ -62,6 +62,25 @@ qint64 CopyFilesAction::calcSize() {
     return result;
 }
 
+qint64 CopyFilesAction::calcSubactionCount() {
+    qint64 result = 0;
+    for (QString path : _srcPaths) {
+        if (_fs->pathIsFile(path)) {
+            result++;
+        } else {
+            QDirIterator it(
+                path,
+                QDir::AllEntries | QDir::Hidden | QDir::System |
+                    QDir::NoDotAndDotDot,
+                QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+            while (it.hasNext()) {
+                result++;
+            }
+        }
+    }
+    return result;
+}
+
 void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
     emit log(dest);
 
@@ -91,6 +110,9 @@ void CopyFilesAction::copySingleFile(const QString& src, const QString& dest) {
         emit progress(_progress);
     }
     free(buffer);
+
+    _subactionProgress++;
+    emit subactionProgress(_subactionProgress);
 }
 
 // TODO symlink handling?

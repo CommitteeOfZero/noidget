@@ -36,4 +36,6 @@ class LogAction : public TxAction {
    private:
     QString _text;
     bool _fileOnly = false;
+
+    qint64 calcSubactionCount() override { return 0; }
 };

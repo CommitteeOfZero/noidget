@@ -36,12 +36,24 @@ ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
     connect(tx, &Transaction::sectionChanged, this,
             &ProgressPage::txSectionChange);
     connect(tx, &Transaction::log, this, &ProgressPage::getLog);
-    connect(tx, &Transaction::progress, this, &ProgressPage::updateProgressBar);
+    if (tx->uninstallMode()) {
+        connect(tx, &Transaction::subactionProgress, this,
+                &ProgressPage::updateProgressBar);
+    } else {
+        connect(tx, &Transaction::progress, this,
+                &ProgressPage::updateProgressBar);
+    }
 
-    QFuture<qint64> txSize = QtConcurrent::run(tx, &Transaction::prepare);
+    QFuture<std::pair<qint64, qint64>> txSize =
+        QtConcurrent::run(tx, &Transaction::prepare);
     QFutureWatcher<void>* txSizeWatcher = new QFutureWatcher<void>(this);
     connect(txSizeWatcher, &QFutureWatcher<void>::finished, [=]() {
-        qint64 rawSize = txSize.result();
+        qint64 rawSize;
+        if (tx->uninstallMode()) {
+            rawSize = txSize.result().first;
+        } else {
+            rawSize = txSize.result().second;
+        }
         if (rawSize > INT_MAX) {
             _needProgressDownscale = true;
             _progressDownscaleFactor = (double)INT_MAX / (double)rawSize;
