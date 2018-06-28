@@ -22,6 +22,7 @@
 #include "tx/setregistryvalueaction.h"
 #include "tx/createshortcutaction.h"
 #include "tx/removedirectoryaction.h"
+#include "tx/rollbackreceiptaction.h"
 
 static QScriptValue txSectionCopyFiles(QScriptContext *context,
                                        QScriptEngine *engine);
@@ -49,6 +50,8 @@ static QScriptValue txSectionCreateShortcut(QScriptContext *context,
                                             QScriptEngine *engine);
 static QScriptValue txSectionRemoveDirectory(QScriptContext *context,
                                              QScriptEngine *engine);
+static QScriptValue txSectionRollbackReceipt(QScriptContext *context,
+                                             QScriptEngine *engine);
 static void modifyTxSectionInstance(QScriptValue &o) {
     o.setProperty("copyFiles", o.engine()->newFunction(txSectionCopyFiles));
     o.setProperty("log", o.engine()->newFunction(txSectionLog));
@@ -69,6 +72,8 @@ static void modifyTxSectionInstance(QScriptValue &o) {
                   o.engine()->newFunction(txSectionCreateShortcut));
     o.setProperty("removeDirectory",
                   o.engine()->newFunction(txSectionRemoveDirectory));
+    o.setProperty("rollbackReceipt",
+                  o.engine()->newFunction(txSectionRollbackReceipt));
 }
 
 static QScriptValue mpkAddEntry(QScriptContext *context, QScriptEngine *engine);
@@ -209,6 +214,15 @@ QScriptValue removeDirectoryActionToScriptValue(
 void removeDirectoryActionFromScriptValue(const QScriptValue &object,
                                           RemoveDirectoryAction *&out) {
     out = qobject_cast<RemoveDirectoryAction *>(object.toQObject());
+}
+QScriptValue rollbackReceiptActionToScriptValue(
+    QScriptEngine *engine, RollbackReceiptAction *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void rollbackReceiptActionFromScriptValue(const QScriptValue &object,
+                                          RollbackReceiptAction *&out) {
+    out = qobject_cast<RollbackReceiptAction *>(object.toQObject());
 }
 QScriptValue txStreamToScriptValue(QScriptEngine *engine, TxStream *const &in) {
     auto ret = engine->newQObject(in);
@@ -790,6 +804,30 @@ static QScriptValue txSectionRemoveDirectory(QScriptContext *context,
     return ret;
 }
 
+/*^jsdoc
+ * Main uninstall operation
+ * 
+ * May only be used in uninstall mode
+ * 
+ * @method rollbackReceipt
+ * @memberof ng.tx.TxSection
+ * @returns {ng.tx.RollbackReceiptAction}
+ * @instance
+ ^jsdoc*/
+static QScriptValue txSectionRollbackReceipt(QScriptContext *context,
+                                             QScriptEngine *engine) {
+    QScriptValue _this = context->thisObject();
+    TxSection *section;
+    txSectionFromScriptValue(_this, section);
+    QScriptValue ret;
+    SCRIPT_EX_GUARD_START_FUN
+    RollbackReceiptAction *action = new RollbackReceiptAction(section);
+    section->addAction(action);
+    ret = rollbackReceiptActionToScriptValue(engine, action);
+    SCRIPT_EX_GUARD_END_FUN(ret)
+    return ret;
+}
+
 namespace api {
 TxHost::TxHost(ApiHost *parent) : QObject(parent) {
     QScriptEngine *engine = parent->engine();
@@ -825,6 +863,8 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
                             createShortcutActionFromScriptValue);
     qScriptRegisterMetaType(engine, removeDirectoryActionToScriptValue,
                             removeDirectoryActionFromScriptValue);
+    qScriptRegisterMetaType(engine, rollbackReceiptActionToScriptValue,
+                            rollbackReceiptActionFromScriptValue);
     qScriptRegisterMetaType(engine, txStreamToScriptValue,
                             txStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txFileStreamToScriptValue,
