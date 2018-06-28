@@ -1,6 +1,7 @@
 #include "transaction.h"
 #include "txsection.h"
 #include "fs.h"
+#include "receiptwriter.h"
 #include <util/exception.h>
 #include <QProcess>
 #include <QDir>
@@ -83,6 +84,8 @@ qint64 Transaction::prepare() {
     _logFile->open();
     _logFile->setTextModeEnabled(true);
     sectionLog(QString("Logging to %1").arg(_logFile->fileName()));
+
+    ngApp->receipt()->open(_receiptPath);
 
     try {
         qint64 size = 0;

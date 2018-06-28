@@ -48,7 +48,6 @@ class TxHost : public QObject, protected QScriptable {
     void setupScriptObject(QScriptValue& o);
     ~TxHost();
 
-    Q_INVOKABLE void openReceipt(const QString& path);
     Q_INVOKABLE Transaction* tx();
     Q_INVOKABLE void run();
     Q_INVOKABLE TxFileStream* fileStream(const QString& inPath);

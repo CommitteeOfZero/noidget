@@ -28,12 +28,14 @@ class TxSection;
  * @property {string} finishText
  * @property {string} cancelText
  * @property {string} errorText
+ * @property {string} receiptPath **Folder** the receipt resides in
  ^jsdoc*/
 class Transaction : public QObject, protected QScriptable {
     Q_OBJECT
     Q_PROPERTY(QString finishText READ finishText WRITE setFinishText)
     Q_PROPERTY(QString cancelText READ cancelText WRITE setCancelText)
     Q_PROPERTY(QString errorText READ errorText WRITE setErrorText)
+    Q_PROPERTY(QString receiptPath READ receiptPath WRITE setReceiptPath)
 
    public:
     explicit Transaction(QObject* parent);
@@ -59,6 +61,10 @@ class Transaction : public QObject, protected QScriptable {
     void setErrorText(const QString& errorText) { _errorText = errorText; }
     QString cancelText() { return _cancelText; }
     void setCancelText(const QString& cancelText) { _cancelText = cancelText; }
+    QString receiptPath() { return _receiptPath; }
+    void setReceiptPath(const QString& receiptPath) {
+        _receiptPath = receiptPath;
+    }
 
    signals:
     void sectionChanged(int i, const QString& title);
@@ -83,6 +89,7 @@ class Transaction : public QObject, protected QScriptable {
     bool _isCancelled = false;
 
     QString _finishText, _cancelText, _errorText;
+    QString _receiptPath;
 
     void logToFile(const QString& text);
 };
