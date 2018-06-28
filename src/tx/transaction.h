@@ -28,7 +28,7 @@ class TxSection;
  * @property {string} finishText
  * @property {string} cancelText
  * @property {string} errorText
- * @property {string} receiptPath **Folder** the receipt resides in
+ * @property {string} receiptPath - **Folder** the receipt resides in
  ^jsdoc*/
 class Transaction : public QObject, protected QScriptable {
     Q_OBJECT
@@ -36,6 +36,17 @@ class Transaction : public QObject, protected QScriptable {
     Q_PROPERTY(QString cancelText READ cancelText WRITE setCancelText)
     Q_PROPERTY(QString errorText READ errorText WRITE setErrorText)
     Q_PROPERTY(QString receiptPath READ receiptPath WRITE setReceiptPath)
+    /*^jsdoc
+     * Use uninstall mode?
+     * 
+     * In uninstall mode, no receipt will be written. It is otherwise equivalent
+     * to install mode.
+     * @member {boolean} uninstallMode
+     * @default false
+     * @instance
+     * @memberof ng.tx.Transaction
+     ^jsdoc*/
+    Q_PROPERTY(bool uninstallMode READ uninstallMode WRITE setUninstallMode)
 
    public:
     explicit Transaction(QObject* parent);
@@ -65,6 +76,10 @@ class Transaction : public QObject, protected QScriptable {
     void setReceiptPath(const QString& receiptPath) {
         _receiptPath = receiptPath;
     }
+    bool uninstallMode() { return _uninstallMode; }
+    void setUninstallMode(bool uninstallMode) {
+        _uninstallMode = uninstallMode;
+    }
 
    signals:
     void sectionChanged(int i, const QString& title);
@@ -87,6 +102,7 @@ class Transaction : public QObject, protected QScriptable {
     bool _isPrepared = false;
     bool _isStarted = false;
     bool _isCancelled = false;
+    bool _uninstallMode = false;
 
     QString _finishText, _cancelText, _errorText;
     QString _receiptPath;

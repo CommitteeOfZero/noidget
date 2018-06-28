@@ -85,7 +85,9 @@ qint64 Transaction::prepare() {
     _logFile->setTextModeEnabled(true);
     sectionLog(QString("Logging to %1").arg(_logFile->fileName()));
 
-    ngApp->receipt()->open(_receiptPath);
+    if (!_uninstallMode) {
+        ngApp->receipt()->open(_receiptPath);
+    }
 
     try {
         qint64 size = 0;
