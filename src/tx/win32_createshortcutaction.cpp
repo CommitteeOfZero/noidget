@@ -12,6 +12,7 @@
 #include "fs.h"
 #include "installerapplication.h"
 #include "util/exception.h"
+#include "receiptwriter.h"
 
 void CreateShortcutAction::run() {
     if (_targetPath.isEmpty() || _shortcutPath.isEmpty()) {
@@ -55,12 +56,15 @@ void CreateShortcutAction::run() {
         if (SUCCEEDED(hres)) {
             ngApp->globalFs()->createDirectory(
                 QFileInfo(_shortcutExpanded).path());
+            bool fileIsNew = !ngApp->globalFs()->pathExists(_shortcutExpanded);
             hres = ppf->Save((LPCOLESTR)_shortcutExpanded.utf16(), TRUE);
             if (!SUCCEEDED(hres)) {
                 ppf->Release();
                 psl->Release();
                 throw NgException(QString("Failed to save shortcut at %1")
                                       .arg(_shortcutExpanded));
+            } else if (fileIsNew) {
+                ngApp->receipt()->logFileCreate(_shortcutExpanded);
             }
             ppf->Release();
         } else {
