@@ -74,6 +74,7 @@ qint64 CopyFilesAction::calcSubactionCount() {
                     QDir::NoDotAndDotDot,
                 QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
             while (it.hasNext()) {
+                it.next();
                 result++;
             }
         }
