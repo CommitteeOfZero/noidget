@@ -7,8 +7,8 @@ win32 {
     CONFIG += embed_manifest_exe
     QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'requireAdministrator\'
     # registry, shortcuts
-    DEFINES += WIN32_LEAN_AND_MEAN
-    LIBS += Advapi32.lib Shell32.lib Ole32.lib
+    DEFINES += WIN32_LEAN_AND_MEAN PSAPI_VERSION=1
+    LIBS += Advapi32.lib Shell32.lib Ole32.lib Psapi.lib
 }
 
 CONFIG(scriptdebug) {

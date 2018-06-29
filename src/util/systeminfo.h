@@ -16,5 +16,6 @@ class SystemInfo {
 
     static OsFamily platform();
     static bool isWine();
+    static bool isProcessRunning(const QString& processName);
 };
 }  // namespace util

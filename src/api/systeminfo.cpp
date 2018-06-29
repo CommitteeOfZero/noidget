@@ -33,4 +33,19 @@ util::SystemInfo::OsFamily SystemInfo::platform() const {
  ^jsdoc*/
 bool SystemInfo::isWine() const { return util::SystemInfo::isWine(); }
 
+/*^jsdoc
+ * Is a process with the given name running (besides the installer application itself)?
+ * 
+ * `processName` is **case sensitive**.
+ * 
+ * @method isProcessRunning
+ * @memberof ng.systemInfo
+ * @static
+ * @param {string} processName
+ * @returns {boolean}
+ ^jsdoc*/
+bool SystemInfo::isProcessRunning(const QString& processName) const {
+    return util::SystemInfo::isProcessRunning(processName);
+}
+
 }  // namespace api
