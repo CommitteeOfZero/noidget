@@ -24,4 +24,13 @@ util::SystemInfo::OsFamily SystemInfo::platform() const {
     return util::SystemInfo::platform();
 }
 
+/*^jsdoc
+ * Is the installer a Windows build running under Wine?
+ * @method isWine
+ * @memberof ng.systemInfo
+ * @static
+ * @returns {boolean}
+ ^jsdoc*/
+bool SystemInfo::isWine() const { return util::SystemInfo::isWine(); }
+
 }  // namespace api

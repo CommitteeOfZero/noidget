@@ -15,5 +15,6 @@ class SystemInfo {
     Q_ENUM(OsFamily)
 
     static OsFamily platform();
+    static bool isWine();
 };
 }  // namespace util

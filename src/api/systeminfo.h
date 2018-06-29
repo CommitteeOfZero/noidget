@@ -36,5 +36,6 @@ class SystemInfo : public QObject, protected QScriptable {
     ~SystemInfo();
 
     Q_INVOKABLE util::SystemInfo::OsFamily platform() const;
+    Q_INVOKABLE bool isWine() const;
 };
 }  // namespace api
