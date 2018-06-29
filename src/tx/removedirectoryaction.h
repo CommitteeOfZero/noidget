@@ -33,5 +33,5 @@ class RemoveDirectoryAction : public TxAction {
 
    private:
     QString _path;
-    bool _onlyIfEmpty;
+    bool _onlyIfEmpty = false;
 };
