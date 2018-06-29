@@ -83,8 +83,15 @@ void ReceiptWriter::close() {
 
 void ReceiptWriter::logFileCreate(const QString& path) {
     if (!_isLogging) return;
-    auto expandedPath =
-        QFileInfo(ngApp->globalFs()->expandedPath(path)).canonicalFilePath();
+    auto fi = QFileInfo(ngApp->globalFs()->expandedPath(path));
+    QString expandedPath;
+    if (fi.isSymLink()) {
+        // canonicalFilePath() follows symlinks / Windows .lnk shortcuts,
+        // so we'll have to make do with this I guess
+        expandedPath = fi.absoluteFilePath();
+    } else {
+        expandedPath = fi.canonicalFilePath();
+    }
     if (!_store.filesCreated.contains(expandedPath)) {
         _store.filesCreated << expandedPath;
         writeLogFileCreate(path);
