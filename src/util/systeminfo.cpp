@@ -1,6 +1,7 @@
 #include "systeminfo.h"
 #include "exception.h"
 #include <QCoreApplication>
+#include <QMessageBox>
 
 #ifdef Q_OS_WIN32
 #include <windows.h>
@@ -57,7 +58,7 @@ bool SystemInfo::isProcessRunning(const QString& processName) {
             PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pids[i]);
         if (hProcess != NULL) {
             GetModuleBaseNameW(hProcess, NULL, szProcessName,
-                               sizeof(processName) / sizeof(wchar_t));
+                               sizeof(szProcessName) / sizeof(wchar_t));
             QString qstr = QString::fromWCharArray(szProcessName);
             if (qstr == processName) result = true;
             CloseHandle(hProcess);
