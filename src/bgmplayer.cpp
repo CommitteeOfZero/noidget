@@ -15,7 +15,8 @@ BgmPlayer::~BgmPlayer() {
     if (haveDecoder) mal_decoder_uninit(&decoder);
 }
 
-void BgmPlayer::setBgm(const QString& path) {
+void BgmPlayer::setBgm(const QString& path, uint32_t loopStart,
+                       uint32_t loopEnd) {
     if (haveDevice) {
         mal_device_uninit(&device);
         haveDevice = false;
@@ -56,6 +57,10 @@ void BgmPlayer::setBgm(const QString& path) {
         return;
     }
 
+    loopPointStart = loopStart;
+    loopPointEnd = loopEnd;
+    framesPlayed = 0;
+
     haveDecoder = true;
     haveDevice = true;
     playing = true;
@@ -68,9 +73,23 @@ mal_uint32 BgmPlayer::onSend(mal_device* pDevice, mal_uint32 frameCount,
     BgmPlayer* player = (BgmPlayer*)pDevice->pUserData;
     if (!player->haveDecoder) return 0;
 
+    uint32_t framesToRead = frameCount;
+    if (player->loopPointEnd > 0) {
+        framesToRead =
+            qMin(frameCount, player->loopPointEnd - player->framesPlayed);
+    }
     mal_uint32 result =
-        (mal_uint32)mal_decoder_read(&player->decoder, frameCount, pSamples);
-    if (result < frameCount) mal_decoder_seek_to_frame(&player->decoder, 0);
+        (mal_uint32)mal_decoder_read(&player->decoder, framesToRead, pSamples);
+    mal_uint32 framesLeft = frameCount - result;
+    if (framesLeft > 0) {
+        mal_decoder_seek_to_frame(&player->decoder, player->loopPointStart);
+        player->framesPlayed =
+            mal_decoder_read(&player->decoder, framesToRead, pSamples);
+        result += player->framesPlayed;
+        player->framesPlayed += player->loopPointStart;
+    } else {
+        player->framesPlayed += result;
+    }
 
     return result;
 }

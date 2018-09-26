@@ -196,7 +196,10 @@ view::Page *InstallerWindow::currentPage() {
     return qobject_cast<view::Page *>(ui->stackedWidget->currentWidget());
 }
 
-void InstallerWindow::setBgm(const QString &url) { bgmPlayer->setBgm(url); }
+void InstallerWindow::setBgm(const QString &url, uint32_t loopStart,
+                             uint32_t loopEnd) {
+    bgmPlayer->setBgm(url, loopStart, loopEnd);
+}
 
 void InstallerWindow::onBgmAvailabilityChanged(bool available) {
     if (_muteButton) {

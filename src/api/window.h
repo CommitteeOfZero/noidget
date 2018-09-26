@@ -32,7 +32,7 @@ class Window : public QObject, protected QScriptable {
     Q_INVOKABLE void pushPage(api::view::Page* page);
     Q_INVOKABLE void popPage();
 
-    Q_INVOKABLE void playBgm(const QString& url);
+    Q_INVOKABLE void playBgm(const QScriptValue& v);
     Q_INVOKABLE void setMessageBoxIcon(const QString& url);
     Q_INVOKABLE void setTitle(const QString& title);
 

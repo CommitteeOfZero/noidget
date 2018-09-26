@@ -53,16 +53,41 @@ void Window::pushPage(api::view::Page *page) {
 void Window::popPage() { ngApp->window()->pop(); }
 
 /*^jsdoc
- * Starts playing a new BGM track.
+ * Starts playing a new BGM track looping from start to finish.
  * @method playBgm
  * @memberof ng.window
  * @static
  * @param {string} url
  ^jsdoc*/
-void Window::playBgm(const QString &url) {
-    // TODO disable this when building without multimedia
-    // TODO hide mute button when no BGM set
-    ngApp->window()->setBgm(url);
+/*^jsdoc
+ * Starts playing a new BGM track looping from *params.loopStart* to *params.loopEnd*.
+ * @method playBgm
+ * @memberof ng.window
+ * @static
+ * @param {object} params
+ * @param {string} params.url
+ * @param {Number} [params.loopStart=0] in samples
+ * @param {Number} [params.loopEnd=0] in samples, or 0 for end of track
+ ^jsdoc*/
+void Window::playBgm(const QScriptValue &v) {
+    QString url;
+    uint32_t loopStart = 0, loopEnd = 0;
+    if (v.isString()) {
+        url = v.toString();
+    } else if (v.isObject()) {
+        auto url_ = v.property("url");
+        if (url_.isString()) {
+            url = url_.toString();
+            auto loopStart_ = v.property("loopStart");
+            if (loopStart_.isNumber()) loopStart = loopStart_.toUInt32();
+            auto loopEnd_ = v.property("loopEnd");
+            if (loopEnd_.isNumber()) loopEnd = loopEnd_.toUInt32();
+        }
+    } else {
+        SCRIPT_THROW("Wrong type")
+        return;
+    }
+    ngApp->window()->setBgm(url, loopStart, loopEnd);
 }
 
 /*^jsdoc

@@ -13,7 +13,7 @@ class BgmPlayer : public QObject {
     explicit BgmPlayer(QObject* parent = 0);
     ~BgmPlayer();
 
-    void setBgm(const QString& path);
+    void setBgm(const QString& path, uint32_t loopStart, uint32_t loopEnd);
     void togglePaused();
 
    signals:
@@ -32,4 +32,7 @@ class BgmPlayer : public QObject {
     mal_decoder decoder;
     mal_device device;
     mal_device_config deviceConfig;
+    uint32_t loopPointStart;
+    uint32_t loopPointEnd;
+    uint32_t framesPlayed;
 };
