@@ -1,12 +1,11 @@
 #pragma once
 
 #include <QMainWindow>
-#include <QtMultimedia/QMediaPlayer>
-#include <QtMultimedia/QMediaPlaylist>
 #include <QEvent>
 #include <QCloseEvent>
 #include <view/ipagestack.h>
 #include "installerapplication.h"
+#include "bgmplayer.h"
 
 class QToolButton;
 
@@ -28,7 +27,7 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
     void pop() override;
     view::Page *currentPage() override;
 
-    void setBgm(const QUrl &url);
+    void setBgm(const QString &url);
 
    protected:
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
@@ -57,8 +56,7 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
    private:
     Ui::InstallerWindow *ui;
     QToolButton *_muteButton;
-    QMediaPlayer bgm;
-    QMediaPlaylist playlist;
+    BgmPlayer *bgmPlayer;
 
     void removePage(view::Page *page);
 };

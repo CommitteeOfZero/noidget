@@ -79,8 +79,10 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     connect(_muteButton, &QAbstractButton::clicked, this,
             &InstallerWindow::on_muteButton_clicked);
 
+    bgmPlayer = new BgmPlayer(this);
+
     // only show muteButton when BGM has started playing
-    connect(&bgm, &QMediaPlayer::audioAvailableChanged, this,
+    connect(bgmPlayer, &BgmPlayer::bgmAvailabilityChanged, this,
             &InstallerWindow::onBgmAvailabilityChanged);
     _muteButton->setVisible(false);
 
@@ -171,9 +173,7 @@ void InstallerWindow::cancelRequested() {
     }
 }
 
-void InstallerWindow::on_muteButton_clicked() {
-    bgm.state() == QMediaPlayer::PlayingState ? bgm.pause() : bgm.play();
-}
+void InstallerWindow::on_muteButton_clicked() { bgmPlayer->togglePaused(); }
 
 void InstallerWindow::push(view::Page *page) {
     connect(page, &view::Page::nextEnabled, this,
@@ -196,15 +196,7 @@ view::Page *InstallerWindow::currentPage() {
     return qobject_cast<view::Page *>(ui->stackedWidget->currentWidget());
 }
 
-void InstallerWindow::setBgm(const QUrl &url) {
-    // TODO gapless?
-    playlist.clear();
-    playlist.addMedia(url);
-    playlist.setPlaybackMode(QMediaPlaylist::Loop);
-    bgm.setPlaylist(&playlist);
-    bgm.setVolume(50);
-    bgm.play();
-}
+void InstallerWindow::setBgm(const QString &url) { bgmPlayer->setBgm(url); }
 
 void InstallerWindow::onBgmAvailabilityChanged(bool available) {
     if (_muteButton) {

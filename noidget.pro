@@ -1,4 +1,4 @@
-QT += core gui multimedia widgets script concurrent
+QT += core gui widgets script concurrent
 
 TARGET = noidget
 TEMPLATE = app

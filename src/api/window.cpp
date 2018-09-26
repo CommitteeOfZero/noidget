@@ -54,9 +54,6 @@ void Window::popPage() { ngApp->window()->pop(); }
 
 /*^jsdoc
  * Starts playing a new BGM track.
- * 
- * **When using a BGM track from resources**, `url` must be prefixed with `qrc:/`, not just `:/` like usual.
- * 
  * @method playBgm
  * @memberof ng.window
  * @static
@@ -65,7 +62,7 @@ void Window::popPage() { ngApp->window()->pop(); }
 void Window::playBgm(const QString &url) {
     // TODO disable this when building without multimedia
     // TODO hide mute button when no BGM set
-    ngApp->window()->setBgm(QUrl(url));
+    ngApp->window()->setBgm(url);
 }
 
 /*^jsdoc
