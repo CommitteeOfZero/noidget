@@ -6,7 +6,7 @@ Installer scripts are written in JavaScript (well, technically QtScript). `npm r
 
 Copy `conf.pri.sample` to `conf.pri` and put in paths to dependencies.
 
-At the time of writing, for Windows, this should be built with MSVC 2015, and `libarchive` needs to be built statically with the same compiler.
+At the time of writing, for Windows, this should be built with MSVC 2015.
 
 Example build (in a cmd.exe configured for Qt 5.x for MSVC 2015):
 ```
@@ -21,7 +21,5 @@ A `userdata.rcc` containing at least a `userdata/script.js` installation script 
 This framework depends on the following software:
 
 - [Qt](https://www.qt.io/) 5.9+
-- [Libarchive](http://libarchive.org/) tested with 3.3.2
-  - note, we currently don't actually *use* libarchive, but it's there...
 - [mini_al](https://github.com/dr-soft/mini_al) and [dr_mp3](https://github.com/mackron/dr_libs) (vendored)
 - [kofuna](https://github.com/CommitteeOfZero/kofuna) (ours, submodule)
