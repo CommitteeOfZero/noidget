@@ -22,6 +22,7 @@ class TxStream : public QObject, protected QScriptable {
     virtual void open() = 0;
     virtual void close() = 0;
     virtual void seek(qint64 count) = 0;
+    virtual void seekAbs(qint64 pos) = 0;
     virtual qint64 read(void* buffer, qint64 max) = 0;
 
     bool isOpen() const { return _isOpen; }

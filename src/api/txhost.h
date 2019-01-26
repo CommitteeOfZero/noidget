@@ -5,8 +5,10 @@
 #include <QScriptValue>
 
 class Transaction;
+class TxStream;
 class TxFileStream;
 class TxXdelta3Stream;
+class TxMpkInputStream;
 
 namespace api {
 
@@ -51,7 +53,9 @@ class TxHost : public QObject, protected QScriptable {
     Q_INVOKABLE Transaction* tx();
     Q_INVOKABLE void run();
     Q_INVOKABLE TxFileStream* fileStream(const QString& inPath);
-    Q_INVOKABLE TxXdelta3Stream* xdelta3Stream(const QString& srcPath,
-                                               const QString& diffPath);
+    Q_INVOKABLE TxMpkInputStream* mpkInputStream(const QString& inPath,
+                                                 quint32 entry);
+    Q_INVOKABLE TxXdelta3Stream* xdelta3Stream(TxStream* srcStream,
+                                               TxStream* diffStream);
 };
 }  // namespace api

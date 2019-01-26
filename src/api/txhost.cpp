@@ -15,6 +15,7 @@
 #include "tx/binarysearchreplaceaction.h"
 #include "tx/txfilestream.h"
 #include "tx/txxdelta3stream.h"
+#include "tx/txmpkinputstream.h"
 #include "installerapplication.h"
 #include "progresspage.h"
 #include "installerwindow.h"
@@ -261,6 +262,15 @@ QScriptValue txXdelta3StreamToScriptValue(QScriptEngine *engine,
 void txXdelta3StreamFromScriptValue(const QScriptValue &object,
                                     TxXdelta3Stream *&out) {
     out = qobject_cast<TxXdelta3Stream *>(object.toQObject());
+}
+QScriptValue txMpkInputStreamToScriptValue(QScriptEngine *engine,
+                                           TxMpkInputStream *const &in) {
+    auto ret = engine->newQObject(in);
+    return ret;
+}
+void txMpkInputStreamFromScriptValue(const QScriptValue &object,
+                                     TxMpkInputStream *&out) {
+    out = qobject_cast<TxMpkInputStream *>(object.toQObject());
 }
 
 /*^jsdoc
@@ -918,6 +928,8 @@ TxHost::TxHost(ApiHost *parent) : QObject(parent) {
                             txFileStreamFromScriptValue);
     qScriptRegisterMetaType(engine, txXdelta3StreamToScriptValue,
                             txXdelta3StreamFromScriptValue);
+    qScriptRegisterMetaType(engine, txMpkInputStreamToScriptValue,
+                            txMpkInputStreamFromScriptValue);
 }
 void TxHost::setupScriptObject(QScriptValue &o) {}
 TxHost::~TxHost() {}
@@ -943,18 +955,37 @@ TxFileStream *TxHost::fileStream(const QString &inPath) {
  * Prepare a stream for decoding a VCDIFF file
  * 
  * @method xdelta3Stream
- * @param {string} srcPath
- * @param {string} diffPath
+ * @param {ng.tx.TxStream} srcStream
+ * @param {ng.tx.TxStream} diffStream
  * @memberof ng.tx
  * @returns {ng.tx.TxXdelta3Stream}
  * @static
  ^jsdoc*/
-TxXdelta3Stream *TxHost::xdelta3Stream(const QString &srcPath,
-                                       const QString &diffPath) {
+TxXdelta3Stream *TxHost::xdelta3Stream(TxStream *srcStream,
+                                       TxStream *diffStream) {
     SCRIPT_EX_GUARD_START
     TxXdelta3Stream *ret = new TxXdelta3Stream(tx());
-    ret->setSrcPath(srcPath);
-    ret->setDiffPath(diffPath);
+    ret->setSrcStream(srcStream);
+    ret->setDiffStream(diffStream);
+    return ret;
+    SCRIPT_EX_GUARD_END(nullptr)
+}
+
+/*^jsdoc
+ * Prepare a stream for reading an MPK entry
+ * 
+ * @method mpkInputStream
+ * @param {string} inPath
+ * @param {number} entry
+ * @memberof ng.tx
+ * @returns {ng.tx.TxMpkInputStream}
+ * @static
+ ^jsdoc*/
+TxMpkInputStream *TxHost::mpkInputStream(const QString &inPath, quint32 entry) {
+    SCRIPT_EX_GUARD_START
+    TxMpkInputStream *ret = new TxMpkInputStream(tx());
+    ret->setInPath(inPath);
+    ret->setEntry(entry);
     return ret;
     SCRIPT_EX_GUARD_END(nullptr)
 }

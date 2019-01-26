@@ -42,7 +42,16 @@ void TxFileStream::seek(qint64 count) {
         throw NgException(QString("Tried to seek file that wasn't open: %1")
                               .arg(expandedPath));
     }
-    if (!_inFile->seek(_inFile->pos() + count)) {
+    seekAbs(_inFile->pos() + count);
+}
+
+void TxFileStream::seekAbs(qint64 pos) {
+    QString expandedPath = ngApp->globalFs()->expandedPath(_inPath);
+    if (_inFile == nullptr || !_inFile->isOpen()) {
+        throw NgException(QString("Tried to seek file that wasn't open: %1")
+                              .arg(expandedPath));
+    }
+    if (!_inFile->seek(pos)) {
         throw NgException(
             QString("Couldn't seek in file: %1").arg(expandedPath));
     }
