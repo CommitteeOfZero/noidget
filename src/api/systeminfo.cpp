@@ -3,6 +3,7 @@
 #include <api/exception.h>
 #include <QScriptValue>
 #include <QScriptValueList>
+#include <QProcessEnvironment>
 
 namespace api {
 
@@ -46,6 +47,19 @@ bool SystemInfo::isWine() const { return util::SystemInfo::isWine(); }
  ^jsdoc*/
 bool SystemInfo::isProcessRunning(const QString& processName) const {
     return util::SystemInfo::isProcessRunning(processName);
+}
+
+/*^jsdoc
+ * Get an environment variable
+ * 
+ * @method getEnv
+ * @memberof ng.systemInfo
+ * @static
+ * @param {string} name
+ * @returns {string} Value (empty if not set)
+ ^jsdoc*/
+QString SystemInfo::getEnv(const QString& name) const {
+    return QProcessEnvironment::systemEnvironment().value(name);
 }
 
 }  // namespace api

@@ -43,3 +43,11 @@ nglib.PageController.prototype.push = function() {
  * @instance
  * @abstract
  */
+
+/**
+ * Are we running in Steam Play? (Proton, Steam's Linux Wine wrapper)
+ */
+nglib.isSteamPlay = function() {
+    if (!ng.systemInfo.isWine()) return false;
+    return ng.systemInfo.getEnv('HOMEPATH').indexof('steamuser') !== -1;
+}
