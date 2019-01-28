@@ -36,6 +36,7 @@ DirectoryPicker::DirectoryPicker(QWidget *parent) : QWidget(parent) {
     // no parent - avoid styling
     _dlg = new QFileDialog(nullptr);
     _dlg->setFileMode(QFileDialog::Directory);
+    _dlg->setFilter(QDir::Dirs | QDir::Drives | QDir::Hidden | QDir::System);
     connect(_dlg, &QFileDialog::fileSelected, this,
             &DirectoryPicker::dlg_fileSelected);
 
