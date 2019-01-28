@@ -52,6 +52,8 @@ bool SystemInfo::isProcessRunning(const QString& processName) const {
 /*^jsdoc
  * Get an environment variable
  * 
+ * Note we also have such functionality in {@link ng.fs.Fs#expandedPath}
+ * 
  * @method getEnv
  * @memberof ng.systemInfo
  * @static

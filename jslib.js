@@ -49,5 +49,5 @@ nglib.PageController.prototype.push = function() {
  */
 nglib.isSteamPlay = function() {
     if (!ng.systemInfo.isWine()) return false;
-    return ng.systemInfo.getEnv('HOMEPATH').indexof('steamuser') !== -1;
+    return ng.systemInfo.getEnv('HOMEPATH').indexOf('steamuser') !== -1;
 }
