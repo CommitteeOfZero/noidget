@@ -5,6 +5,9 @@ TEMPLATE = app
 
 CONFIG += force_debug_info
 
+# mini_al's feature detection for AVX is apparently broken, tries to use AVX on i7 930
+DEFINES += MAL_NO_AVX MAL_NO_AVX2 MAL_NO_AVX512
+
 win32 {
     CONFIG += embed_manifest_exe
     QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'requireAdministrator\'
