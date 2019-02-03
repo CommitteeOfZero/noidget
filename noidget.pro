@@ -3,6 +3,8 @@ QT += core gui widgets script concurrent
 TARGET = noidget
 TEMPLATE = app
 
+CONFIG += force_debug_info
+
 win32 {
     CONFIG += embed_manifest_exe
     QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'requireAdministrator\'
