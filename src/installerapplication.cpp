@@ -9,11 +9,31 @@
 #include <QTextStream>
 #include <QStyleFactory>
 #include <QResource>
+#include <QMessageBox>
+#include <QScriptEngineAgent>
 
 #ifdef SCRIPT_DEBUG
 #include <QScriptEngineDebugger>
 #include <QAction>
 #endif
+
+class ErrorAgent : public QScriptEngineAgent {
+   public:
+    ErrorAgent(QScriptEngine* engine) : QScriptEngineAgent(engine) {}
+
+    void exceptionThrow(qint64 scriptId, const QScriptValue& exception,
+                        bool hasHandler) override {
+        if (hasHandler) return;
+
+        QMessageBox mb(ngApp->window());
+        mb.setText(
+            QString("Script error (please send this to patch developers):\n%1")
+                .arg(exception.toString()));
+        mb.setDetailedText(engine()->currentContext()->backtrace().join('\n'));
+        mb.setWindowTitle("Script error");
+        mb.exec();
+    }
+};
 
 InstallerApplication::InstallerApplication(int& argc, char** argv)
     : QApplication(argc, argv) {
@@ -23,7 +43,13 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
 
     _currentState = State::Preparation;
 
-    QResource::registerResource("userdata.rcc");
+    if (!QResource::registerResource("userdata.rcc")) {
+        QMessageBox::critical(0, "Error",
+                              "Could not load userdata.rcc (are you running "
+                              "the installer out of its directory?)");
+        exit(1);
+        return;
+    }
 
     w = new InstallerWindow(0);
 
@@ -52,13 +78,17 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     QScriptEngineDebugger* debugger = new QScriptEngineDebugger(this);
     debugger->attachTo(h->engine());
     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
+#else
+    ErrorAgent* agent = new ErrorAgent(h->engine());
+    h->engine()->setAgent(agent);
 #endif
-    h->engine()->evaluate(ts2.readAll());
+
+    h->engine()->evaluate(ts2.readAll(), "script.js");
 }
 
 InstallerApplication::~InstallerApplication() {
-    delete w;
-    delete h;
+    if (w) delete w;
+    if (h) delete h;
 }
 
 void InstallerApplication::showWindow() { w->show(); }

@@ -49,7 +49,7 @@ ApiHost::ApiHost(QObject *parent) : QObject(parent) {
     QFile jslibFile(":/jslib.js");
     jslibFile.open(QFile::ReadOnly | QFile::Text);
     QTextStream ts(&jslibFile);
-    _engine->evaluate(ts.readAll());
+    _engine->evaluate(ts.readAll(), "jslib.js");
 }
 
 QScriptValue ApiHost::root() { return _engine->globalObject().property("ng"); }
