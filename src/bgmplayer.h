@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vendor/mini_al.h"
+#include "vendor/miniaudio.h"
 
 #include <QObject>
 #include <QString>
@@ -20,8 +20,8 @@ class BgmPlayer : public QObject {
     void bgmAvailabilityChanged(bool available);
 
    private:
-    static mal_uint32 onSend(mal_device* pDevice, mal_uint32 frameCount,
-                             void* pSamples);
+    static void onSend(ma_device* pDevice, void* pOutput, const void* pInput,
+                       ma_uint32 frameCount);
 
     // Careful with accessing these - onSend runs on a background thread
 
@@ -29,10 +29,10 @@ class BgmPlayer : public QObject {
     bool haveDecoder;
     bool haveDevice;
     bool playing;
-    mal_decoder decoder;
-    mal_device device;
-    mal_device_config deviceConfig;
+    ma_decoder decoder;
+    ma_device device;
+    ma_device_config deviceConfig;
     uint32_t loopPointStart;
     uint32_t loopPointEnd;
-    uint32_t framesPlayed;
+    uint32_t cursor;
 };

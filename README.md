@@ -21,5 +21,5 @@ A `userdata.rcc` containing at least a `userdata/script.js` installation script 
 This framework depends on the following software:
 
 - [Qt](https://www.qt.io/) 5.9+
-- [mini_al](https://github.com/dr-soft/mini_al) and [dr_mp3](https://github.com/mackron/dr_libs) (vendored)
+- [miniaudio](https://github.com/dr-soft/miniaudio) and [dr_mp3](https://github.com/mackron/dr_libs) (vendored)
 - [kofuna](https://github.com/CommitteeOfZero/kofuna) (ours, submodule)

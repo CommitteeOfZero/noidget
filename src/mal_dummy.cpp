@@ -8,5 +8,5 @@
 #define DR_MP3_IMPLEMENTATION
 #include "vendor/dr_mp3.h"
 
-#define MINI_AL_IMPLEMENTATION
-#include "vendor/mini_al.h"
+#define MINIAUDIO_IMPLEMENTATION
+#include "vendor/miniaudio.h"

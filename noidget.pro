@@ -5,8 +5,8 @@ TEMPLATE = app
 
 CONFIG += force_debug_info
 
-# mini_al's feature detection for AVX is apparently broken, tries to use AVX on i7 930
-DEFINES += MAL_NO_AVX MAL_NO_AVX2 MAL_NO_AVX512
+# miniaudio's feature detection for AVX is (or was) apparently broken, tries to use AVX on i7 930
+DEFINES += MA_NO_AVX MA_NO_AVX2 MA_NO_AVX512
 
 win32 {
     CONFIG += embed_manifest_exe
