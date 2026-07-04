@@ -5,6 +5,7 @@
 #include "txstream.h"
 #include "txfilestream.h"
 #include <util/exception.h>
+#include <api/exception.h>
 #include <QtEndian>
 #include <QFile>
 
@@ -48,6 +49,35 @@ void BuildMpkAction::addEntry(int id, const QString& name, TxStream* source,
     strncpy(entry.name, _name, sizeof(entry.name));
     entry.name[sizeof(entry.name) - 1] = '\0';
     _entries.append(entry);
+}
+void BuildMpkAction::addEntry(const QJSValue& params) {
+    if (!params.isObject()) {
+        SCRIPT_THROW("Parameter has invalid type")
+        return;
+    }
+    auto source = params.property("source");
+    if (!params.property("id").isNumber() ||
+        !params.property("name").isString() ||
+        (!source.isString() &&
+         (!source.isQObject() ||
+          qobject_cast<TxStream*>(source.toQObject()) == 0))) {
+        SCRIPT_THROW("Missing required parameter / invalid type")
+        return;
+    }
+    int id = params.property("id").toInt();
+    QString name = params.property("name").toString();
+    qint64 displaySize = 0;
+    if (params.property("displaySize").isNumber()) {
+        displaySize = (qint64)params.property("displaySize").toNumber();
+    }
+    SCRIPT_EX_GUARD_START
+    if (source.isString()) {
+        addEntry(id, name, source.toString(), displaySize);
+    } else {
+        TxStream* stream = qobject_cast<TxStream*>(source.toQObject());
+        addEntry(id, name, stream, displaySize);
+    }
+    SCRIPT_EX_GUARD_END()
 }
 
 void BuildMpkAction::run() {

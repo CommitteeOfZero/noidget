@@ -1,4 +1,4 @@
-QT += core gui widgets script concurrent
+QT += core gui widgets qml concurrent
 
 TARGET = noidget
 TEMPLATE = app
@@ -14,11 +14,6 @@ win32 {
     # registry, shortcuts
     DEFINES += WIN32_LEAN_AND_MEAN PSAPI_VERSION=1
     LIBS += Advapi32.lib Shell32.lib Ole32.lib Psapi.lib
-}
-
-CONFIG(scriptdebug) {
-    DEFINES += SCRIPT_DEBUG
-    QT += scripttools
 }
 
 # The following define makes your compiler emit warnings if you use

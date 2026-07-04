@@ -2,7 +2,6 @@
 
 #include "txaction.h"
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Action to create a (desktop/start menu) shortcut (Win32, Linux only)

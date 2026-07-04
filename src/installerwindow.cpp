@@ -61,20 +61,28 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     // widgets while passing through input events that don't hit any of its
     // child widgets
     QToolButton *crossButton = new QToolButton(this);
+    QIcon crossIcon;
+    crossIcon.addFile(":/cross.png", QSize(18, 18), QIcon::Normal);
+    crossIcon.addFile(":/cross_hover.png", QSize(18, 18), QIcon::Active);
+    crossButton->setIcon(crossIcon);
+    crossButton->setIconSize(QSize(18, 18));
     crossButton->setStyleSheet(
-        "QToolButton { image: url(':/cross.png'); }"
-        "QToolButton:hover { image: url(':/cross_hover.png'); }");
+        "QToolButton { background: transparent; border: 0; padding: 0; }");
     crossButton->setCursor(QCursor(Qt::PointingHandCursor));
-    crossButton->resize(18, 18);
+    crossButton->setFixedSize(18, 18);
     crossButton->move(width() - (crossButton->width() + 12), 12);
     connect(crossButton, &QAbstractButton::clicked, this,
             &InstallerWindow::cancelRequested);
     _muteButton = new QToolButton(this);
+    QIcon muteIcon;
+    muteIcon.addFile(":/mute.png", QSize(18, 18), QIcon::Normal);
+    muteIcon.addFile(":/mute_hover.png", QSize(18, 18), QIcon::Active);
+    _muteButton->setIcon(muteIcon);
+    _muteButton->setIconSize(QSize(18, 18));
     _muteButton->setStyleSheet(
-        "QToolButton { image: url(':/mute.png'); }"
-        "QToolButton:hover { image: url(':/mute_hover.png'); }");
+        "QToolButton { background: transparent; border: 0; padding: 0; }");
     _muteButton->setCursor(QCursor(Qt::PointingHandCursor));
-    _muteButton->resize(18, 18);
+    _muteButton->setFixedSize(18, 18);
     _muteButton->move(crossButton->x() - (_muteButton->width() + 8), 12);
     connect(_muteButton, &QAbstractButton::clicked, this,
             &InstallerWindow::on_muteButton_clicked);
@@ -98,14 +106,14 @@ bool InstallerWindow::eventFilter(QObject *watched, QEvent *event) {
     static QPoint lastPos;
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        lastPos = mouseEvent->globalPos();
+        lastPos = mouseEvent->globalPosition().toPoint();
         event->accept();
         return true;
     }
     if (event->type() == QEvent::MouseMove) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        move(pos() + (mouseEvent->globalPos() - lastPos));
-        lastPos = mouseEvent->globalPos();
+        move(pos() + (mouseEvent->globalPosition().toPoint() - lastPos));
+        lastPos = mouseEvent->globalPosition().toPoint();
         event->accept();
         return true;
     }

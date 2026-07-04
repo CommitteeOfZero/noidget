@@ -2,7 +2,6 @@
 
 #include "txaction.h"
 #include <QObject>
-#include <QScriptable>
 #include "win32_registry.h"
 
 #ifdef Q_OS_WIN32

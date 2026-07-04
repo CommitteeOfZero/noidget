@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QScriptable>
+#include <QJSValue>
 #include <util/systeminfo.h>
 
 namespace api {
@@ -15,7 +15,7 @@ class ApiHost;
  * @static
  * @toplevel
  ^jsdoc*/
-class SystemInfo : public QObject, protected QScriptable {
+class SystemInfo : public QObject {
     Q_OBJECT
 
    public:
@@ -32,7 +32,7 @@ class SystemInfo : public QObject, protected QScriptable {
      ^jsdoc*/
 
     explicit SystemInfo(ApiHost* parent);
-    void setupScriptObject(QScriptValue& o);
+    void setupScriptObject(QJSValue& o);
     ~SystemInfo();
 
     Q_INVOKABLE util::SystemInfo::OsFamily platform() const;

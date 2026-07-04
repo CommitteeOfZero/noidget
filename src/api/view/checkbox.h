@@ -1,12 +1,11 @@
 #pragma once
 
 #include <QWidget>
-#include <QScriptable>
 #include <QHBoxLayout>
 #include <QCheckBox>
 #include <QLabel>
 #include <QMouseEvent>
-#include <QScriptValue>
+#include <QJSValue>
 
 namespace api {
 namespace view {
@@ -24,7 +23,7 @@ namespace view {
  Setting a default (`preset`) when creating the CheckBox with {@link
  ng.view.Container#addCheckBox} will not.
  ^jsdoc*/
-class CheckBox : public QWidget, protected QScriptable {
+class CheckBox : public QWidget {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -44,7 +43,7 @@ class CheckBox : public QWidget, protected QScriptable {
      * @instance
      * @memberof ng.view.CheckBox
      ^jsdoc*/
-    Q_PROPERTY(QScriptValue onChange READ onChange WRITE setOnChange)
+    Q_PROPERTY(QJSValue onChange READ onChange WRITE setOnChange)
     /*^jsdoc
      * Input allowed? (When this is `false`, `checked` can still be changed
      programmatically)
@@ -74,8 +73,8 @@ class CheckBox : public QWidget, protected QScriptable {
     bool checked() const { return _cb->isChecked(); }
     void setChecked(bool v) { _cb->setChecked(v); }
 
-    QScriptValue onChange() const { return _onChange; }
-    void setOnChange(const QScriptValue &v) { _onChange = v; }
+    QJSValue onChange() const { return _onChange; }
+    void setOnChange(const QJSValue &v) { _onChange = v; }
 
     bool enabled() const { return _cb->isEnabled(); }
     void setEnabled(bool v) { _cb->setEnabled(v); }
@@ -91,7 +90,7 @@ class CheckBox : public QWidget, protected QScriptable {
     // We need our own label to support rich text and avoid shortcut processing
     QLabel *_lbl;
     QCheckBox *_cb;
-    QScriptValue _onChange;
+    QJSValue _onChange;
 };
 }  // namespace view
 }  // namespace api

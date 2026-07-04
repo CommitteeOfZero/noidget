@@ -46,7 +46,7 @@ void Transaction::handleAppStateChange(InstallerApplication::State newState) {
 TxSection* Transaction::addSection(const QString& title) {
     TxSection* section = new TxSection(this);
     section->setTitle(title);
-    connect(section, &TxSection::log, this, &Transaction::sectionLog,
+    connect(section, &TxSection::actionLogged, this, &Transaction::sectionLog,
             Qt::DirectConnection);
     connect(this, &Transaction::cancelled, section, &TxSection::cancel);
     _sections.append(section);
@@ -179,5 +179,5 @@ void Transaction::logToFile(const QString& text) {
     QTextStream stream(_logFile);
     QString timestamp =
         QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
-    stream << QString("[%1 UTC] %2").arg(timestamp, text) << endl;
+    stream << QString("[%1 UTC] %2").arg(timestamp, text) << Qt::endl;
 }

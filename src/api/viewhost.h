@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <QScriptable>
-#include <QScriptValue>
+#include <QJSValue>
 
 namespace api {
 
@@ -14,12 +13,12 @@ class ApiHost;
  * @static
  * @hidesecondlevel
  ^jsdoc*/
-class ViewHost : public QObject, protected QScriptable {
+class ViewHost : public QObject {
     Q_OBJECT
 
    public:
     explicit ViewHost(ApiHost* parent);
-    void setupScriptObject(QScriptValue& o);
+    void setupScriptObject(QJSValue& o);
     ~ViewHost();
 };
 }  // namespace api

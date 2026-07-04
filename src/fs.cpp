@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
+#include <QJSValueIterator>
 
 // http://doc.qt.io/qt-5/qfileinfo.html#ntfs-permissions
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
@@ -29,8 +30,7 @@ Fs::~Fs() {}
  * @param {string} value
  ^jsdoc*/
 void Fs::setMacro(const QString& key, const QString& value) {
-    const static QRegularExpression validMacro(
-        "^[\\w\\(\\)]+$", QRegularExpression::OptimizeOnFirstUsageOption);
+    const static QRegularExpression validMacro("^[\\w\\(\\)]+$");
     if (!validMacro.match(key).hasMatch()) {
         SCRIPT_THROW("Macro name contains invalid characters")
         return;
@@ -44,6 +44,28 @@ void Fs::setMacro(const QString& key, const QString& value) {
  * @instance
  * @param {string} key
  ^jsdoc*/
+/*^jsdoc
+ * Adds/changes `macros`, name => value. Throws for invalid arguments.
+ * @method addMacros
+ * @memberof ng.fs.Fs
+ * @instance
+ * @param {Object} macros
+ ^jsdoc*/
+void Fs::addMacros(const QJSValue& macros_) {
+    if (!macros_.isObject()) {
+        SCRIPT_THROW("Macros parameter has invalid type")
+        return;
+    }
+    SCRIPT_EX_GUARD_START
+    QJSValueIterator it(macros_);
+    while (it.hasNext()) {
+        it.next();
+        if (it.value().isString()) {
+            setMacro(it.name(), it.value().toString());
+        }
+    }
+    SCRIPT_EX_GUARD_END()
+}
 void Fs::removeMacro(const QString& key) { macros.remove(key); }
 /*^jsdoc
  * Removes all macros
@@ -62,8 +84,7 @@ void Fs::clearMacros() { macros.clear(); }
  * @returns {string}
  ^jsdoc*/
 QString Fs::expandedPath(const QString& inPath) const {
-    const static QRegularExpression matchMacro(
-        "%([\\w\\(\\)]+)%", QRegularExpression::OptimizeOnFirstUsageOption);
+    const static QRegularExpression matchMacro("%([\\w\\(\\)]+)%");
     QString result = inPath;
     bool found;
     do {
@@ -179,7 +200,6 @@ QString Fs::readTextFile(const QString& filePath) const {
         return "";
     }
     QTextStream in(&f);
-    in.setCodec("UTF-8");
     return in.readAll();
 }
 

@@ -1,8 +1,7 @@
 #include "systeminfo.h"
 #include "apihost.h"
 #include <api/exception.h>
-#include <QScriptValue>
-#include <QScriptValueList>
+#include <QJSValue>
 #include <QProcessEnvironment>
 
 namespace api {
@@ -10,8 +9,8 @@ namespace api {
 SystemInfo::SystemInfo(ApiHost* parent) : QObject(parent) {}
 SystemInfo::~SystemInfo() {}
 
-void SystemInfo::setupScriptObject(QScriptValue& o) {
-    ApiHost::registerEnum<util::SystemInfo::OsFamily>(o);
+void SystemInfo::setupScriptObject(QJSValue& o) {
+    ApiHost::registerEnum<util::SystemInfo::OsFamily>(qjsEngine(this), o);
 }
 
 /*^jsdoc

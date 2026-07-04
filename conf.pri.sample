@@ -1,8 +1,17 @@
-# xdelta3.1 (https://github.com/jmacd/xdelta 7508fd2)
-INCLUDEPATH += $$quote(/path/to/xdelta3)
+# xdelta3.1 (https://github.com/jmacd/xdelta 7508fd2), vendored in
+# src/vendor/ (see src/xd3_dummy.c) rather than referenced by absolute path -
+# keeps the build self-contained and avoids qmake's dependency scanner ever
+# reaching xdelta3's own cpp-btree/examples/testing checkout content (which
+# previously made qmake hang indefinitely under Qt 6.11 when this pointed at
+# an external directory containing that whole tree).
 win32-msvc* {
-    # build xdelta3 as part of noidget, see src/xd3_dummy.c
-    HEADERS += $$files(/path/to/xdelta3/*.h, false)
+    # xdelta3.h uses GCC/Clang-only __attribute__((__format__(...))) syntax
+    # behind an #ifndef PRINTF_ATTRIBUTE guard. cl.exe's /D does not expand
+    # function-like macro definitions (unlike gcc/clang -D), so force-include
+    # a tiny compat header that #defines it away with a real preprocessor
+    # directive instead.
+    QMAKE_CXXFLAGS += /FI$$quote($$PWD/src/vendor/xdelta3_msvc_compat.h)
+    QMAKE_CFLAGS += /FI$$quote($$PWD/src/vendor/xdelta3_msvc_compat.h)
     DEFINES += XD3_MAIN=0 NOT_MAIN=1 XD3_USE_LARGEFILE64=1 SECONDARY_DJW=1 SECONDARY_FGK=1 XD3_WIN32=1 SECONDARY_LZMA=0 SIZEOF_SIZE_T=4 SIZEOF_UNSIGNED_LONG_LONG=8 EXTERNAL_COMPRESSION=0
     CONFIG(debug, debug|release) {
         DEFINES += XD3_DEBUG=1

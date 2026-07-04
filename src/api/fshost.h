@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <QScriptable>
-#include <QScriptValue>
+#include <QJSValue>
 
 class Fs;
 
@@ -16,15 +15,15 @@ class ApiHost;
  * @static
  * @toplevel
  ^jsdoc*/
-class FsHost : public QObject, protected QScriptable {
+class FsHost : public QObject {
     Q_OBJECT
 
    public:
     explicit FsHost(ApiHost* parent);
-    void setupScriptObject(QScriptValue& o);
+    void setupScriptObject(QJSValue& o);
     ~FsHost();
 
-    Q_INVOKABLE QScriptValue createFs();
+    Q_INVOKABLE Fs* createFs();
     Q_INVOKABLE Fs* global();
 };
 }  // namespace api

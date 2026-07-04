@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QJSValue>
 
 namespace api {
 namespace view {
@@ -19,12 +20,12 @@ class IContainer {
    public:
     virtual ~IContainer() {}
     virtual void addSpace(int space) = 0;
-    virtual Label* addLabel(const QScriptValue& obj) = 0;
-    virtual Button* addButton(const QScriptValue& obj) = 0;
-    virtual TextField* addTextField(const QScriptValue& obj) = 0;
-    virtual CheckBox* addCheckBox(const QScriptValue& obj) = 0;
-    virtual RadioGroup* addRadioGroup(const QScriptValue& obj) = 0;
-    virtual DirectoryPicker* addDirectoryPicker(const QScriptValue& obj) = 0;
+    virtual Label* addLabel(const QJSValue& obj) = 0;
+    virtual Button* addButton(const QJSValue& obj) = 0;
+    virtual TextField* addTextField(const QJSValue& obj) = 0;
+    virtual CheckBox* addCheckBox(const QJSValue& obj) = 0;
+    virtual RadioGroup* addRadioGroup(const QJSValue& obj) = 0;
+    virtual DirectoryPicker* addDirectoryPicker(const QJSValue& obj) = 0;
     virtual Column* addColumn() = 0;
     virtual Row* addRow() = 0;
 };

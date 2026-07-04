@@ -13,7 +13,7 @@ namespace view {
 
 Page::Page(QWidget* parent) : ::view::Page(parent) {
     _layout = new QVBoxLayout(this);
-    _layout->setMargin(0);
+    _layout->setContentsMargins(0, 0, 0, 0);
     _layout->setSpacing(8);
     _layout->setAlignment(Qt::AlignTop);
     setLayout(_layout);
@@ -27,13 +27,13 @@ Page::Page(QWidget* parent) : ::view::Page(parent) {
 }
 
 void Page::next() {
-    if (_onNext.isFunction()) {
-        _onNext.call();
+    if (_onNext.isCallable()) {
+        reportIfScriptError(_onNext.call());
     }
 }
 void Page::back() {
-    if (_onBack.isFunction()) {
-        _onBack.call();
+    if (_onBack.isCallable()) {
+        reportIfScriptError(_onBack.call());
     }
     // TODO check allowed by script
     emit popRequested();
@@ -47,32 +47,32 @@ void Page::attached() {
 
 void Page::addSpace(int space) { _col->addSpace(space); }
 
-Label* Page::addLabel(const QScriptValue& obj) {
+Label* Page::addLabel(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addLabel(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-Button* Page::addButton(const QScriptValue& obj) {
+Button* Page::addButton(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addButton(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-TextField* Page::addTextField(const QScriptValue& obj) {
+TextField* Page::addTextField(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addTextField(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-CheckBox* Page::addCheckBox(const QScriptValue& obj) {
+CheckBox* Page::addCheckBox(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addCheckBox(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-RadioGroup* Page::addRadioGroup(const QScriptValue& obj) {
+RadioGroup* Page::addRadioGroup(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addRadioGroup(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-DirectoryPicker* Page::addDirectoryPicker(const QScriptValue& obj) {
+DirectoryPicker* Page::addDirectoryPicker(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _col->addDirectoryPicker(obj);
     SCRIPT_EX_GUARD_END(nullptr)

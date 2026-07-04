@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QScriptable>
 #include <QVector>
 #include <QTemporaryFile>
 #include "installerapplication.h"
@@ -31,7 +30,7 @@ class TxSection;
  * @property {string} errorText
  * @property {string} receiptPath - **Folder** the receipt resides in
  ^jsdoc*/
-class Transaction : public QObject, protected QScriptable {
+class Transaction : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString finishText READ finishText WRITE setFinishText)
     Q_PROPERTY(QString cancelText READ cancelText WRITE setCancelText)

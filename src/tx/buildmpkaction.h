@@ -2,7 +2,7 @@
 
 #include "txaction.h"
 #include <QObject>
-#include <QScriptable>
+#include <QJSValue>
 #include <QVector>
 
 class TxStream;
@@ -42,6 +42,19 @@ class BuildMpkAction : public TxAction {
                   qint64 displaySize = 0);
     void addEntry(int id, const QString& name, TxStream* source,
                   qint64 displaySize = 0);
+    /*^jsdoc
+     * Add a file to the archive
+     *
+     * @method addEntry
+     * @param {Object} params
+     * @param {Number} params.id
+     * @param {string} params.name - archive-internal file name/path (ISO-8859-1, max. 223 characters)
+     * @param {Number} [params.displaySize=0] - file size in bytes (purely for progress indicator, BuildMpkAction always copies all data)
+     * @param params.source - either a file path or a {@link ng.tx.TxStream}
+     * @memberof ng.tx.BuildMpkAction
+     * @instance
+     ^jsdoc*/
+    Q_INVOKABLE void addEntry(const QJSValue& params);
 
    private:
     QString _path;

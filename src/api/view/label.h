@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QWidget>
-#include <QScriptable>
 #include <QLabel>
 
 namespace api {
@@ -15,7 +14,7 @@ namespace view {
  * @hideconstructor
  * @property {string} text - Label text, supports wordwrapping
  ^jsdoc*/
-class Label : public QWidget, protected QScriptable {
+class Label : public QWidget {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc

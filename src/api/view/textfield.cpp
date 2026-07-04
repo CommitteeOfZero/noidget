@@ -6,7 +6,7 @@ namespace view {
 
 TextField::TextField(QWidget *parent) : QWidget(parent), _richText(false) {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     setLayout(layout);
     _te = new QTextEdit(this);

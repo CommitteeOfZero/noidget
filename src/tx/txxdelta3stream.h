@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QFile>
 extern "C" {
-#include <xdelta3.h>
+#include "vendor/xdelta3.h"
 }
 
 /*^jsdoc

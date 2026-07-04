@@ -7,8 +7,8 @@
 #include "column.h"
 #include "row.h"
 #include "directorypicker.h"
-#include <QScriptValue>
-#include <QScriptValueIterator>
+#include <QJSValue>
+#include <QJSValueIterator>
 #include <api/exception.h>
 
 namespace api {
@@ -45,7 +45,7 @@ void Container::addSpace(int space) { _layout->addSpacing(space); }
  * @param {boolean} [params.richText=false]
  * @returns {ng.view.Label}
  ^jsdoc*/
-Label* Container::addLabel(const QScriptValue& obj) {
+Label* Container::addLabel(const QJSValue& obj) {
     QString text;
     bool richText = false;
 
@@ -80,7 +80,7 @@ Label* Container::addLabel(const QScriptValue& obj) {
  * @param {number} [params.height]
  * @returns {ng.view.Button}
  ^jsdoc*/
-Button* Container::addButton(const QScriptValue& obj) {
+Button* Container::addButton(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     if (!obj.isObject()) {
         // TODO what about no parameters?
@@ -95,9 +95,9 @@ Button* Container::addButton(const QScriptValue& obj) {
     if (enabled.isBool()) btn->setEnabled(enabled.toBool());
     btn->setOnClick(obj.property("onClick"));
     auto width = obj.property("width");
-    if (width.isNumber()) btn->setWidth(width.toInt32());
+    if (width.isNumber()) btn->setWidth(width.toInt());
     auto height = obj.property("height");
-    if (height.isNumber()) btn->setHeight(height.toInt32());
+    if (height.isNumber()) btn->setHeight(height.toInt());
     _layout->addWidget(btn);
     return btn;
     SCRIPT_EX_GUARD_END(nullptr)
@@ -120,7 +120,7 @@ Button* Container::addButton(const QScriptValue& obj) {
  * @param {boolean} [params.richText=false]
  * @returns {ng.view.TextField}
  ^jsdoc*/
-TextField* Container::addTextField(const QScriptValue& obj) {
+TextField* Container::addTextField(const QJSValue& obj) {
     QString text;
     bool richText = false;
 
@@ -164,12 +164,12 @@ TextField* Container::addTextField(const QScriptValue& obj) {
  * @param {Function} [params.onChange]
  * @returns {ng.view.CheckBox}
  ^jsdoc*/
-CheckBox* Container::addCheckBox(const QScriptValue& obj) {
+CheckBox* Container::addCheckBox(const QJSValue& obj) {
     QString text;
     bool richText = false;
     bool preset = false;
     bool enabled = true;
-    QScriptValue onChange(QScriptValue::UndefinedValue);
+    QJSValue onChange;
 
     if (obj.isString()) {
         text = obj.toString();
@@ -216,7 +216,7 @@ CheckBox* Container::addCheckBox(const QScriptValue& obj) {
  * @param {boolean} [params.vertical=false]
  * @returns {ng.view.RadioGroup}
  ^jsdoc*/
-RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
+RadioGroup* Container::addRadioGroup(const QJSValue& obj) {
     // TODO what about no parameters?
     if (!obj.isObject()) {
         SCRIPT_THROW("Wrong type")
@@ -234,7 +234,7 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
 
     auto options_ = obj.property("options");
     if (options_.isArray()) {
-        QScriptValueIterator it(options_);
+        QJSValueIterator it(options_);
         while (it.hasNext()) {
             it.next();
             auto option = it.value();
@@ -287,7 +287,7 @@ RadioGroup* Container::addRadioGroup(const QScriptValue& obj) {
  * @param {Function} [params.adjustDirectory]
  * @returns {ng.view.DirectoryPicker}
  ^jsdoc*/
-DirectoryPicker* Container::addDirectoryPicker(const QScriptValue& obj) {
+DirectoryPicker* Container::addDirectoryPicker(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     if (!obj.isObject()) {
         // TODO what about no parameters?

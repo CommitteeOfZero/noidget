@@ -1,11 +1,10 @@
 #pragma once
 
 #include <QWidget>
-#include <QScriptable>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpacerItem>
-#include <QScriptValue>
+#include <QJSValue>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QFileDialog>
@@ -23,7 +22,7 @@ namespace view {
  * @property {string} value - Current text in input field
  * @property {string} title - Window title for directory selection dialog
  ^jsdoc*/
-class DirectoryPicker : public QWidget, protected QScriptable {
+class DirectoryPicker : public QWidget {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -47,7 +46,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      * @instance
      * @memberof ng.view.DirectoryPicker
      ^jsdoc*/
-    Q_PROPERTY(QScriptValue onPick READ onPick WRITE setOnPick)
+    Q_PROPERTY(QJSValue onPick READ onPick WRITE setOnPick)
     /*^jsdoc
      * Callback triggered *before* directory selection dialog is opened.
      *
@@ -61,7 +60,7 @@ class DirectoryPicker : public QWidget, protected QScriptable {
      * @instance
      * @memberof ng.view.DirectoryPicker
      ^jsdoc*/
-    Q_PROPERTY(QScriptValue adjustDirectory READ adjustDirectory WRITE
+    Q_PROPERTY(QJSValue adjustDirectory READ adjustDirectory WRITE
                    setAdjustDirectory)
     Q_PROPERTY(QString value READ value WRITE setValue)
     Q_PROPERTY(QString title READ title WRITE setTitle)
@@ -94,11 +93,11 @@ class DirectoryPicker : public QWidget, protected QScriptable {
     }
 
     // NOTE: value not set if onPick exists
-    QScriptValue onPick() const { return _onPick; }
-    void setOnPick(const QScriptValue &v) { _onPick = v; }
+    QJSValue onPick() const { return _onPick; }
+    void setOnPick(const QJSValue &v) { _onPick = v; }
 
-    QScriptValue adjustDirectory() const { return _adjustDirectory; }
-    void setAdjustDirectory(const QScriptValue &v) { _adjustDirectory = v; }
+    QJSValue adjustDirectory() const { return _adjustDirectory; }
+    void setAdjustDirectory(const QJSValue &v) { _adjustDirectory = v; }
 
     QString value() const { return _edit->text(); }
     void setValue(const QString &v) { _edit->setText(v); }
@@ -116,8 +115,8 @@ class DirectoryPicker : public QWidget, protected QScriptable {
     QLineEdit *_edit;
     QPushButton *_btn;
     QFileDialog *_dlg;
-    QScriptValue _onPick;
-    QScriptValue _adjustDirectory;
+    QJSValue _onPick;
+    QJSValue _adjustDirectory;
 };
 }  // namespace view
 }  // namespace api

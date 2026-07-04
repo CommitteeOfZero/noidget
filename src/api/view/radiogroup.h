@@ -1,11 +1,10 @@
 #pragma once
 
 #include <QWidget>
-#include <QScriptable>
 #include <QLabel>
 #include <QButtonGroup>
 #include <QAbstractButton>
-#include <QScriptValue>
+#include <QJSValue>
 
 namespace api {
 namespace view {
@@ -24,7 +23,7 @@ namespace view {
  string for no selection. **TODO** does setting this programmatically trigger
  onChange?
  ^jsdoc*/
-class RadioGroup : public QWidget, protected QScriptable {
+class RadioGroup : public QWidget {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText)
     Q_PROPERTY(QString selected READ selected WRITE setSelected)
@@ -37,7 +36,7 @@ class RadioGroup : public QWidget, protected QScriptable {
      * @instance
      * @memberof ng.view.RadioGroup
      ^jsdoc*/
-    Q_PROPERTY(QScriptValue onChange READ onChange WRITE setOnChange)
+    Q_PROPERTY(QJSValue onChange READ onChange WRITE setOnChange)
    public:
     explicit RadioGroup(QWidget *parent = 0, bool vertical = false);
     ~RadioGroup();
@@ -48,18 +47,18 @@ class RadioGroup : public QWidget, protected QScriptable {
     QString selected() const;
     void setSelected(const QString &v);
 
-    QScriptValue onChange() const { return _onChange; }
-    void setOnChange(const QScriptValue &v) { _onChange = v; }
+    QJSValue onChange() const { return _onChange; }
+    void setOnChange(const QJSValue &v) { _onChange = v; }
 
     Q_INVOKABLE void addOption(const QString &name, const QString &text);
 
    private slots:
-    void buttonGroup_buttonToggled(int id, bool checked);
+    void buttonGroup_buttonToggled(QAbstractButton *button, bool checked);
 
    private:
     QLabel *_lbl;
     QWidget *_groupWidget;
-    QScriptValue _onChange;
+    QJSValue _onChange;
     QAbstractButton *_prevButton;
     QButtonGroup *_buttonGroup;
 };

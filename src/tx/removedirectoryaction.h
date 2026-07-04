@@ -2,7 +2,6 @@
 
 #include "txaction.h"
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Action to recursively remove a directory

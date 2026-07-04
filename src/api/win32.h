@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QScriptable>
+#include <QJSValue>
 #ifdef Q_OS_WIN32
 #include <win32_registry.h>
 
@@ -16,12 +16,12 @@ class ApiHost;
  * @static
  * @toplevel
  ^jsdoc*/
-class Win32 : public QObject, protected QScriptable {
+class Win32 : public QObject {
     Q_OBJECT
 
    public:
     explicit Win32(ApiHost* parent);
-    void setupScriptObject(QScriptValue& o);
+    void setupScriptObject(QJSValue& o);
     ~Win32();
 
     Q_INVOKABLE Registry* registry() const;

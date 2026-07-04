@@ -7,8 +7,7 @@
 #include <QMessageBox>
 #include <api/exception.h>
 #include <api/view/dialog.h>
-#include <QScriptValue>
-#include <QScriptValueList>
+#include <QJSValue>
 
 namespace api {
 
@@ -69,7 +68,7 @@ void Window::popPage() { ngApp->window()->pop(); }
  * @param {Number} [params.loopStart=0] in samples
  * @param {Number} [params.loopEnd=0] in samples, or 0 for end of track
  ^jsdoc*/
-void Window::playBgm(const QScriptValue &v) {
+void Window::playBgm(const QJSValue &v) {
     QString url;
     uint32_t loopStart = 0, loopEnd = 0;
     if (v.isString()) {
@@ -79,9 +78,9 @@ void Window::playBgm(const QScriptValue &v) {
         if (url_.isString()) {
             url = url_.toString();
             auto loopStart_ = v.property("loopStart");
-            if (loopStart_.isNumber()) loopStart = loopStart_.toUInt32();
+            if (loopStart_.isNumber()) loopStart = loopStart_.toUInt();
             auto loopEnd_ = v.property("loopEnd");
-            if (loopEnd_.isNumber()) loopEnd = loopEnd_.toUInt32();
+            if (loopEnd_.isNumber()) loopEnd = loopEnd_.toUInt();
         }
     } else {
         SCRIPT_THROW("Wrong type")
@@ -106,7 +105,7 @@ void Window::playBgm(const QScriptValue &v) {
  * @param {string} params.text
  * @param {boolean} [params.richText=false]
  ^jsdoc*/
-void Window::messageBox(const QScriptValue &v) {
+void Window::messageBox(const QJSValue &v) {
     QString text;
     bool richText = false;
     if (v.isString()) {
@@ -166,8 +165,8 @@ void Window::setTitle(const QString &title) {
  * @returns {boolean} - was the dialog accepted or rejected? (`OK` type dialogs
  always return true)
  ^jsdoc*/
-bool Window::modal(api::view::Dialog::DlgType type, const QScriptValue &setup) {
-    if (!setup.isFunction()) {
+bool Window::modal(api::view::Dialog::DlgType type, const QJSValue &setup) {
+    if (!setup.isCallable()) {
         SCRIPT_THROW("Setup function is required")
         return false;
     }
@@ -177,12 +176,10 @@ bool Window::modal(api::view::Dialog::DlgType type, const QScriptValue &setup) {
     // TODO ensure dialog gets deleted in case of exception?
     // (we have nothing that throws here yet)
     SCRIPT_EX_GUARD_START
-    QScriptValueList args;
-    // script-invokable functions can only take constrefs to QScriptValues
-    // so we need to create a new mutable QScriptValue here
-    QScriptValue setup_(setup);
-    args << setup_.engine()->toScriptValue(&dlg);
-    setup_.call(QScriptValue(), args);
+    QJSValueList args;
+    args << qjsEngine(this)->toScriptValue(&dlg);
+    QJSValue result = setup.call(args);
+    if (reportIfScriptError(result)) return false;
     return dlg.present();
     SCRIPT_EX_GUARD_END(false)
 }
