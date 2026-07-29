@@ -9,6 +9,7 @@
 #include <QToolButton>
 #include <QMessageBox>
 #include <QFileInfo>
+#include <QMovie>
 
 InstallerWindow::InstallerWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::InstallerWindow) {
@@ -39,6 +40,17 @@ InstallerWindow::InstallerWindow(QWidget *parent)
     } else {
         ui->belowHeaderColumns->removeWidget(
             ui->rightImage);  // get rid of spacing
+    }
+    if (QFileInfo(":/userdata/next_button.gif").exists()) {
+        QMovie *gifIcon = new QMovie(this);
+        gifIcon->setFileName(":/userdata/next_button.gif");
+        connect(gifIcon, &QMovie::frameChanged, [=]{
+            ui->nextButton->setIcon(gifIcon->currentPixmap());
+        });
+        gifIcon->start();
+        // following is needed for dynamic property based styles to update
+        ui->nextButton->style()->unpolish(ui->nextButton);
+        ui->nextButton->style()->polish(ui->nextButton);
     }
     if (QFileInfo(":/userdata/next_button.png").exists()) {
         ui->nextButton->setIcon(QIcon(":/userdata/next_button.png"));
