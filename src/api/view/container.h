@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QWidget>
-#include <QScriptable>
 #include <QBoxLayout>
 #include "icontainer.h"
 
@@ -26,7 +25,7 @@ class Row;
  * @toplevel
  * @hideconstructor
  ^jsdoc*/
-class Container : public QWidget, public IContainer, protected QScriptable {
+class Container : public QWidget, public IContainer {
     Q_OBJECT
 
    public:
@@ -35,16 +34,16 @@ class Container : public QWidget, public IContainer, protected QScriptable {
 
     Q_INVOKABLE void addSpace(int space) override;
 
-    Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
-    Q_INVOKABLE api::view::Button* addButton(const QScriptValue& obj) override;
+    Q_INVOKABLE api::view::Label* addLabel(const QJSValue& obj) override;
+    Q_INVOKABLE api::view::Button* addButton(const QJSValue& obj) override;
     Q_INVOKABLE api::view::TextField* addTextField(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::CheckBox* addCheckBox(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::RadioGroup* addRadioGroup(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::DirectoryPicker* addDirectoryPicker(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
 
     Q_INVOKABLE api::view::Column* addColumn() override;
     Q_INVOKABLE api::view::Row* addRow() override;

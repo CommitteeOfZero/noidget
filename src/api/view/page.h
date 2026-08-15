@@ -1,7 +1,6 @@
 #pragma once
 
-#include <QScriptable>
-#include <QScriptValue>
+#include <QJSValue>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <view/page.h>
@@ -31,7 +30,7 @@ class Row;
  * @property {string} title - Page title, displayed on the page, **not** the
  window title. Rich text is not allowed.
  ^jsdoc*/
-class Page : public ::view::Page, public IContainer, protected QScriptable {
+class Page : public ::view::Page, public IContainer {
     Q_OBJECT
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     /*^jsdoc
@@ -44,7 +43,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
      * @instance
      * @memberof ng.view.Page
      ^jsdoc*/
-    Q_PROPERTY(QScriptValue onNext READ onNext WRITE setOnNext)
+    Q_PROPERTY(QJSValue onNext READ onNext WRITE setOnNext)
     /*^jsdoc
      * Event handler called when the page's "back" button is clicked. Unlike
      * {@link Page#onNext}, the current page will be destroyed after this is
@@ -55,7 +54,7 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
      * @instance
      * @memberof ng.view.Page
     ^jsdoc*/
-    Q_PROPERTY(QScriptValue onBack READ onBack WRITE setOnBack)
+    Q_PROPERTY(QJSValue onBack READ onBack WRITE setOnBack)
 
    public:
     explicit Page(QWidget* parent = 0);
@@ -69,23 +68,23 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
         emit titleChanged(v);
     }
 
-    QScriptValue onNext() const { return _onNext; }
-    void setOnNext(const QScriptValue& v) { _onNext = v; }
-    QScriptValue onBack() const { return _onBack; }
-    void setOnBack(const QScriptValue& v) { _onBack = v; }
+    QJSValue onNext() const { return _onNext; }
+    void setOnNext(const QJSValue& v) { _onNext = v; }
+    QJSValue onBack() const { return _onBack; }
+    void setOnBack(const QJSValue& v) { _onBack = v; }
 
     Q_INVOKABLE void addSpace(int space) override;
 
-    Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
-    Q_INVOKABLE api::view::Button* addButton(const QScriptValue& obj) override;
+    Q_INVOKABLE api::view::Label* addLabel(const QJSValue& obj) override;
+    Q_INVOKABLE api::view::Button* addButton(const QJSValue& obj) override;
     Q_INVOKABLE api::view::TextField* addTextField(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::CheckBox* addCheckBox(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::RadioGroup* addRadioGroup(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::DirectoryPicker* addDirectoryPicker(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
 
     Q_INVOKABLE api::view::Column* addColumn() override;
     Q_INVOKABLE api::view::Row* addRow() override;
@@ -98,8 +97,8 @@ class Page : public ::view::Page, public IContainer, protected QScriptable {
     QVBoxLayout* _layout;
     QLabel* _titleLbl;
 
-    QScriptValue _onNext;
-    QScriptValue _onBack;
+    QJSValue _onNext;
+    QJSValue _onBack;
 };
 
 }  // namespace view

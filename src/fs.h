@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QString>
 #include <QHash>
-#include <QScriptable>
+#include <QJSValue>
 
 /*^jsdoc
  * Filesystem interface.
@@ -29,7 +29,7 @@
  * @toplevel
  * @hideconstructor
  ^jsdoc*/
-class Fs : public QObject, protected QScriptable {
+class Fs : public QObject {
     Q_OBJECT
 
    public:
@@ -37,6 +37,14 @@ class Fs : public QObject, protected QScriptable {
     ~Fs();
 
     Q_INVOKABLE void setMacro(const QString& key, const QString& value);
+    /*^jsdoc
+     * Adds/changes `macros`, name => value. Throws for invalid arguments.
+     * @method addMacros
+     * @param {Object} macros
+     * @memberof ng.fs.Fs
+     * @instance
+     ^jsdoc*/
+    Q_INVOKABLE void addMacros(const QJSValue& macros);
     Q_INVOKABLE void removeMacro(const QString& key);
     Q_INVOKABLE void clearMacros();
 

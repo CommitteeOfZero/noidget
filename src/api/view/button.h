@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QWidget>
-#include <QScriptable>
-#include <QScriptValue>
+#include <QJSValue>
 #include <QPushButton>
 
 namespace api {
@@ -23,7 +22,7 @@ namespace view {
  * @property {number} height - Fixed button height. **TODO** stretching
  behaviour when unset
  ^jsdoc*/
-class Button : public QWidget, protected QScriptable {
+class Button : public QWidget {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
@@ -34,7 +33,7 @@ class Button : public QWidget, protected QScriptable {
      * @instance
      * @memberof ng.view.Button
      ^jsdoc*/
-    Q_PROPERTY(QScriptValue onClick READ onClick WRITE setOnClick)
+    Q_PROPERTY(QJSValue onClick READ onClick WRITE setOnClick)
     /*^jsdoc
      * Is button clickable?
      * @member {boolean} enabled
@@ -52,8 +51,8 @@ class Button : public QWidget, protected QScriptable {
     QString text() const { return _btn->text(); }
     void setText(const QString &v) { _btn->setText(v); }
 
-    QScriptValue onClick() const { return _onClick; }
-    void setOnClick(const QScriptValue &v) { _onClick = v; }
+    QJSValue onClick() const { return _onClick; }
+    void setOnClick(const QJSValue &v) { _onClick = v; }
 
     bool enabled() const { return _btn->isEnabled(); }
     void setEnabled(bool v) { _btn->setEnabled(v); }
@@ -68,7 +67,7 @@ class Button : public QWidget, protected QScriptable {
 
    private:
     QPushButton *_btn;
-    QScriptValue _onClick;
+    QJSValue _onClick;
 };
 }  // namespace view
 }  // namespace api

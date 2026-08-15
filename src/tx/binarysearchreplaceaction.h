@@ -2,7 +2,6 @@
 
 #include "txaction.h"
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Action to search and replace a pattern in a binary file

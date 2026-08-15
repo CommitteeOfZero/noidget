@@ -43,7 +43,7 @@ class InstallerWindow : public QMainWindow, public view::IPageStack {
     void cancelRequested();
     void on_muteButton_clicked();
 
-    void InstallerWindow::onBgmAvailabilityChanged(bool available);
+    void onBgmAvailabilityChanged(bool available);
 
     void on_nextButton_clicked();
     void on_backButton_clicked();

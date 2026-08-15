@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QScriptable>
 #include <QVBoxLayout>
 #include "container.h"
 
@@ -22,7 +21,7 @@ class Column : public Container {
    public:
     explicit Column(QWidget *parent = 0) : Container(parent) {
         _layout = new QVBoxLayout(this);
-        _layout->setMargin(0);
+        _layout->setContentsMargins(0, 0, 0, 0);
         _layout->setSpacing(8);  // TODO parameterize
         _layout->setAlignment(Qt::AlignTop);
         setLayout(_layout);

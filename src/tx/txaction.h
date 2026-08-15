@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Abstract base class for individual operations in a transaction
@@ -12,7 +11,7 @@
  * @toplevel
  * @hideconstructor
  ^jsdoc*/
-class TxAction : public QObject, protected QScriptable {
+class TxAction : public QObject {
     Q_OBJECT
 
    public:

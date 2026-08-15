@@ -3,7 +3,6 @@
 #include "txaction.h"
 #include "txstream.h"
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Queued stream-to-file-writing action

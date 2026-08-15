@@ -1,6 +1,7 @@
 #include "installerapplication.h"
 #include "installerwindow.h"
 #include <api/apihost.h>
+#include <api/exception.h>
 #include "fs.h"
 #include <tx/transaction.h>
 #include "receiptwriter.h"
@@ -10,30 +11,6 @@
 #include <QStyleFactory>
 #include <QResource>
 #include <QMessageBox>
-#include <QScriptEngineAgent>
-
-#ifdef SCRIPT_DEBUG
-#include <QScriptEngineDebugger>
-#include <QAction>
-#endif
-
-class ErrorAgent : public QScriptEngineAgent {
-   public:
-    ErrorAgent(QScriptEngine* engine) : QScriptEngineAgent(engine) {}
-
-    void exceptionThrow(qint64 scriptId, const QScriptValue& exception,
-                        bool hasHandler) override {
-        if (hasHandler) return;
-
-        QMessageBox mb(ngApp->window());
-        mb.setText(
-            QString("Script error (please send this to patch developers):\n%1")
-                .arg(exception.toString()));
-        mb.setDetailedText(engine()->currentContext()->backtrace().join('\n'));
-        mb.setWindowTitle("Script error");
-        mb.exec();
-    }
-};
 
 InstallerApplication::InstallerApplication(int& argc, char** argv)
     : QApplication(argc, argv) {
@@ -74,16 +51,9 @@ InstallerApplication::InstallerApplication(int& argc, char** argv)
     QFile scriptFile(":/userdata/script.js");
     scriptFile.open(QFile::ReadOnly | QFile::Text);
     QTextStream ts2(&scriptFile);
-#ifdef SCRIPT_DEBUG
-    QScriptEngineDebugger* debugger = new QScriptEngineDebugger(this);
-    debugger->attachTo(h->engine());
-    debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
-#else
-    ErrorAgent* agent = new ErrorAgent(h->engine());
-    h->engine()->setAgent(agent);
-#endif
 
-    h->engine()->evaluate(ts2.readAll(), "script.js");
+    QJSValue result = h->engine()->evaluate(ts2.readAll(), "script.js");
+    api::reportIfScriptError(result);
 }
 
 InstallerApplication::~InstallerApplication() {

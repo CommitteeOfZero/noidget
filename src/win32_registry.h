@@ -2,7 +2,6 @@
 #include <QObject>
 #include <QString>
 #include <QVariant>
-#include <QScriptable>
 #ifdef Q_OS_WIN32
 #include <windows.h>
 #endif
@@ -26,7 +25,7 @@
  * @toplevel
  * @hideconstructor
  ^jsdoc*/
-class Registry : public QObject, protected QScriptable {
+class Registry : public QObject {
     Q_OBJECT
 
    public:

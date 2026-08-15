@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QScriptable>
 #include <QHBoxLayout>
 #include "container.h"
 
@@ -22,7 +21,7 @@ class Row : public Container {
    public:
     explicit Row(QWidget *parent = 0) : Container(parent) {
         _layout = new QHBoxLayout(this);
-        _layout->setMargin(0);
+        _layout->setContentsMargins(0, 0, 0, 0);
         _layout->setSpacing(8);  // TODO parameterize
         _layout->setAlignment(Qt::AlignLeft);
         setLayout(_layout);

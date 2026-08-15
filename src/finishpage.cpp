@@ -4,7 +4,7 @@
 
 FinishPage::FinishPage(QWidget* parent) : view::Page(parent) {
     _layout = new QVBoxLayout(this);
-    _layout->setMargin(0);
+    _layout->setContentsMargins(0, 0, 0, 0);
     _layout->setSpacing(8);
     _layout->setAlignment(Qt::AlignTop);
     setLayout(_layout);

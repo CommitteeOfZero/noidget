@@ -1,14 +1,14 @@
 #include "checkbox.h"
 #include <QHBoxLayout>
 #include "installerapplication.h"
-#include <QScriptValueList>
+#include <api/exception.h>
 
 namespace api {
 namespace view {
 
 CheckBox::CheckBox(QWidget *parent) : QWidget(parent) {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     layout->setAlignment(Qt::AlignLeft);
     setLayout(layout);
@@ -23,24 +23,24 @@ CheckBox::CheckBox(QWidget *parent) : QWidget(parent) {
 CheckBox::~CheckBox() {}
 
 void CheckBox::mousePressEvent(QMouseEvent *event) {
-    QMouseEvent *ne =
-        new QMouseEvent(event->type(), QPointF(0.0, 0.0), event->button(),
-                        event->buttons(), event->modifiers());
+    QMouseEvent *ne = new QMouseEvent(event->type(), QPointF(0.0, 0.0),
+                                      event->globalPosition(), event->button(),
+                                      event->buttons(), event->modifiers());
     ngApp->postEvent(_cb, ne);
 }
 void CheckBox::mouseReleaseEvent(QMouseEvent *event) {
-    QMouseEvent *ne =
-        new QMouseEvent(event->type(), QPointF(0.0, 0.0), event->button(),
-                        event->buttons(), event->modifiers());
+    QMouseEvent *ne = new QMouseEvent(event->type(), QPointF(0.0, 0.0),
+                                      event->globalPosition(), event->button(),
+                                      event->buttons(), event->modifiers());
     ngApp->postEvent(_cb, ne);
 }
 
 void CheckBox::qcb_stateChanged(int state) {
     bool checked = state == Qt::Checked;
-    if (_onChange.isFunction()) {
-        QScriptValueList args;
+    if (_onChange.isCallable()) {
+        QJSValueList args;
         args << checked;
-        _onChange.call(QScriptValue(), args);
+        reportIfScriptError(_onChange.call(args));
     }
 }
 

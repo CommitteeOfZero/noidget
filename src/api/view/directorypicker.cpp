@@ -1,7 +1,7 @@
 #include "directorypicker.h"
 #include <QHBoxLayout>
 #include "installerapplication.h"
-#include <QScriptValueList>
+#include <api/exception.h>
 
 namespace api {
 namespace view {
@@ -10,7 +10,7 @@ DirectoryPicker::DirectoryPicker(QWidget *parent) : QWidget(parent) {
     // TODO figure out how to give textbox minimum width, allow textbox *and*
     // label to expand, ensure there's enough vertical room for multiline labels
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(8);
     layout->setAlignment(Qt::AlignLeft);
     setLayout(layout);
@@ -45,21 +45,21 @@ DirectoryPicker::DirectoryPicker(QWidget *parent) : QWidget(parent) {
 DirectoryPicker::~DirectoryPicker() { delete _dlg; }
 
 void DirectoryPicker::dlg_fileSelected(const QString &file) {
-    if (_onPick.isFunction()) {
-        QScriptValueList args;
+    if (_onPick.isCallable()) {
+        QJSValueList args;
         args << file;
-        _onPick.call(QScriptValue(), args);
+        reportIfScriptError(_onPick.call(args));
     } else {
         _edit->setText(file);
     }
 }
 
 void DirectoryPicker::btn_clicked() {
-    if (_adjustDirectory.isFunction()) {
-        QScriptValueList args;
+    if (_adjustDirectory.isCallable()) {
+        QJSValueList args;
         args << value();
-        auto ret = _adjustDirectory.call(QScriptValue(), args);
-        if (ret.isString()) {
+        auto ret = _adjustDirectory.call(args);
+        if (!reportIfScriptError(ret) && ret.isString()) {
             _dlg->setDirectory(ret.toString());
         }
     } else {

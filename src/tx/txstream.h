@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Abstract stream (builder) to be operated on with various actions
@@ -12,7 +11,7 @@
  * @toplevel
  * @hideconstructor
  ^jsdoc*/
-class TxStream : public QObject, protected QScriptable {
+class TxStream : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool isOpen READ isOpen)
 

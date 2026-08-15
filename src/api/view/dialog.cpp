@@ -17,7 +17,7 @@ Dialog::Dialog(Dialog::DlgType type, QWidget* parent)
     _dlg->_col = new Column(_dlg);
     QVBoxLayout* layout = new QVBoxLayout(_dlg);
     _dlg->setLayout(layout);
-    layout->setMargin(16);
+    layout->setContentsMargins(16, 16, 16, 16);
     layout->setSpacing(8);
     layout->setAlignment(Qt::AlignTop);
     layout->addWidget(_dlg->_col, 1);
@@ -53,32 +53,32 @@ void Dialog::setHeight(int v) { _dlg->setFixedHeight(v); }
 
 void Dialog::addSpace(int space) { _dlg->_col->addSpace(space); }
 
-Label* Dialog::addLabel(const QScriptValue& obj) {
+Label* Dialog::addLabel(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _dlg->_col->addLabel(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-Button* Dialog::addButton(const QScriptValue& obj) {
+Button* Dialog::addButton(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _dlg->_col->addButton(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-TextField* Dialog::addTextField(const QScriptValue& obj) {
+TextField* Dialog::addTextField(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _dlg->_col->addTextField(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-CheckBox* Dialog::addCheckBox(const QScriptValue& obj) {
+CheckBox* Dialog::addCheckBox(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _dlg->_col->addCheckBox(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-RadioGroup* Dialog::addRadioGroup(const QScriptValue& obj) {
+RadioGroup* Dialog::addRadioGroup(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _dlg->_col->addRadioGroup(obj);
     SCRIPT_EX_GUARD_END(nullptr)
 }
-DirectoryPicker* Dialog::addDirectoryPicker(const QScriptValue& obj) {
+DirectoryPicker* Dialog::addDirectoryPicker(const QJSValue& obj) {
     SCRIPT_EX_GUARD_START
     return _dlg->_col->addDirectoryPicker(obj);
     SCRIPT_EX_GUARD_END(nullptr)

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QScriptable>
-#include <QScriptValue>
+#include <QObject>
+#include <QJSValue>
 #include "icontainer.h"
 
 namespace api {
@@ -29,7 +29,7 @@ class Row;
  * @property {number} width - Window width
  * @property {number} height - Window height
  ^jsdoc*/
-class Dialog : public QObject, public IContainer, protected QScriptable {
+class Dialog : public QObject, public IContainer {
     Q_OBJECT
     Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(int width READ width WRITE setWidth)
@@ -62,16 +62,16 @@ class Dialog : public QObject, public IContainer, protected QScriptable {
 
     Q_INVOKABLE void addSpace(int space) override;
 
-    Q_INVOKABLE api::view::Label* addLabel(const QScriptValue& obj) override;
-    Q_INVOKABLE api::view::Button* addButton(const QScriptValue& obj) override;
+    Q_INVOKABLE api::view::Label* addLabel(const QJSValue& obj) override;
+    Q_INVOKABLE api::view::Button* addButton(const QJSValue& obj) override;
     Q_INVOKABLE api::view::TextField* addTextField(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::CheckBox* addCheckBox(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::RadioGroup* addRadioGroup(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
     Q_INVOKABLE api::view::DirectoryPicker* addDirectoryPicker(
-        const QScriptValue& obj) override;
+        const QJSValue& obj) override;
 
     Q_INVOKABLE api::view::Column* addColumn() override;
     Q_INVOKABLE api::view::Row* addRow() override;

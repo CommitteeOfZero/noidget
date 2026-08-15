@@ -184,7 +184,7 @@ QVariant Registry::value(RootKey root, const QString& key, bool use64bit,
  ^jsdoc*/
 bool Registry::setValue(RootKey root, const QString& key, bool use64bit,
                         const QString& valName, const QVariant& value) {
-    if (value.type() != QMetaType::QString && !value.canConvert<uint>()) {
+    if (value.typeId() != QMetaType::QString && !value.canConvert<uint>()) {
         return false;
     }
     if (!createKey(root, key, use64bit)) return false;
@@ -196,7 +196,7 @@ bool Registry::setValue(RootKey root, const QString& key, bool use64bit,
             &hKey) == ERROR_SUCCESS;
     if (success) {
         bool valueExisted = valueExists(root, key, use64bit, valName);
-        if (value.type() == QMetaType::QString) {
+        if (value.typeId() == QMetaType::QString) {
             QString str = value.toString();
             success = RegSetValueExW(hKey, (LPCWSTR)valName.utf16(), 0, REG_SZ,
                                      (const BYTE*)str.utf16(),

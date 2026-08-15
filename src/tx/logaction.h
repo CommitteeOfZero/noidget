@@ -2,7 +2,6 @@
 
 #include "txaction.h"
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Action to write plain text to the log when execution reaches it

@@ -32,22 +32,22 @@ struct ReceiptEntry;
 
 // I don't know what I'm doing help
 // https://stackoverflow.com/a/22402626
-inline uint qHash(const RegKeyRecord& record, uint seed = 0) {
+inline size_t qHash(const RegKeyRecord& record, size_t seed = 0) {
     return qHash((int)record.root) ^ qHash(record.key) + qHash(record.use64bit);
 }
-inline uint qHash(const RegValRecord& record, uint seed = 0) {
+inline size_t qHash(const RegValRecord& record, size_t seed = 0) {
     return qHash((int)record.root) ^
            qHash(record.key) + qHash(record.use64bit) + qHash(record.valName);
 }
-inline uint qHash(const QSet<RegKeyRecord>& set, uint seed = 0) {
+inline size_t qHash(const QSet<RegKeyRecord>& set, size_t seed = 0) {
     return std::accumulate(set.begin(), set.end(), seed,
-                           [](uint seed, const RegKeyRecord& value) {
+                           [](size_t seed, const RegKeyRecord& value) {
                                return seed + qHash(value);  // or ^
                            });
 }
-inline uint qHash(const QSet<RegValRecord>& set, uint seed = 0) {
+inline size_t qHash(const QSet<RegValRecord>& set, size_t seed = 0) {
     return std::accumulate(set.begin(), set.end(), seed,
-                           [](uint seed, const RegValRecord& value) {
+                           [](size_t seed, const RegValRecord& value) {
                                return seed + qHash(value);  // or ^
                            });
 }

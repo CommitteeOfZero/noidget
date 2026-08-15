@@ -3,7 +3,6 @@
 #include "txaction.h"
 #include "txstream.h"
 #include <QObject>
-#include <QScriptable>
 
 /*^jsdoc
  * Action to queue the seeking of a previously opened stream

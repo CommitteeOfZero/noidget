@@ -8,7 +8,7 @@
 
 ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
     _layout = new QVBoxLayout(this);
-    _layout->setMargin(0);
+    _layout->setContentsMargins(0, 0, 0, 0);
     _layout->setSpacing(8);
     _layout->setAlignment(Qt::AlignTop);
     setLayout(_layout);
@@ -45,7 +45,7 @@ ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
     }
 
     QFuture<std::pair<qint64, qint64>> txSize =
-        QtConcurrent::run(tx, &Transaction::prepare);
+        QtConcurrent::run(&Transaction::prepare, tx);
     QFutureWatcher<void>* txSizeWatcher = new QFutureWatcher<void>(this);
     connect(txSizeWatcher, &QFutureWatcher<void>::finished, [=]() {
         qint64 rawSize;
@@ -70,7 +70,7 @@ ProgressPage::ProgressPage(QWidget* parent) : view::Page(parent) {
 void ProgressPage::startTx() {
     _sectionCount = ngApp->tx()->sectionCount();
 
-    QFuture<void> f = QtConcurrent::run(ngApp->tx(), &Transaction::run);
+    QFuture<void> f = QtConcurrent::run(&Transaction::run, ngApp->tx());
 }
 
 void ProgressPage::txSectionChange(int i, const QString& sectionTitle) {

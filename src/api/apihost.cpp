@@ -1,4 +1,4 @@
-#include <QScriptValue>
+#include <QJSValue>
 #include <QFile>
 #include <QTextStream>
 #include "apihost.h"
@@ -12,8 +12,8 @@
 namespace api {
 
 ApiHost::ApiHost(QObject *parent) : QObject(parent) {
-    _engine = new QScriptEngine(this);
-    QScriptValue root_ = _engine->newObject();
+    _engine = new QJSEngine(this);
+    QJSValue root_ = _engine->newObject();
 
     root_.setProperty("window", _engine->newQObject(new Window(this)));
 
@@ -52,7 +52,7 @@ ApiHost::ApiHost(QObject *parent) : QObject(parent) {
     _engine->evaluate(ts.readAll(), "jslib.js");
 }
 
-QScriptValue ApiHost::root() { return _engine->globalObject().property("ng"); }
+QJSValue ApiHost::root() { return _engine->globalObject().property("ng"); }
 
 ApiHost::~ApiHost() {}
 

@@ -2,7 +2,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <view/flowlayout.h>
-#include <QScriptValueList>
+#include <QJSValue>
 #include <QRadioButton>
 #include <api/exception.h>
 
@@ -16,7 +16,7 @@ RadioGroup::RadioGroup(QWidget *parent, bool vertical) : QWidget(parent) {
 
     if (vertical) {
         QVBoxLayout *layout = new QVBoxLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
         layout->setSpacing(8);
         layout->setAlignment(Qt::AlignTop);
         setLayout(layout);
@@ -24,7 +24,7 @@ RadioGroup::RadioGroup(QWidget *parent, bool vertical) : QWidget(parent) {
         _groupWidget = this;
     } else {
         QHBoxLayout *layout = new QHBoxLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
         layout->setSpacing(8);
         layout->setAlignment(Qt::AlignLeft);
         setLayout(layout);
@@ -36,8 +36,7 @@ RadioGroup::RadioGroup(QWidget *parent, bool vertical) : QWidget(parent) {
     }
 
     _buttonGroup = new QButtonGroup(_groupWidget);
-    connect(_buttonGroup,
-            QOverload<int, bool>::of(&QButtonGroup::buttonToggled), this,
+    connect(_buttonGroup, &QButtonGroup::buttonToggled, this,
             &RadioGroup::buttonGroup_buttonToggled);
 }
 RadioGroup::~RadioGroup() {}
@@ -92,7 +91,7 @@ void RadioGroup::addOption(const QString &name, const QString &text) {
     _groupWidget->layout()->addWidget(button);
 }
 
-void RadioGroup::buttonGroup_buttonToggled(int id, bool checked) {
+void RadioGroup::buttonGroup_buttonToggled(QAbstractButton *button, bool checked) {
     if (_buttonGroup->checkedButton() == _prevButton) {
         // When user changes selection, buttonToggled gets emitted twice (old
         // option toggled off, new option toggled on), so we need to avoid
@@ -101,10 +100,10 @@ void RadioGroup::buttonGroup_buttonToggled(int id, bool checked) {
         return;
     }
     _prevButton = _buttonGroup->checkedButton();
-    if (_onChange.isFunction()) {
-        QScriptValueList args;
+    if (_onChange.isCallable()) {
+        QJSValueList args;
         args << selected();
-        _onChange.call(QScriptValue(), args);
+        reportIfScriptError(_onChange.call(args));
     }
 }
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QWidget>
-#include <QScriptable>
 #include <QTextEdit>
 
 namespace api {
@@ -16,7 +15,7 @@ capabilities. Vertical scroll bar is always shown.
  * @hideconstructor
  * @property {string} text - Text, supports wordwrapping
  ^jsdoc*/
-class TextField : public QWidget, protected QScriptable {
+class TextField : public QWidget {
     Q_OBJECT
     Q_PROPERTY(QString text READ text WRITE setText)
     /*^jsdoc
